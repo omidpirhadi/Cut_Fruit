@@ -25,7 +25,8 @@ public class TouchController : MonoBehaviour
         if (Physics.Raycast(ray, out hit, maskBackground))
         {
             Plane.transform.position = hit.point;
-            currentPos = new Vector3(hit.point.x, hit.point.y, -4.0f);
+         //   currentPos = new Vector3(hit.point.x, hit.point.y, -4.0f);
+           // Debug.Log("AAAA" + currentPos);
             //Debug.Log("Wall");
         }
     }
@@ -34,11 +35,11 @@ public class TouchController : MonoBehaviour
         ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out hit, maskBackground))
         {
-            //prev_pos = currentPos;
+            prev_pos = currentPos;
             //Plane.transform.LookAt(new Vector3(hit.point.x, hit.point.y, 0));
             Plane.transform.position = new Vector3(hit.point.x, hit.point.y, -4.0f);
             
-         //   currentPos = new Vector3(hit.point.x, hit.point.y, -4.0f);
+           currentPos = new Vector3(hit.point.x, hit.point.y, -4.0f);
           //  Debug.Log($"Vec : {prev_pos}, Current:{currentPos}");
         }
     }
@@ -49,12 +50,12 @@ public class TouchController : MonoBehaviour
         {
 
             prev_pos = new Vector3(hit.point.x, hit.point.y, -4.0f);
-
+          //  Debug.Log("BBBB" + prev_pos);
             var dir = prev_pos - currentPos;
-
+          ///  Debug.Log("Dir" + dir);
             float angle = Vector3.Angle(dir, GuidLine);
 
-            Plane.transform.eulerAngles = new Vector3(0, 0, angle);
+            Plane.transform.eulerAngles = new Vector3(0, 0, -angle);
             Debug.Log("angle:" + angle);
         }
 
