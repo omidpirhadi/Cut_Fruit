@@ -39,6 +39,10 @@ public class Cutter : MonoBehaviour
     }
     public SlicedHull Slice(Vector3 planeWorldPosition, Vector3 planeWorldDirection, Material mat)
     {
+
+        GameObject gameObject = new GameObject();
+      
         return objectToSlice.Slice(planeWorldPosition, planeWorldDirection, mat);
     }
+
 }
