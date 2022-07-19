@@ -64,7 +64,7 @@ public class TouchController : MonoBehaviour
 
        // line.SetPosition(0, Vector3.zero);
         //line.SetPosition(1, Vector3.zero);
-        //cutter.Cut();
+      cutter.Cut();
        // Debug.Log("Cut");
     }
     /* public void Update()

@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "com.nosuchstudio.rtltmpro": {
-      "version": "file:D:/Unity/TournamentGit2/Tournament/UPMPackage",
+      "version": "file:../UPMPackage",
       "depth": 0,
       "source": "local",
       "dependencies": {}

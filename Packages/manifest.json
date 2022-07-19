@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "com.nosuchstudio.rtltmpro": "file:D:/Unity/TournamentGit2/Tournament/UPMPackage",
+    "com.nosuchstudio.rtltmpro": "file:../UPMPackage",
     "com.unity.collab-proxy": "1.2.16",
     "com.unity.device-simulator": "3.0.3-preview",
     "com.unity.ide.rider": "1.1.4",

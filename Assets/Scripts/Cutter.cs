@@ -23,8 +23,12 @@ public class Cutter : MonoBehaviour
         // var dir = p2.transform.position - p1.transform.position;
         var hull = Slice(Plane.transform.position, Plane.transform.up, crossSectionMaterial);
 
-        hull.CreateLowerHull(objectToSlice, crossSectionMaterial);
-        hull.CreateUpperHull(objectToSlice, crossSectionMaterial);
+        var lower = hull.CreateLowerHull(objectToSlice, crossSectionMaterial);
+        lower.AddComponent<MeshCollider>().convex = true;
+        lower.AddComponent<Rigidbody>();
+        var upper = hull.CreateUpperHull(objectToSlice, crossSectionMaterial);
+       upper.AddComponent<MeshCollider>().convex = true;
+        upper.AddComponent<Rigidbody>();
         objectToSlice.SetActive(false);
         // Debug.Log("Cut");
     }
@@ -40,7 +44,7 @@ public class Cutter : MonoBehaviour
     public SlicedHull Slice(Vector3 planeWorldPosition, Vector3 planeWorldDirection, Material mat)
     {
 
-        GameObject gameObject = new GameObject();
+      
       
         return objectToSlice.Slice(planeWorldPosition, planeWorldDirection, mat);
     }
