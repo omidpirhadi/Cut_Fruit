@@ -5,98 +5,59 @@ using EzySlice;
 public class TouchController : MonoBehaviour
 {
 
-    public GameObject PointerObject;
+   // public GameObject PointerObject;
     public GameObject Plane;
     public Cutter cutter;
-  //  private Vector3 point;
-    public LayerMask maskBackground;
-    public LineRenderer line;
-    private RaycastHit hit;
-    
-    private Ray ray;
-    private Vector3 currentPos;
-    private Vector3 prev_pos;
+
     private Vector3 point1;
     private Vector3 point2;
-    public Vector3 GuidLine;
-    public void OnMouseDown()
+
+    //  private Vector3 point;
+    /* public LayerMask maskBackground;
+     public LineRenderer line;
+     private RaycastHit hit;
+
+     private Ray ray;
+     private Vector3 currentPos;
+     private Vector3 prev_pos;
+
+     public Vector3 GuidLine;*/
+    private void Update()
     {
-        ray =  Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out hit, maskBackground))
-        {
-            Plane.transform.eulerAngles = Vector3.zero;
-            Plane.transform.position = new Vector3(hit.point.x, hit.point.y, 10f);
-            //   currentPos = new Vector3(hit.point.x, hit.point.y, -4.0f);
-            // Debug.Log("AAAA" + currentPos);
-            //Debug.Log("Wall");
-        }
+        Touch();
     }
-    public void OnMouseDrag()
+    private void Touch()
     {
-        ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out hit, maskBackground))
+        if(Input.touchCount>0)
         {
+            var touch = Input.GetTouch(0);
+            Vector3 pos_click;
+            if(touch.phase == TouchPhase.Began)
+            {
+                pos_click = Camera.main.ScreenToWorldPoint(touch.position);
+                pos_click.z = 5.0f;
+                point1 = pos_click;
+            }
+            else if(touch.phase == TouchPhase.Moved)
+            {
 
-
-            
-            //Plane.transform.LookAt(new Vector3(hit.point.x, hit.point.y, 0));
-            //Plane.transform.position = new Vector3(hit.point.x, hit.point.y, 10f);
-          //  prev_pos = currentPos;
-          //  currentPos = new Vector3(hit.point.x, hit.point.y, 10);
-           Debug.Log($"Vec : {prev_pos}, Current:{currentPos}");
+            }
+            else if (touch.phase == TouchPhase.Ended)
+            {
+                pos_click = Camera.main.ScreenToWorldPoint(touch.position);
+                pos_click.z = 5.0f;
+                point2 = pos_click;
+                SetCutPlane(point1, point2, Plane.transform);
+                cutter.Cut();
+            }
         }
-    }
-    public void OnMouseUp()
-    {
-        ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out hit, maskBackground))
-        {
-            PointerObject.transform.position = new Vector3(hit.point.x, hit.point.y, 10f);
-            //prev_pos = new Vector3(hit.point.x, hit.point.y, 10);
-            //  Debug.Log("BBBB" + prev_pos);
-            var dir = PointerObject.transform.position - Plane.transform.position;
-          ///  Debug.Log("Dir" + dir);
-            float angle = Vector3.Angle(dir, GuidLine);
-
-            Plane.transform.rotation = Quaternion.Euler(0, 0, -angle);
-            Debug.Log("angle:" + angle);
-        }
-
-       // line.SetPosition(0, Vector3.zero);
-        //line.SetPosition(1, Vector3.zero);
-      cutter.Cut();
-       // Debug.Log("Cut");
-    }
-    /* public void Update()
-    {
         
-        if(Input.GetKeyDown(KeyCode.Mouse0))
-        {
-            PlanePlace();
-
-        }
-        if(Input.GetKey(KeyCode.Mouse0))
-        {
-            PlaneRotate();
-
-        }
-
     }
-   public void PlanePlace()
+    private void SetCutPlane(Vector3 point1, Vector3 point2, Transform plane)
     {
-        
-      ///  var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        float x = Input.mousePosition.x;
-        float y =  Input.mousePosition.y;
-        point = Camera.main.ScreenToWorldPoint(new Vector3(x, y, Camera.main.nearClipPlane));
-        Plane.transform.position = point;
+        var dir = point2 - point1;
+        plane.position = point1 + (dir / 2.0f);
+        plane.localScale = new Vector3(dir.magnitude, dir.magnitude, dir.magnitude);
+        plane.forward = dir;
     }
-    public void PlaneRotate()
-    {
-        float x = Input.mousePosition.x;
-        float y = Input.mousePosition.y;
-        point = Camera.main.ScreenToWorldPoint(new Vector3(x, y, Camera.main.nearClipPlane));
-
-        Plane.transform.LookAt(point);
-    }*/
 }
