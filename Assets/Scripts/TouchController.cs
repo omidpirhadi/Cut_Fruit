@@ -57,7 +57,7 @@ public class TouchController : MonoBehaviour
     {
         var dir = point2 - point1;
         plane.position = point1 + (dir / 2.0f);
-        plane.localScale = new Vector3(dir.magnitude, dir.magnitude, dir.magnitude);
+        plane.localScale = new Vector3(1, 1, 1);
         plane.forward = dir;
     }
 }
