@@ -98,12 +98,12 @@ public class TouchController : MonoBehaviour
         if (!SelectedFruits.Contains(fruit))
         {
             SelectedFruits.Add(fruit);
-            Debug.Log($"Add Furit :{fruit}");
+          //  Debug.Log($"Add Furit :{fruit}");
         }
         else
         {
             SelectedFruits.Remove(fruit);
-            Debug.Log($"Removed Furit :{fruit}");
+          //  Debug.Log($"Removed Furit :{fruit}");
 
         }
     }

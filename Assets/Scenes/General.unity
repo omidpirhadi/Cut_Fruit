@@ -864,7 +864,7 @@ LineRenderer:
   - {x: 0, y: 0, z: 1}
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 0.3
+    widthMultiplier: 0.1
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -1424,7 +1424,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe7243f4be3c73147adf8721c802927c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  meshFilter: {fileID: 0}
 --- !u!64 &1838097188915502018
 MeshCollider:
   m_ObjectHideFlags: 0

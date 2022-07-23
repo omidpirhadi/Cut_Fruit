@@ -21,9 +21,9 @@ public class FuritSliceManager : MonoBehaviour
         var pieces = FindObjectsOfType<FruitPiece>();
         foreach (var piece in pieces)
         {
-            AddPiecesFuritToList(piece.FuritTag, piece.Volume);
+            AddPiecesFuritToListAfterSclice(piece.FuritTag, piece.Volume);
         }
-        Debug.Log("CUTTtTTT" + pieces.Length);
+       // Debug.Log("CUTTtTTT" + pieces.Length);
     }
 
     // Update is called once per frame
@@ -31,13 +31,13 @@ public class FuritSliceManager : MonoBehaviour
     {
         
     }
-    public void AddFuritToList(string tag , float  vloume)
+    public void AddFuritOnStartGame(string tag , float  vloume)
     {
        
             FuritsInGame.Furits.Add(new FuritData { Tag = tag, TotalVolume = vloume, slicedPieces = new List<SlicedPieceData>() });
         
     }
-    public void AddPiecesFuritToList(string tag, float vloume)
+    private void AddPiecesFuritToListAfterSclice(string tag, float vloume)
     {
        // Clearpiecelist();
 

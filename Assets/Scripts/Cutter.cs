@@ -50,7 +50,7 @@ public class Cutter : MonoBehaviour
         upper.name = furit.name;
 
         objectToSlice.SetActive(false);
-        //Handler_Cut();
+        Handler_Cut();
 
         // Debug.Log("Cut");
     }

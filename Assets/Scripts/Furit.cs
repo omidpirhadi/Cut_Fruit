@@ -21,7 +21,7 @@ public class Furit : MonoBehaviour
         furitSliceManager = FindObjectOfType<FuritSliceManager>();
         
         
-        furitSliceManager.AddFuritToList(FuritTag, Volume);
+        furitSliceManager.AddFuritOnStartGame(FuritTag, Volume);
     }
     void OnMouseEnter()
     {
