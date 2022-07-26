@@ -7,6 +7,7 @@ public class TouchController : MonoBehaviour
 
     // public GameObject PointerObject;
     //public GameObject Plane;
+    public bool IsReadyForCut = true;
     public LayerMask MaskFruit;
     private Cutter cutter;
     private LineRenderer line;
@@ -15,6 +16,8 @@ public class TouchController : MonoBehaviour
     private Vector3 point1;
     private Vector3 point2;
     private Vector3 pos_click;
+
+
    // private Ray ray;
    // private RaycastHit hit;
 
@@ -30,10 +33,15 @@ public class TouchController : MonoBehaviour
      public Vector3 GuidLine;*/
     private void Start()
     {
+        FindObjectOfType<UI>().ChangeMode += FuritSliceManager_ChangeMode;
         cutter = GetComponent<Cutter>();
         line = GetComponent<LineRenderer>();
         SelectedFruits = new List<GameObject>();
         line.positionCount = 2;
+    }
+    private void FuritSliceManager_ChangeMode(bool cut ,  bool pick)
+    {
+        IsReadyForCut = cut;
     }
     private void Update()
     {
@@ -49,14 +57,17 @@ public class TouchController : MonoBehaviour
             
             if(touch.phase == TouchPhase.Began)
             {
-                line.positionCount = 2;
-                
-                SelectedFruits.Clear();
-                pos_click = Camera.main.ScreenToWorldPoint(touch.position);
-                pos_click.z = 10.0f;
-                point1 = pos_click;
-                line.SetPosition(0, point1);
-                line.SetPosition(1, point1);
+                if (IsReadyForCut)
+                {
+                    line.positionCount = 2;
+
+                    SelectedFruits.Clear();
+                    pos_click = Camera.main.ScreenToWorldPoint(touch.position);
+                    pos_click.z = 10.0f;
+                    point1 = pos_click;
+                    line.SetPosition(0, point1);
+                    line.SetPosition(1, point1);
+                }
             }
             else if(touch.phase == TouchPhase.Moved)
             {
@@ -68,20 +79,26 @@ public class TouchController : MonoBehaviour
                          FruitSelect(hit.collider.gameObject);
                      }
                  }*/
-                pos_click = Camera.main.ScreenToWorldPoint(touch.position);
-                pos_click.z = 10.0f;
-                point2 = pos_click;
-                line.SetPosition(1, point2);
+                if (IsReadyForCut)
+                {
+                    pos_click = Camera.main.ScreenToWorldPoint(touch.position);
+                    pos_click.z = 10.0f;
+                    point2 = pos_click;
+                    line.SetPosition(1, point2);
+                }
             }
             else if (touch.phase == TouchPhase.Ended)
             {
-                pos_click = Camera.main.ScreenToWorldPoint(touch.position);
-                pos_click.z = 10.0f;
-                point2 = pos_click;
-                line.positionCount = 0;
-                cutter.SetCutPlane(point1, point2);
+                if (IsReadyForCut)
+                {
+                    pos_click = Camera.main.ScreenToWorldPoint(touch.position);
+                    pos_click.z = 10.0f;
+                    point2 = pos_click;
+                    line.positionCount = 0;
+                    cutter.SetCutPlane(point1, point2);
 
-                CutFruits();
+                    CutFruits();
+                }
             }
         }
         

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,22 +7,69 @@ public class Furit : MonoBehaviour
 {
     public string FuritTag;   
     public float Volume;
-   // public int SliceNumber;
-  //  public bool Sliced = false;
+    // public int SliceNumber;
+    //  public bool Sliced = false;
+    public bool IsReadyPickedUp = false;
 
+    public Material hightlighter;
+    private Material default_matrial;
     private TouchController controller;
     private FuritSliceManager furitSliceManager;
     private Mesh meshFilter;
 
+    //private List<Material> matrials_Temp;
     void Start()
     {
+
+       
+        FindObjectOfType<UI>().ChangeMode += Furit_ChangeMode;
         meshFilter = GetComponent<MeshFilter>().sharedMesh;
         Volume = VolumeOfMesh(meshFilter);
         controller = FindObjectOfType<TouchController>();
         furitSliceManager = FindObjectOfType<FuritSliceManager>();
         
         
-        furitSliceManager.AddFuritOnStartGame(FuritTag, Volume);
+      //  furitSliceManager.AddFuritOnStartGame(FuritTag, Volume);
+         
+     //  default_matrial = GetComponent<MeshRenderer>().materials[0];
+
+    }
+
+    private void Furit_ChangeMode(bool cut , bool pick)
+    {
+       IsReadyPickedUp = pick;
+         if (pick)
+        {
+            //GetComponent<MeshRenderer>().materials = new Material[2] { default_matrial, hightlighter };
+        }
+        else
+        {
+
+           // GetComponent<MeshRenderer>().materials = new Material[1] { default_matrial};
+        }
+    }
+
+    private void OnDestroy()
+    {
+       // FindObjectOfType<UI>().ChangeMode -= Furit_ChangeMode;
+    }
+    private void OnMouseDown()
+    {
+        if(IsReadyPickedUp)
+        {
+            //hightlighter.SetFloat("_Width", 10);
+            Debug.Log("PICK");
+        }
+    }
+    private void OnMouseDrag()
+    {
+        if (IsReadyPickedUp)
+        {
+           var pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            ///var offset = transform.position - transform.TransformPoint(GetComponent<MeshFilter>().mesh.bounds.center);
+            // offset.z = transform.position.z;
+            this.transform.position = new Vector3(pos.x, pos.y, transform.position.z) ;
+        }
     }
     void OnMouseEnter()
     {

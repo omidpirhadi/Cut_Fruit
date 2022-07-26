@@ -6,23 +6,58 @@ public class FruitPiece : MonoBehaviour
 {
     public string FuritTag;
     public float Volume;
-   // public int SliceNumber;
-   // public bool Sliced = false;
+    public bool IsReadyPickedUp = false;
 
     private TouchController controller;
-    private FuritSliceManager furitSliceManager;
     private Mesh meshFilter;
 
+    public Material hightlighter;
+    private Material default_matrial;
+    private Material default_uv;
     void Start()
     {
+        FindObjectOfType<UI>().ChangeMode += Furit_ChangeMode;
         meshFilter = GetComponent<MeshFilter>().sharedMesh;
         Volume = VolumeOfMesh(meshFilter);
         controller = FindObjectOfType<TouchController>();
-        furitSliceManager = FindObjectOfType<FuritSliceManager>();
-
-
-       // furitSliceManager.AddPiecesFuritToList(FuritTag, Volume);
+       // default_matrial = GetComponent<MeshRenderer>().materials[0];
+       // default_uv = GetComponent<MeshRenderer>().materials[1];
     }
+
+    private void Furit_ChangeMode(bool cut, bool pick)
+    {
+        IsReadyPickedUp = pick;
+        if (pick)
+        {
+           // GetComponent<MeshRenderer>().materials = new Material[3] { default_matrial,default_uv, hightlighter };
+        }
+        else
+        {
+
+            //GetComponent<MeshRenderer>().materials = new Material[2] { default_matrial, default_uv };
+        }
+    }
+    private void OnMouseDrag()
+    {
+        if (IsReadyPickedUp)
+        {
+
+               var pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            // var offset = transform.position - transform.TransformPoint(GetComponent<MeshFilter>().mesh.bounds.center);
+
+            this.transform.position = new Vector3(pos.x, pos.y, transform.position.z);
+        }
+    }
+
+    private void OnMouseDown()
+    {
+        if (IsReadyPickedUp)
+        {
+            // hightlighter.SetFloat("_Width", 10);
+            Debug.Log("PICK");
+        }
+    }
+
     void OnMouseEnter()
     {
         controller.FruitSelect(this.gameObject);
@@ -32,7 +67,10 @@ public class FruitPiece : MonoBehaviour
     {
         // controller.FruitSelect(this.gameObject);
     }
-
+    private void OnDestroy()
+    {
+        //FindObjectOfType<UI>().ChangeMode -= Furit_ChangeMode;
+    }
     public float SignedVolumeOfTriangle(Vector3 p1, Vector3 p2, Vector3 p3)
     {
         float v321 = p3.x * p2.y * p1.z;

@@ -11,9 +11,13 @@ public class FuritSliceManager : MonoBehaviour
     private Cutter cut;
     void Start()
     {
+        
         cut = GetComponent<Cutter>();
         cut.OnCut += Cut_OnCut;
     }
+
+   
+
     [Button("find",ButtonSizes.Medium)]
     public void Cut_OnCut()
     {
