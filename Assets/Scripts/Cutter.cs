@@ -35,55 +35,62 @@ public class Cutter : MonoBehaviour
             tag_furit = furit.GetComponent<FruitPiece>().FuritTag;
 
         }
-        var hull = Slice(furit, Plane.transform.position, Plane.transform.up, crossSectionMaterial);
+        if (furit != null)
+        {
+            var hull = Slice(furit, Plane.transform.position, Plane.transform.up, crossSectionMaterial);
+            if (objectToSlice != null && hull !=null)
+            {
+                ////****************************************************************Create Lower
+                var lower = hull.CreateLowerHull(objectToSlice, crossSectionMaterial);
+                
+                var colliderlower = lower.AddComponent<MeshCollider>();
+                colliderlower.convex = true;
+                colliderlower.material = physicMaterial;
+                colliderlower.convex = true;
 
-        ////****************************************************************Create Lower
-        var lower = hull.CreateLowerHull(objectToSlice, crossSectionMaterial);
-        lower.AddComponent<MeshCollider>().convex = true;
-        var colliderlower = lower.AddComponent<MeshCollider>();
-        colliderlower.material = physicMaterial;
-        colliderlower.convex = true;
+                var lowerbody = lower.AddComponent<Rigidbody>();
+                lowerbody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+                lowerbody.interpolation = RigidbodyInterpolation.Interpolate;
+                lowerbody.AddForce(Vector3.forward * 5, ForceMode.Impulse);
 
-        var lowerbody = lower.AddComponent<Rigidbody>();
-        lowerbody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
-        lowerbody.interpolation = RigidbodyInterpolation.Interpolate;
-        lowerbody.AddForce(Vector3.forward * 5, ForceMode.Impulse);
+                var piece_lower = lower.AddComponent<FruitPiece>();
+                piece_lower.FuritTag = tag_furit;
+                //piece_lower.hightlighter = hightlight_matrial;
 
-        var piece_lower = lower.AddComponent<FruitPiece>();
-        piece_lower.FuritTag = tag_furit;
-        //piece_lower.hightlighter = hightlight_matrial;
+                lower.layer = LayerMask.NameToLayer("Furit");
+                lower.name = furit.name;
+                DOVirtual.DelayedCall(2, () =>
+                {
+                    lowerbody.isKinematic = true;
+                });
+                ////****************************************************************Create Upper
+                var upper = hull.CreateUpperHull(objectToSlice, crossSectionMaterial);
+                var colliderupper = upper.AddComponent<MeshCollider>();
+                colliderupper.material = physicMaterial;
+                colliderupper.convex = true;
 
-        lower.layer = LayerMask.NameToLayer("Furit");
-        lower.name = furit.name;
-        DOVirtual.DelayedCall(2, () => {
-            lowerbody.isKinematic = true;
-        });
-        ////****************************************************************Create Upper
-        var upper = hull.CreateUpperHull(objectToSlice, crossSectionMaterial);
-        var colliderupper = upper.AddComponent<MeshCollider>();
-        colliderupper.material = physicMaterial;
-        colliderupper.convex = true;
+                var upperbody = upper.AddComponent<Rigidbody>();
 
-        var upperbody = upper.AddComponent<Rigidbody>();
+                upperbody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+                upperbody.interpolation = RigidbodyInterpolation.Interpolate;
+                upperbody.AddForce(Vector3.forward * 5, ForceMode.Impulse);
 
-        upperbody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
-        upperbody.interpolation = RigidbodyInterpolation.Interpolate;
-        upperbody.AddForce(Vector3.forward * 5, ForceMode.Impulse);
+                var piece_upper = upper.AddComponent<FruitPiece>();
+                piece_upper.FuritTag = tag_furit;
+                // piece_upper.hightlighter = hightlight_matrial;
 
-        var piece_upper= upper.AddComponent<FruitPiece>();
-        piece_upper.FuritTag = tag_furit;
-       // piece_upper.hightlighter = hightlight_matrial;
+                upper.layer = LayerMask.NameToLayer("Furit");
+                upper.name = furit.name;
 
-        upper.layer = LayerMask.NameToLayer("Furit");
-        upper.name = furit.name;
-
-        DOVirtual.DelayedCall(2, () => {
-            upperbody.isKinematic = true;
-        });
-        // objectToSlice.SetActive(false);
-        Destroy(objectToSlice);
-        Handler_Cut();
-
+                DOVirtual.DelayedCall(2, () =>
+                {
+                    upperbody.isKinematic = true;
+                });
+                // objectToSlice.SetActive(false);
+                Destroy(objectToSlice);
+                Handler_Cut();
+            }
+        }
         // Debug.Log("Cut");
     }
     public void SetCutPlane(Vector3 point1, Vector3 point2)

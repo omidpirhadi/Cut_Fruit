@@ -10,16 +10,22 @@ public class FruitPiece : MonoBehaviour
 
     private TouchController controller;
     private Mesh meshFilter;
-
+    private  new MeshRenderer  renderer;
     public Material hightlighter;
     private Material default_matrial;
     private Material default_uv;
+
+    private float Get_Z;
+    private UI ui;
     void Start()
     {
-        FindObjectOfType<UI>().ChangeMode += Furit_ChangeMode;
+
+        ui = FindObjectOfType<UI>();
+        ui.ChangeMode += Furit_ChangeMode;
         meshFilter = GetComponent<MeshFilter>().sharedMesh;
         Volume = VolumeOfMesh(meshFilter);
         controller = FindObjectOfType<TouchController>();
+        renderer = GetComponent<MeshRenderer>();
        // default_matrial = GetComponent<MeshRenderer>().materials[0];
        // default_uv = GetComponent<MeshRenderer>().materials[1];
     }
@@ -29,12 +35,12 @@ public class FruitPiece : MonoBehaviour
         IsReadyPickedUp = pick;
         if (pick)
         {
-           // GetComponent<MeshRenderer>().materials = new Material[3] { default_matrial,default_uv, hightlighter };
+         
         }
         else
         {
 
-            //GetComponent<MeshRenderer>().materials = new Material[2] { default_matrial, default_uv };
+            
         }
     }
     private void OnMouseDrag()
@@ -42,10 +48,11 @@ public class FruitPiece : MonoBehaviour
         if (IsReadyPickedUp)
         {
 
-               var pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            // var offset = transform.position - transform.TransformPoint(GetComponent<MeshFilter>().mesh.bounds.center);
-
-            this.transform.position = new Vector3(pos.x, pos.y, transform.position.z);
+            var pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            var offset = transform.position - transform.TransformPoint(GetComponent<MeshFilter>().mesh.bounds.center);
+            var tt = new Vector3(pos.x, pos.y, transform.position.z) + offset;
+            tt.z = Get_Z;
+            this.transform.position = tt;
         }
     }
 
@@ -53,11 +60,20 @@ public class FruitPiece : MonoBehaviour
     {
         if (IsReadyPickedUp)
         {
-            // hightlighter.SetFloat("_Width", 10);
+            Get_Z = transform.position.z;
+            FindObjectOfType<Facepunch.Highlight>().Highlighted.Add(renderer);
             Debug.Log("PICK");
         }
     }
-
+    private void OnMouseUp()
+    {
+        if (IsReadyPickedUp)
+        {
+           /// Get_Z = transform.position.z;
+            FindObjectOfType<Facepunch.Highlight>().Highlighted.Remove(renderer);
+            Debug.Log("Drop");
+        }
+    }
     void OnMouseEnter()
     {
         controller.FruitSelect(this.gameObject);
@@ -69,7 +85,7 @@ public class FruitPiece : MonoBehaviour
     }
     private void OnDestroy()
     {
-        //FindObjectOfType<UI>().ChangeMode -= Furit_ChangeMode;
+        ui.ChangeMode -= Furit_ChangeMode;
     }
     public float SignedVolumeOfTriangle(Vector3 p1, Vector3 p2, Vector3 p3)
     {

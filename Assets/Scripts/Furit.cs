@@ -10,28 +10,33 @@ public class Furit : MonoBehaviour
     // public int SliceNumber;
     //  public bool Sliced = false;
     public bool IsReadyPickedUp = false;
-
+    private new MeshRenderer renderer;
     public Material hightlighter;
     private Material default_matrial;
     private TouchController controller;
-    private FuritSliceManager furitSliceManager;
+   // private FuritSliceManager furitSliceManager;
     private Mesh meshFilter;
 
+    private float Get_Z;
+
+    private UI ui;
     //private List<Material> matrials_Temp;
     void Start()
     {
 
-       
-        FindObjectOfType<UI>().ChangeMode += Furit_ChangeMode;
+
+        ui = FindObjectOfType<UI>();
+        ui.ChangeMode += Furit_ChangeMode;
         meshFilter = GetComponent<MeshFilter>().sharedMesh;
         Volume = VolumeOfMesh(meshFilter);
         controller = FindObjectOfType<TouchController>();
-        furitSliceManager = FindObjectOfType<FuritSliceManager>();
-        
-        
-      //  furitSliceManager.AddFuritOnStartGame(FuritTag, Volume);
-         
-     //  default_matrial = GetComponent<MeshRenderer>().materials[0];
+        renderer = GetComponent<MeshRenderer>();
+        // furitSliceManager = FindObjectOfType<FuritSliceManager>();
+
+
+        //  furitSliceManager.AddFuritOnStartGame(FuritTag, Volume);
+
+        //  default_matrial = GetComponent<MeshRenderer>().materials[0];
 
     }
 
@@ -51,24 +56,40 @@ public class Furit : MonoBehaviour
 
     private void OnDestroy()
     {
-       // FindObjectOfType<UI>().ChangeMode -= Furit_ChangeMode;
+        ui.ChangeMode -= Furit_ChangeMode;
     }
-    private void OnMouseDown()
-    {
-        if(IsReadyPickedUp)
-        {
-            //hightlighter.SetFloat("_Width", 10);
-            Debug.Log("PICK");
-        }
-    }
+
     private void OnMouseDrag()
     {
         if (IsReadyPickedUp)
         {
-           var pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            ///var offset = transform.position - transform.TransformPoint(GetComponent<MeshFilter>().mesh.bounds.center);
-            // offset.z = transform.position.z;
-            this.transform.position = new Vector3(pos.x, pos.y, transform.position.z) ;
+
+            var pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            var offset = transform.position - transform.TransformPoint(GetComponent<MeshFilter>().mesh.bounds.center);
+            var tt = new Vector3(pos.x, pos.y, transform.position.z) + offset;
+            tt.z = Get_Z;
+            this.transform.position = tt;
+        }
+    }
+
+    private void OnMouseDown()
+    {
+        if (IsReadyPickedUp)
+        {
+            Get_Z = transform.position.z;
+            FindObjectOfType<Facepunch.Highlight>().Highlighted.Add(renderer);
+            FindObjectOfType<Facepunch.Highlight>().RebuildCommandBuffer();
+            Debug.Log("PICK");
+        }
+    }
+    private void OnMouseUp()
+    {
+        if (IsReadyPickedUp)
+        {
+            /// Get_Z = transform.position.z;
+            FindObjectOfType<Facepunch.Highlight>().Highlighted.Remove(renderer);
+            FindObjectOfType<Facepunch.Highlight>().ReleaseAll();
+            Debug.Log("Drop");
         }
     }
     void OnMouseEnter()
