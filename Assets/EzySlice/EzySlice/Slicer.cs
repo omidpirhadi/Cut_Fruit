@@ -296,6 +296,7 @@ namespace EzySlice {
             int crossCount = crossSection != null ? crossSection.Count : 0;
 
             Mesh newMesh = new Mesh();
+         
             newMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
             
             int arrayLen = (total + crossCount) * 3;
