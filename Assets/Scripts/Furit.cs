@@ -11,8 +11,8 @@ public class Furit : MonoBehaviour
     //  public bool Sliced = false;
     public bool IsReadyPickedUp = false;
     private new MeshRenderer renderer;
-    public Material hightlighter;
-    private Material default_matrial;
+    public Material InnerMatrialAfterCut;
+    //private Material default_matrial;
     private TouchController controller;
    // private FuritSliceManager furitSliceManager;
     private Mesh meshFilter;
@@ -77,8 +77,7 @@ public class Furit : MonoBehaviour
         if (IsReadyPickedUp)
         {
             Get_Z = transform.position.z;
-            FindObjectOfType<Facepunch.Highlight>().Highlighted.Add(renderer);
-            FindObjectOfType<Facepunch.Highlight>().RebuildCommandBuffer();
+            renderer.materials[0].SetFloat("_OutlineSize", 10);
             Debug.Log("PICK");
         }
     }
@@ -87,14 +86,13 @@ public class Furit : MonoBehaviour
         if (IsReadyPickedUp)
         {
             /// Get_Z = transform.position.z;
-            FindObjectOfType<Facepunch.Highlight>().Highlighted.Remove(renderer);
-            FindObjectOfType<Facepunch.Highlight>().ReleaseAll();
+            renderer.materials[0].SetFloat("_OutlineSize", 0);
             Debug.Log("Drop");
         }
     }
     void OnMouseEnter()
     {
-        controller.FruitSelect(this.gameObject);
+        controller.FruitSelect(this.gameObject ,  InnerMatrialAfterCut);
     }
     
     void OnMouseExit()

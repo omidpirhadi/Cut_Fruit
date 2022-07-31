@@ -235,6 +235,10 @@ PrefabInstance:
       propertyPath: hightlighter
       value: 
       objectReference: {fileID: 2100000, guid: b6a29f0acf92b344e921bcf55d11c91e, type: 2}
+    - target: {fileID: 57213764, guid: cd7277dc4a7559d42af89ac1fa1c741c, type: 3}
+      propertyPath: InnerMatrialAfterCut
+      value: 
+      objectReference: {fileID: 2100000, guid: 6d6efdef9e0f214438eea43d2c685a87, type: 2}
     - target: {fileID: 1507011352708970, guid: cd7277dc4a7559d42af89ac1fa1c741c, type: 3}
       propertyPath: m_Name
       value: Lemon
@@ -301,8 +305,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 5911932637532464255, guid: 6de0096c2ca86e644af997c45d044372,
-        type: 3}
+      objectReference: {fileID: 2100000, guid: d018a225e0ae5644e883f6934abcb6f8, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cd7277dc4a7559d42af89ac1fa1c741c, type: 3}
 --- !u!1 &57213759 stripped
@@ -528,6 +531,10 @@ PrefabInstance:
       propertyPath: hightlighter
       value: 
       objectReference: {fileID: 2100000, guid: b6a29f0acf92b344e921bcf55d11c91e, type: 2}
+    - target: {fileID: 528314590, guid: 3c4c5d59ea9397e46be405f96747f9cd, type: 3}
+      propertyPath: InnerMatrialAfterCut
+      value: 
+      objectReference: {fileID: 2100000, guid: d386b00135b18ba4f849745aaa1ced7e, type: 2}
     - target: {fileID: 1345404160042626, guid: 3c4c5d59ea9397e46be405f96747f9cd, type: 3}
       propertyPath: m_Name
       value: Coconut
@@ -580,6 +587,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 23171870517283116, guid: 3c4c5d59ea9397e46be405f96747f9cd,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 6d34d88a604145e47837942b62f9645b, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3c4c5d59ea9397e46be405f96747f9cd, type: 3}
 --- !u!1 &263011046
@@ -737,6 +749,10 @@ PrefabInstance:
       propertyPath: FuritTag
       value: Apple202
       objectReference: {fileID: 0}
+    - target: {fileID: 548133747, guid: 42f8409ef5a994a48992f877b6f6c6a1, type: 3}
+      propertyPath: InnerMatrialAfterCut
+      value: 
+      objectReference: {fileID: 2100000, guid: d4fc5eebe6a9fd145aa5dbd87365c5ef, type: 2}
     - target: {fileID: 1622116134637774, guid: 42f8409ef5a994a48992f877b6f6c6a1, type: 3}
       propertyPath: m_Name
       value: Apple_Green
@@ -1843,10 +1859,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectToSlice: {fileID: 57213759}
-  crossSectionMaterial: {fileID: 2100000, guid: 7a423c08f9346462aa2c19a6b3b7a90c,
-    type: 2}
   physicMaterial: {fileID: 13400000, guid: 627588ca3f10fb34a861777cfadb671a, type: 2}
-  hightlight_matrial: {fileID: 2100000, guid: b6a29f0acf92b344e921bcf55d11c91e, type: 2}
   Plane: {fileID: 2138618058}
 --- !u!1001 &1349049624
 PrefabInstance:
@@ -1949,8 +1962,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 824015559753126921, guid: 18ef87c3bf00f84438839a937eae6dc6,
-        type: 3}
+      objectReference: {fileID: 2100000, guid: c3fbd7952e1114c4aaeb366a3248570b, type: 2}
     - target: {fileID: 919132149155446097, guid: 210684f10587a2d4d9ac1096167d6fd5,
         type: 3}
       propertyPath: m_Name
@@ -2402,7 +2414,8 @@ MonoBehaviour:
   FuritTag: G_apple
   Volume: 0
   IsReadyPickedUp: 0
-  hightlighter: {fileID: 2100000, guid: b6a29f0acf92b344e921bcf55d11c91e, type: 2}
+  InnerMatrialAfterCut: {fileID: 2100000, guid: d4fc5eebe6a9fd145aa5dbd87365c5ef,
+    type: 2}
 --- !u!64 &2045404495
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -2417,20 +2430,6 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -5893236616962125096, guid: 210684f10587a2d4d9ac1096167d6fd5, type: 3}
---- !u!114 &2045404499
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2045404493}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fbf3575480402db40813e763382412fb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  color: 1
-  eraseRenderer: 0
 --- !u!1 &2050656125
 GameObject:
   m_ObjectHideFlags: 0
@@ -2553,8 +2552,6 @@ GameObject:
   - component: {fileID: 2086128105}
   - component: {fileID: 2086128104}
   - component: {fileID: 2086128103}
-  - component: {fileID: 2086128107}
-  - component: {fileID: 2086128108}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -2635,58 +2632,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2086128107
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2086128102}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 832d2aff31eccee4dbe1857c71014257, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  VisualizeRenderTarget: 0
-  TargetCamera: {fileID: 2086128105}
-  ImageEffectMaterial: {fileID: 2100000, guid: c72ec7131d4b6604582569c3aa8b2cf8, type: 2}
-  MeshRenderMaterial: {fileID: 2100000, guid: 5442aadb1d604784397e2370bdf87c6e, type: 2}
-  Highlighted: []
---- !u!114 &2086128108
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2086128102}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a78da3f00f3328541b4526c0b0b5ec5c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  lineThickness: 1.25
-  lineIntensity: 0.5
-  fillAmount: 0.2
-  lineColor0: {r: 1, g: 0, b: 0, a: 1}
-  lineColor1: {r: 0, g: 1, b: 0, a: 1}
-  lineColor2: {r: 0, g: 0, b: 1, a: 1}
-  additiveRendering: 0
-  backfaceCulling: 1
-  fillTexture: {fileID: 0}
-  fillTextureScale: {x: 1, y: 1}
-  useFillColor: 0
-  fillColor: {r: 0, g: 0, b: 1, a: 1}
-  cornerOutlines: 1
-  addLinesBetweenColors: 1
-  scaleWithScreenSize: 1
-  alphaCutoff: 0.5
-  flipY: 0
-  sourceCamera: {fileID: 0}
-  autoEnableOutlines: 0
-  outlineCamera: {fileID: 0}
-  outlineShaderMaterial: {fileID: 0}
-  renderTexture: {fileID: 0}
-  extraRenderTexture: {fileID: 0}
 --- !u!1 &2091480407
 GameObject:
   m_ObjectHideFlags: 0

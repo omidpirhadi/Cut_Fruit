@@ -13,6 +13,7 @@ public class TouchController : MonoBehaviour
     private LineRenderer line;
 
     private List<GameObject> SelectedFruits;
+    private List<Material> SelectedInnerMatrials;
     private Vector3 point1;
     private Vector3 point2;
     private Vector3 pos_click;
@@ -37,6 +38,7 @@ public class TouchController : MonoBehaviour
         cutter = GetComponent<Cutter>();
         line = GetComponent<LineRenderer>();
         SelectedFruits = new List<GameObject>();
+        SelectedInnerMatrials = new List<Material>();
         line.positionCount = 2;
     }
     private void FuritSliceManager_ChangeMode(bool cut ,  bool pick)
@@ -62,6 +64,7 @@ public class TouchController : MonoBehaviour
                     line.positionCount = 2;
 
                     SelectedFruits.Clear();
+                    SelectedInnerMatrials.Clear();
                     pos_click = Camera.main.ScreenToWorldPoint(touch.position);
                     pos_click.z = 10.0f;
                     point1 = pos_click;
@@ -98,6 +101,7 @@ public class TouchController : MonoBehaviour
                     cutter.SetCutPlane(point1, point2);
 
                     CutFruits();
+
                 }
             }
         }
@@ -107,20 +111,22 @@ public class TouchController : MonoBehaviour
     {
         for (int i = 0; i < SelectedFruits.Count; i++)
         {
-            cutter.Cut(SelectedFruits[i]);
+            cutter.Cut(SelectedFruits[i], SelectedInnerMatrials[i]);
         }
     }
-    public void FruitSelect(GameObject fruit)
+    public void FruitSelect(GameObject fruit , Material innerMatrialAfterCut)
     {
-        if (!SelectedFruits.Contains(fruit))
+        if (!SelectedFruits.Contains(fruit) && !SelectedInnerMatrials.Contains(innerMatrialAfterCut))
         {
             SelectedFruits.Add(fruit);
+            SelectedInnerMatrials.Add(innerMatrialAfterCut);
           //  Debug.Log($"Add Furit :{fruit}");
         }
         else
         {
             SelectedFruits.Remove(fruit);
-          //  Debug.Log($"Removed Furit :{fruit}");
+            SelectedInnerMatrials.Remove(innerMatrialAfterCut);
+            //  Debug.Log($"Removed Furit :{fruit}");
 
         }
     }

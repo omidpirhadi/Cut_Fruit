@@ -3,7 +3,12 @@ guid: 6de0096c2ca86e644af997c45d044372
 ModelImporter:
   serializedVersion: 19301
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Lemon
+    second: {fileID: 2100000, guid: cba1024e20890be43bdc76399d3b8dba, type: 2}
   materials:
     materialImportMode: 1
     materialName: 0

@@ -10,20 +10,13 @@ public class Cutter : MonoBehaviour
 {
 
     public GameObject objectToSlice; // non-null
-    public Material crossSectionMaterial; // non-null
+   // public Material crossSectionMaterial; // non-null
     public PhysicMaterial physicMaterial;
-    public Material hightlight_matrial;
+  //  public Material hightlight_matrial;
     public Transform Plane;
-    // public GameObject p1, p2;
-    //public Vector3 vec;
-    /**
-     * Example on how to slice a GameObject in world coordinates.
-     * Uses a custom TextureRegion to offset the UV coordinates of the cross-section
-     * Uses a custom Material
-     */
-    // [Button("Cut", ButtonSizes.Medium)]
 
-    public void Cut(GameObject furit)
+
+    public void Cut(GameObject furit , Material inner)
     {
         string tag_furit = "";
         if (furit.GetComponent<Furit>())
@@ -37,11 +30,11 @@ public class Cutter : MonoBehaviour
         }
         if (furit != null)
         {
-            var hull = Slice(furit, Plane.transform.position, Plane.transform.up, crossSectionMaterial);
+            var hull = Slice(furit, Plane.transform.position, Plane.transform.up, inner);
             if (objectToSlice != null && hull !=null)
             {
                 ////****************************************************************Create Lower
-                var lower = hull.CreateLowerHull(objectToSlice, crossSectionMaterial);
+                var lower = hull.CreateLowerHull(objectToSlice, inner);
                 
                 var colliderlower = lower.AddComponent<MeshCollider>();
                 colliderlower.convex = true;
@@ -55,6 +48,7 @@ public class Cutter : MonoBehaviour
 
                 var piece_lower = lower.AddComponent<FruitPiece>();
                 piece_lower.FuritTag = tag_furit;
+                piece_lower.InnerMatrialAfterCut = inner;
                 //piece_lower.hightlighter = hightlight_matrial;
 
                 lower.layer = LayerMask.NameToLayer("Furit");
@@ -64,7 +58,7 @@ public class Cutter : MonoBehaviour
                     lowerbody.isKinematic = true;
                 });
                 ////****************************************************************Create Upper
-                var upper = hull.CreateUpperHull(objectToSlice, crossSectionMaterial);
+                var upper = hull.CreateUpperHull(objectToSlice, inner);
                 var colliderupper = upper.AddComponent<MeshCollider>();
                 colliderupper.material = physicMaterial;
                 colliderupper.convex = true;
@@ -77,6 +71,7 @@ public class Cutter : MonoBehaviour
 
                 var piece_upper = upper.AddComponent<FruitPiece>();
                 piece_upper.FuritTag = tag_furit;
+                piece_upper.InnerMatrialAfterCut = inner;
                 // piece_upper.hightlighter = hightlight_matrial;
 
                 upper.layer = LayerMask.NameToLayer("Furit");

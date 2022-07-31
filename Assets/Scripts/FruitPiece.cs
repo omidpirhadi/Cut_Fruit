@@ -5,15 +5,18 @@ using UnityEngine;
 public class FruitPiece : MonoBehaviour
 {
     public string FuritTag;
+
+    public Material InnerMatrialAfterCut;
+
     public float Volume;
     public bool IsReadyPickedUp = false;
 
     private TouchController controller;
     private Mesh meshFilter;
     private  new MeshRenderer  renderer;
-    public Material hightlighter;
-    private Material default_matrial;
-    private Material default_uv;
+    
+    //private Material default_matrial;
+   // private Material default_uv;
 
     private float Get_Z;
     private UI ui;
@@ -61,7 +64,7 @@ public class FruitPiece : MonoBehaviour
         if (IsReadyPickedUp)
         {
             Get_Z = transform.position.z;
-            FindObjectOfType<Facepunch.Highlight>().Highlighted.Add(renderer);
+            renderer.materials[0].SetFloat("_OutlineSize", 10);
             Debug.Log("PICK");
         }
     }
@@ -69,14 +72,14 @@ public class FruitPiece : MonoBehaviour
     {
         if (IsReadyPickedUp)
         {
-           /// Get_Z = transform.position.z;
-            FindObjectOfType<Facepunch.Highlight>().Highlighted.Remove(renderer);
+            /// Get_Z = transform.position.z;
+            renderer.materials[0].SetFloat("_OutlineSize", 0);
             Debug.Log("Drop");
         }
     }
     void OnMouseEnter()
     {
-        controller.FruitSelect(this.gameObject);
+        controller.FruitSelect(this.gameObject, InnerMatrialAfterCut);
     }
 
     void OnMouseExit()
