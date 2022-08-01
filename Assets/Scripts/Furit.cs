@@ -20,6 +20,7 @@ public class Furit : MonoBehaviour
     private float Get_Z;
 
     private UI ui;
+    private int index = 0;
     //private List<Material> matrials_Temp;
     void Start()
     {
@@ -92,12 +93,33 @@ public class Furit : MonoBehaviour
     }
     void OnMouseEnter()
     {
-        controller.FruitSelect(this.gameObject ,  InnerMatrialAfterCut);
+        //controller.FruitSelect(this.gameObject, InnerMatrialAfterCut);
+      /*  if (!controller.SelectedFruits.Contains(this.gameObject))
+        {
+            controller.SelectedFruits.Add(this.gameObject);
+            controller.SelectedInnerMatrials.Add(InnerMatrialAfterCut);
+           // index = controller.SelectedFruits.Count - 1;
+        }
+        else
+        {
+           // controller.SelectedFruits.RemoveAt(index);
+           // controller.SelectedInnerMatrials.RemoveAt(index);
+        }*/
     }
     
     void OnMouseExit()
     {
-       // controller.FruitSelect(this.gameObject);
+      /*  if (!controller.SelectedFruits.Contains(this.gameObject))
+        {
+            controller.SelectedFruits.Add(this.gameObject);
+            controller.SelectedInnerMatrials.Add(InnerMatrialAfterCut);
+            index = controller.SelectedFruits.Count - 1;
+        }
+        else
+        {
+            controller.SelectedFruits.RemoveAt(index);
+            controller.SelectedInnerMatrials.RemoveAt(index);
+        }*/
     }
 
     public float SignedVolumeOfTriangle(Vector3 p1, Vector3 p2, Vector3 p3)

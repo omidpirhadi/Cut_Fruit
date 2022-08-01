@@ -20,6 +20,7 @@ public class FruitPiece : MonoBehaviour
 
     private float Get_Z;
     private UI ui;
+    private int index = 0;
     void Start()
     {
 
@@ -79,12 +80,33 @@ public class FruitPiece : MonoBehaviour
     }
     void OnMouseEnter()
     {
-        controller.FruitSelect(this.gameObject, InnerMatrialAfterCut);
+        //controller.FruitSelect(this.gameObject, InnerMatrialAfterCut);
+       /* if (!controller.SelectedFruits.Contains(this.gameObject))
+        {
+            controller.SelectedFruits.Add(this.gameObject);
+            controller.SelectedInnerMatrials.Add(InnerMatrialAfterCut);
+           // index = controller.SelectedFruits.Count - 1;
+        }
+        else
+        {
+            //controller.SelectedFruits.RemoveAt(index);
+          //  controller.SelectedInnerMatrials.RemoveAt(index);
+        }*/
     }
 
     void OnMouseExit()
     {
-        // controller.FruitSelect(this.gameObject);
+       /* if (!controller.SelectedFruits.Contains(this.gameObject))
+        {
+            controller.SelectedFruits.Add(this.gameObject);
+            controller.SelectedInnerMatrials.Add(InnerMatrialAfterCut);
+             index = controller.SelectedFruits.Count - 1;
+        }
+        else
+        {
+            controller.SelectedFruits.RemoveAt(index);
+            controller.SelectedInnerMatrials.RemoveAt(index);
+        }*/
     }
     private void OnDestroy()
     {

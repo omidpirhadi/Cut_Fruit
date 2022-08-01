@@ -35,12 +35,12 @@ public class Cutter : MonoBehaviour
             {
                 ////****************************************************************Create Lower
                 var lower = hull.CreateLowerHull(objectToSlice, inner);
-                
+               
                 var colliderlower = lower.AddComponent<MeshCollider>();
                 colliderlower.convex = true;
                 colliderlower.material = physicMaterial;
                 colliderlower.convex = true;
-
+                
                 var lowerbody = lower.AddComponent<Rigidbody>();
                 lowerbody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
                 lowerbody.interpolation = RigidbodyInterpolation.Interpolate;
@@ -53,9 +53,11 @@ public class Cutter : MonoBehaviour
 
                 lower.layer = LayerMask.NameToLayer("Furit");
                 lower.name = furit.name;
+                lower.tag = "furit";
                 DOVirtual.DelayedCall(2, () =>
                 {
                     lowerbody.isKinematic = true;
+                    colliderlower.isTrigger = true;
                 });
                 ////****************************************************************Create Upper
                 var upper = hull.CreateUpperHull(objectToSlice, inner);
@@ -76,10 +78,11 @@ public class Cutter : MonoBehaviour
 
                 upper.layer = LayerMask.NameToLayer("Furit");
                 upper.name = furit.name;
-
+                upper.tag = "furit";
                 DOVirtual.DelayedCall(2, () =>
                 {
                     upperbody.isKinematic = true;
+                    colliderupper.isTrigger = true;
                 });
                 // objectToSlice.SetActive(false);
                 Destroy(objectToSlice);
