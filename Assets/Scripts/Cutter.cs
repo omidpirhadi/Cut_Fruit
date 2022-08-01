@@ -44,7 +44,7 @@ public class Cutter : MonoBehaviour
                 var lowerbody = lower.AddComponent<Rigidbody>();
                 lowerbody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
                 lowerbody.interpolation = RigidbodyInterpolation.Interpolate;
-                lowerbody.AddForce(Vector3.forward * 5, ForceMode.Impulse);
+                lowerbody.AddForce(-Plane.transform.up , ForceMode.Impulse);
 
                 var piece_lower = lower.AddComponent<FruitPiece>();
                 piece_lower.FuritTag = tag_furit;
@@ -58,6 +58,9 @@ public class Cutter : MonoBehaviour
                 {
                     lowerbody.isKinematic = true;
                     colliderlower.isTrigger = true;
+                   /* var pos = lower.transform.position;
+                    pos.z = 10;
+                    lower.transform.position = pos;*/
                 });
                 ////****************************************************************Create Upper
                 var upper = hull.CreateUpperHull(objectToSlice, inner);
@@ -69,7 +72,7 @@ public class Cutter : MonoBehaviour
 
                 upperbody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
                 upperbody.interpolation = RigidbodyInterpolation.Interpolate;
-                upperbody.AddForce(Vector3.forward * 5, ForceMode.Impulse);
+                upperbody.AddForce(Plane.transform.up , ForceMode.Impulse);
 
                 var piece_upper = upper.AddComponent<FruitPiece>();
                 piece_upper.FuritTag = tag_furit;
@@ -83,6 +86,9 @@ public class Cutter : MonoBehaviour
                 {
                     upperbody.isKinematic = true;
                     colliderupper.isTrigger = true;
+                  /*  var pos = upper.transform.position;
+                    pos.z = 10;
+                    upper.transform.position = pos;*/
                 });
                 // objectToSlice.SetActive(false);
                 Destroy(objectToSlice);
