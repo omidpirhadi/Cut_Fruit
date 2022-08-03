@@ -97,11 +97,14 @@ public class Cutter : MonoBehaviour
         }
         // Debug.Log("Cut");
     }
-    public void SetCutPlane(Vector3 point1, Vector3 point2)
+    public void SetCutPlane(Vector3 point1, Vector3 point2, float muliply = 1)
     {
         var dir = point2 - point1;
+        var dis = Vector3.Distance(point1, point2);
+        var initscale = this.Plane.localScale;
+        var newscale = (initscale * dis) * muliply;
         this.Plane.position = point1 + (dir / 2.0f);
-        this.Plane.localScale = new Vector3(1, 1, 1);
+        this.Plane.localScale = newscale;
         this.Plane.forward = dir;
     }
 
