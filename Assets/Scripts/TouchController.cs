@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using EzySlice;
-using GameAnalyticsSDK;
-using GoogleMobileAds.Api;
+//using GameAnalyticsSDK;
+//using GoogleMobileAds.Api;
 using UnityEngine.UI;
 public class TouchController : MonoBehaviour
 {
@@ -22,21 +22,7 @@ public class TouchController : MonoBehaviour
     private Vector3 pos_click;
     private void Awake()
     {
-        try
-        {
-            // OpenAdsApp();
-
-            MobileAds.Initialize(staus => { });
-            GameAnalytics.Initialize();
-
-            GameAnalytics.NewProgressionEvent(GAProgressionStatus.Complete, "12311232212", 12);
-            
-            Banner();
-        }
-        catch (Exception t)
-        {
-            log.text = t.Message;
-        }
+     
 
     }
     private void Start()
@@ -160,52 +146,5 @@ public class TouchController : MonoBehaviour
     }
 
    // 
-    private BannerView bannertop;
-    private void Banner()
-    {
-#if UNITY_ANDROID
-        string adUnitId = "ca-app-pub-1645141176802491/2317938669";
-#elif UNITY_IPHONE
-string adUnitId = "Your interstitial ID for IOS";
-#else
-string adUnitId = "unexpected_platform";
-#endif
-        bannertop = new BannerView(adUnitId, AdSize.Banner, AdPosition.Top);
-        AdRequest req = new AdRequest.Builder().Build();
-        bannertop.LoadAd(req);
-        bannertop.OnAdOpening += Bannertop_OnAdOpening;
-        bannertop.OnAdFailedToLoad += Bannertop_OnAdFailedToLoad;
-        log.text = "Relased";
-    }
 
-    private void Bannertop_OnAdFailedToLoad(object sender, AdFailedToLoadEventArgs e)
-    {
-        Debug.Log("");
-        log.text = "Relased Error";
-    }
-
-    private void Bannertop_OnAdOpening(object sender, System.EventArgs e)
-    {
-        log.text = "Relased Open";
-    }
-    private AppOpenAd appOpenAds;
-   
-    private void OpenAdsApp()
-    {
-        AdRequest req = new AdRequest.Builder().Build();
-        
-        MobileAds.Initialize(status => { });
-        AppOpenAd.LoadAd("ca-app-pub-1645141176802491/1394086848", ScreenOrientation.Portrait, req, (ad, error) => {
-
-            if(error!= null)
-            {
-                Debug.Log("Ads Open In App Error" + error.LoadAdError.GetMessage());
-            }
-            this.appOpenAds = ad;
-            
-        });
-        appOpenAds.Show();
-
-    }
-    
 }
