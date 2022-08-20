@@ -104,7 +104,7 @@ public class Cutter : MonoBehaviour
         var initscale = this.Plane.localScale;
         var newscale = (initscale * dis) * muliply;
         this.Plane.position = point1 + (dir / 2.0f);
-        this.Plane.localScale = newscale;
+        this.Plane.localScale = Vector3.one;
         this.Plane.forward = dir;
     }
 

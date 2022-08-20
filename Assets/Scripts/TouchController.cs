@@ -71,7 +71,7 @@ public class TouchController : MonoBehaviour
                     SelectedFruits.Clear();
                     SelectedInnerMatrials.Clear();
                     pos_click = Camera.main.ScreenToWorldPoint(touch.position);
-                    pos_click.z = 10.0f;
+                   // pos_click.z = 10.0f;
                     point1 = pos_click;
                     line.SetPosition(0, point1);
                     line.SetPosition(1, point1);
@@ -96,7 +96,7 @@ public class TouchController : MonoBehaviour
                 {
                     
                     pos_click = Camera.main.ScreenToWorldPoint(touch.position);
-                    pos_click.z = 10.0f;
+                   // pos_click.z = 10.0f;
                     point2 = pos_click;
                     selector.RayFire(point1, point2);
 
