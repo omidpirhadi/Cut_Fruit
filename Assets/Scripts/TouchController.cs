@@ -11,10 +11,12 @@ public class TouchController : MonoBehaviour
     public Text log;
     public Selector selector;
     public bool IsReadyForCut = true;
+    public LayerMask RayCastLayar;
     public LayerMask MaskFruit;
     private Cutter cutter;
     private LineRenderer line;
-
+    private RaycastHit hit;
+    private Ray ray;
   [SerializeField]  public List<GameObject> SelectedFruits;
    [SerializeField] public List<Material> SelectedInnerMatrials;
     private Vector3 point1;
@@ -61,53 +63,59 @@ public class TouchController : MonoBehaviour
 
            
             var touch = Input.GetTouch(0);
-            
-            if(touch.phase == TouchPhase.Began)
+
+            if (touch.phase == TouchPhase.Began)
             {
                 if (IsReadyForCut)
                 {
-                    
-                    line.positionCount = 2;
-
                     SelectedFruits.Clear();
                     SelectedInnerMatrials.Clear();
-                    pos_click = Camera.main.ScreenToWorldPoint(touch.position);
-                   // pos_click.z = 10.0f;
-                    point1 = pos_click;
-                    line.SetPosition(0, point1);
-                    line.SetPosition(1, point1);
+                    line.positionCount = 2;
+                    ray = Camera.main.ScreenPointToRay(touch.position);
+                    if (Physics.Raycast(ray, out hit, 10, RayCastLayar))
+                    {
+
+                        point1 = hit.point;
+                        line.SetPosition(0, point1);
+                        line.SetPosition(1, point1);
+                    }
                 }
             }
-            else if(touch.phase == TouchPhase.Moved)
+            else if (touch.phase == TouchPhase.Moved)
             {
 
                 if (IsReadyForCut)
                 {
-                    pos_click = Camera.main.ScreenToWorldPoint(touch.position);
-                    pos_click.z = 11.0f;
-                    point2 = pos_click;
+                    ray = Camera.main.ScreenPointToRay(touch.position);
+                    if (Physics.Raycast(ray, out hit, 10, RayCastLayar))
+                    {
 
-                  
-                    line.SetPosition(1, point2);
+                        point2 = hit.point;
+                        line.SetPosition(0, point1);
+                        line.SetPosition(1, point2);
+                        Debug.Log(hit.collider.name);
+                    }
                 }
             }
             else if (touch.phase == TouchPhase.Ended)
             {
                 if (IsReadyForCut)
                 {
-                    
-                    pos_click = Camera.main.ScreenToWorldPoint(touch.position);
-                   // pos_click.z = 10.0f;
-                    point2 = pos_click;
-                    selector.RayFire(point1, point2);
+
+                    ray = Camera.main.ScreenPointToRay(touch.position);
+                    if (Physics.Raycast(ray, out hit, 10, RayCastLayar))
+                    {
+                        // pos_click.z = 10.0f;
+                        point2 = hit.point;
+                        selector.RayFire(point1, point2);
 
 
 
-                    cutter.SetCutPlane(point1, point2, 1f);
-                //    CutFruits();
-                    line.positionCount = 0;
-                   
+                        cutter.SetCutPlane(point1, point2, 1f);
+                          CutFruits();
+                        line.positionCount = 0;
 
+                    }
                 }
             }
         }

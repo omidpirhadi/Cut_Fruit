@@ -44,7 +44,7 @@ public class Cutter : MonoBehaviour
                 var lowerbody = lower.AddComponent<Rigidbody>();
                 lowerbody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
                 lowerbody.interpolation = RigidbodyInterpolation.Interpolate;
-                lowerbody.AddForce(-Plane.transform.up , ForceMode.Impulse);
+                lowerbody.AddForce(-Plane.transform.up*0.1f , ForceMode.Impulse);
 
                 var piece_lower = lower.AddComponent<FruitPiece>();
                 piece_lower.FuritTag = tag_furit;
@@ -72,7 +72,7 @@ public class Cutter : MonoBehaviour
 
                 upperbody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
                 upperbody.interpolation = RigidbodyInterpolation.Interpolate;
-                upperbody.AddForce(Plane.transform.up , ForceMode.Impulse);
+                upperbody.AddForce(Plane.transform.up*0.1f , ForceMode.Impulse);
 
                 var piece_upper = upper.AddComponent<FruitPiece>();
                 piece_upper.FuritTag = tag_furit;
@@ -106,6 +106,7 @@ public class Cutter : MonoBehaviour
         this.Plane.position = point1 + (dir / 2.0f);
         this.Plane.localScale = Vector3.one;
         this.Plane.forward = dir;
+        this.Plane.eulerAngles = new Vector3(this.Plane.eulerAngles.x, this.Plane.eulerAngles.y, 90);
     }
 
     private SlicedHull Slice( GameObject furit, Vector3 planeWorldPosition, Vector3 planeWorldDirection, Material mat)
