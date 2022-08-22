@@ -66,6 +66,7 @@ public class TouchController : MonoBehaviour
             {
                 if (IsReadyForCut)
                 {
+                    
                     line.positionCount = 2;
 
                     SelectedFruits.Clear();
