@@ -9,11 +9,12 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: 13 - Default 1
   m_Shader: {fileID: 4800000, guid: 851f2d9f112af2f4390a3d702e3e6553, type: 3}
-  m_ShaderKeywords: _FRESNELHIGHLIGHTS_ON _MK_ALBEDO_MAP _MK_ARTISTIC_PROJECTION_SCREEN_SPACE
-    _MK_DETAIL_BLEND_MIX _MK_ENVIRONMENT_REFLECTIONS_AMBIENT _MK_FRESNEL_HIGHLIGHTS
-    _MK_OUTLINE_HULL_CLIP _MK_RECEIVE_SHADOWS _MK_RIM_DEFAULT _MK_SPECULAR_ISOTROPIC
-    _MK_WRAPPED_DIFFUSE _RECEIVESHADOWS_ON _WRAPPEDLIGHTING_ON
-  m_LightmapFlags: 4
+  m_ShaderKeywords: _FRESNELHIGHLIGHTS_ON _MK_ALBEDO_MAP _MK_ARTISTIC_SKETCH _MK_COLOR_GRADING_ALBEDO
+    _MK_DETAIL_BLEND_MIX _MK_DISSOLVE_BORDER_RAMP _MK_ENVIRONMENT_REFLECTIONS_AMBIENT
+    _MK_FRESNEL_HIGHLIGHTS _MK_LIGHT_BANDED _MK_OUTLINE_HULL_CLIP _MK_RECEIVE_SHADOWS
+    _MK_RIM_DEFAULT _MK_SPECULAR_ISOTROPIC _MK_WRAPPED_DIFFUSE _RECEIVESHADOWS_ON
+    _WRAPPEDLIGHTING_ON
+  m_LightmapFlags: 1
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: 2000
@@ -165,15 +166,15 @@ Material:
     - _AlphaClipping: 0
     - _AlphaCutoff: 0.5
     - _Anisotropy: 0
-    - _Artistic: 0
+    - _Artistic: 3
     - _ArtisticFrequency: 1
-    - _ArtisticProjection: 1
+    - _ArtisticProjection: 0
     - _Blend: 0
     - _BlendDst: 0
     - _BlendSrc: 1
     - _Brightness: 1
     - _BumpScale: 1
-    - _ColorGrading: 0
+    - _ColorGrading: 1
     - _Contrast: 1
     - _Cutoff: 0.5
     - _DetailBlend: 0
@@ -181,9 +182,9 @@ Material:
     - _DetailNormalMapIntensity: 1
     - _DetailNormalMapScale: 1
     - _Diffuse: 0
-    - _DiffuseSmoothness: 0
+    - _DiffuseSmoothness: 0.141
     - _DiffuseThresholdOffset: 0.25
-    - _Dissolve: 0
+    - _Dissolve: 3
     - _DissolveAmount: 0.5
     - _DissolveBorderSize: 0.25
     - _DissolveMapScale: 1
@@ -204,10 +205,10 @@ Material:
     - _IridescenceSize: 3.52
     - _IridescenceSmoothness: 0.5
     - _IridescenceThresholdOffset: 0
-    - _Light: 0
-    - _LightBands: 4
-    - _LightBandsScale: 0.5
-    - _LightThreshold: 0.257
+    - _Light: 2
+    - _LightBands: 3
+    - _LightBandsScale: 1
+    - _LightThreshold: 0.212
     - _LightTransmission: 0
     - _LightTransmissionDistortion: 0.25
     - _LightTransmissionIntensity: 1
@@ -232,17 +233,17 @@ Material:
     - _RenderPriority: 0
     - _Rim: 1
     - _RimSize: 5
-    - _RimSmoothness: 0.5
+    - _RimSmoothness: 1
     - _RimThresholdOffset: 0.25
     - _Roughness: 0.5
     - _Saturation: 1
     - _SketchMapScale: 1
-    - _Smoothness: 1
+    - _Smoothness: 0.589
     - _SmoothnessTextureChannel: 0
     - _Specular: 1
     - _SpecularHighlights: 1
     - _SpecularIntensity: 1
-    - _SpecularSmoothness: 0
+    - _SpecularSmoothness: 0.582
     - _SpecularThresholdOffset: 0.25
     - _SrcBlend: 1
     - _Stencil: 1
@@ -271,7 +272,7 @@ Material:
     - _DissolveBorderColor: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _GoochBrightColor: {r: 1, g: 1, b: 1, a: 1}
-    - _GoochDarkColor: {r: 0, g: 0, b: 0, a: 1}
+    - _GoochDarkColor: {r: 0.3018868, g: 0.3018868, b: 0.3018868, a: 1}
     - _IridescenceColor: {r: 1, g: 1, b: 1, a: 0.5}
     - _LightTransmissionColor: {r: 1, g: 0.65, b: 0, a: 1}
     - _OutlineColor: {r: 1, g: 0, b: 0, a: 1}

@@ -14,6 +14,7 @@ public class FuritSliceManager : MonoBehaviour
         
         cut = GetComponent<Cutter>();
         cut.OnCut += Cut_OnCut;
+        
     }
 
    
@@ -26,8 +27,9 @@ public class FuritSliceManager : MonoBehaviour
         foreach (var piece in pieces)
         {
             AddPiecesFuritToListAfterSclice(piece.FuritTag, piece.Volume);
+            Debug.Log("CUTTtTTT" + piece.FuritTag);
         }
-       // Debug.Log("CUTTtTTT" + pieces.Length);
+       
     }
 
     // Update is called once per frame
@@ -38,6 +40,7 @@ public class FuritSliceManager : MonoBehaviour
     public void AddFuritOnStartGame(string tag , float  vloume)
     {
        
+        
             FuritsInGame.Furits.Add(new FuritData { Tag = tag, TotalVolume = vloume, slicedPieces = new List<SlicedPieceData>() });
         
     }

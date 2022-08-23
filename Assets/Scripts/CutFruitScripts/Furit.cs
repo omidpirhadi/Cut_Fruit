@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(MeshCollider),typeof(Rigidbody))]
 public class Furit : MonoBehaviour
 {
     public string FuritTag;   
@@ -14,7 +15,7 @@ public class Furit : MonoBehaviour
     public Material InnerMatrialAfterCut;
     //private Material default_matrial;
     private TouchController controller;
-   // private FuritSliceManager furitSliceManager;
+   private FuritSliceManager furitSliceManager;
     private Mesh meshFilter;
 
     private float Get_Z;
@@ -32,11 +33,12 @@ public class Furit : MonoBehaviour
         Volume = VolumeOfMesh(meshFilter);
         controller = FindObjectOfType<TouchController>();
         renderer = GetComponent<MeshRenderer>();
-        // furitSliceManager = FindObjectOfType<FuritSliceManager>();
+        furitSliceManager = FindObjectOfType<FuritSliceManager>();
 
 
-        //  furitSliceManager.AddFuritOnStartGame(FuritTag, Volume);
+          furitSliceManager.AddFuritOnStartGame(FuritTag, Volume);
 
+        GetComponent<MeshCollider>().convex = true;
         //  default_matrial = GetComponent<MeshRenderer>().materials[0];
 
     }

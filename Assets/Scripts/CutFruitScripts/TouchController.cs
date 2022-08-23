@@ -74,11 +74,13 @@ public class TouchController : MonoBehaviour
                     ray = Camera.main.ScreenPointToRay(touch.position);
                     if (Physics.Raycast(ray, out hit, 10, RayCastLayar))
                     {
-
+                        
                         point1 = hit.point;
                         line.SetPosition(0, point1);
                         line.SetPosition(1, point1);
+                        Debug.Log(hit.collider.name);
                     }
+                  
                 }
             }
             else if (touch.phase == TouchPhase.Moved)
@@ -112,7 +114,7 @@ public class TouchController : MonoBehaviour
 
 
                         cutter.SetCutPlane(point1, point2, 1f);
-                          CutFruits();
+                        CutFruits();
                         line.positionCount = 0;
 
                     }
