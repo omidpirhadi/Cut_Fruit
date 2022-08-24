@@ -78,7 +78,7 @@ public class TouchController : MonoBehaviour
                         point1 = hit.point;
                         line.SetPosition(0, point1);
                         line.SetPosition(1, point1);
-                        Debug.Log(hit.collider.name);
+                      //  Debug.Log(hit.collider.name);
                     }
                   
                 }
@@ -95,7 +95,7 @@ public class TouchController : MonoBehaviour
                         point2 = hit.point;
                         line.SetPosition(0, point1);
                         line.SetPosition(1, point2);
-                        Debug.Log(hit.collider.name);
+                      //  Debug.Log(hit.collider.name);
                     }
                 }
             }

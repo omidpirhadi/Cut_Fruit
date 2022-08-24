@@ -10,107 +10,73 @@ using Diaco.ImageContainerTool;
 public class ShopperSystemController : MonoBehaviour
 {
 
-    
-    public int ShopperCount = 2;
-    [SerializeField] public Shopper ShopperLeft;
-    [SerializeField] public Shopper ShopperRight;
+
+
+    public ShopperIndicatorUI shopperIndicatorUI;
+    public RectTransform Contents;
     public ImageContainer FruitsImage_Container;
-    [SerializeField] public string[] Fruits = new string[4] { "Apple ", "Orange ", "Lemon ", "Watermelon" };
-    public List<int> PercentFruits = new List<int> { 10, 20, 30, 40, 50, 60, 70, 80, 90 };
-    
+    public string[] Fruits = new string[4] { "Apple ", "Orange ", "Lemon ", "Watermelon" };
+    private  List<int> PercentFruits = new List<int> { 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95 };
 
-
+    private List<ShopperIndicatorUI> list_indicatorShopper = new List<ShopperIndicatorUI>();
+    private int PerviousChoose = 0;
     public void Start()
     {
         ImageContainer.InitializeTexture();
       ///  ServiceShopper();
     }
-    [Button("ServiceShopper")]
-    public void ServiceShopper()
+
+
+    [Button("PercentFruit")]
+    public void PercentOfFruit(int shopperCount)
     {
-        
-        var nameleft = SelectFruit();
-        var nameright = SelectFruit();
+        ClearShopperUI();
+        List<int> tempOfchoose = new List<int>(shopperCount);
+        var fruit_image = SelectFruit();
+        Sprite fruit_icon = FruitsImage_Container.LoadImage(fruit_image);
 
-      //  Debug.Log(nameleft+"..........." + nameright);
+        this.PerviousChoose = 0;
+        for (int i = shopperCount; i > 0; i--)
+        {
+            var remining = PercentFruits[PercentFruits.Count - 1] - this.PerviousChoose;
+            var indexPreviousChoose = PercentFruits.IndexOf(remining);
 
-        var image_left = FruitsImage_Container.LoadImage(nameleft);
+            var list_choose = PercentFruits.GetRange(0, (indexPreviousChoose) - (i - 1));
+            var choose_rand = UnityEngine.Random.Range(0, list_choose.Count);
 
-        ShopperLeft.set(nameleft, PercentFruit(), image_left);
+            var person_choose = list_choose[choose_rand];
 
-        var image_right = FruitsImage_Container.LoadImage(nameright);
+            this.PerviousChoose += person_choose;
 
-        ShopperRight.set(nameright, PercentFruit(), image_right);
+            tempOfchoose.Add(person_choose);
+        }
+        tempOfchoose.ForEach(e =>
+        {
+            SpwanShopper(null, fruit_icon, e);
+
+        });
+        tempOfchoose.Clear();
     }
     private string SelectFruit()
     {
         int rand = UnityEngine.Random.Range(0, Fruits.Length);
-      //  Debug.Log(Fruits[rand]);
+        //  Debug.Log(Fruits[rand]);
         return Fruits[rand];
-        
+
     }
-    private int  PercentFruit()
+    private void SpwanShopper(Sprite profile, Sprite iconFruit, int percent)
     {
-        int rand = UnityEngine.Random.Range(0, PercentFruits.Count );
-       // Debug.Log(PercentFruits[rand]);
-        return PercentFruits[rand];
+        var shopper = Instantiate(shopperIndicatorUI, Contents);
+        shopper.Set(null, iconFruit, percent);
+        list_indicatorShopper.Add(shopper);
     }
-    [Button("USE")]
-    public void Use(int shopperCount)
+    private void ClearShopperUI()
     {
-        int tempshopperCount = shopperCount;
-        List<int> percent = new List<int>();
-        List<int> temparray = new List<int>(PercentFruits);
-        for (int i = 0; i < shopperCount; i++)
-        {
-            
-            var t = PercentFruit2(temparray, tempshopperCount);
-            percent.Add(t.Item1);
-            temparray.Clear();
-            temparray.InsertRange(0, t.Item2);
-            tempshopperCount--;
-            
-        }
-      
-       
+        list_indicatorShopper.ForEach(e => {
+            Destroy(e.gameObject);
+        });
+        list_indicatorShopper.Clear();
     }
-    private Tuple<int , List<int>> PercentFruit2(List<int> precents ,  int shopperCount )
-    {
-        var len = precents.Count;// 9 
-        var max = precents[len - 1];// 90
-
-        /*
-        //////////////////////////// all numbers
-        var delta = shopperCount * precents[0];
-        var endRand = 0;
-        for (var i = 0; i< precents.Count; i++)
-        {
-            if(precents[i]<= max - delta)
-            {
-                endRand = i;
-            }
-        }
-        int rand = UnityEngine.Random.Range(0, endRand + 1); /// (0,<rang_chose)
-        ////////////////////
-        */
-        // just 10 numbers
-        var range_chose = (len - shopperCount) + 1;/// (9-n)+1
-        int rand = UnityEngine.Random.Range(0, range_chose); /// (0,<rang_chose)
-        
-
-        List<int> temparray = new List<int>();
-        //Debug.Log("--------- rand:" + precents[rand]);
-        for (int i = 0; i < precents.Count; i++)
-        {
-            if (precents[i] <= max - precents[rand])
-                temparray.Add(precents[i]);
-        }
-
-
-        Debug.Log("Shopper------------------------" + precents[rand]);
-        return new Tuple<int, List<int>>(precents[rand], temparray);
-    }
-
 }
 [Serializable]
 public struct Shopper
