@@ -14,15 +14,17 @@ public class ShopperSystemController : MonoBehaviour
 
     public ShopperIndicatorUI shopperIndicatorUI;
     public RectTransform Contents;
-    public ImageContainer FruitsImage_Container;
-    public string[] Fruits = new string[4] { "Apple ", "Orange ", "Lemon ", "Watermelon" };
+    public int MaxShopperCount;
+    public Transform FruitSpwanPlace;
+    [SerializeField] public List<FruitInShop> fruitInShops = new List<FruitInShop>();
     private  List<int> PercentFruits = new List<int> { 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95 };
 
     private List<ShopperIndicatorUI> list_indicatorShopper = new List<ShopperIndicatorUI>();
     private int PerviousChoose = 0;
     public void Start()
     {
-        ImageContainer.InitializeTexture();
+        var rand_Shopper_Count = UnityEngine.Random.Range(1, MaxShopperCount + 1);
+        PercentOfFruit(rand_Shopper_Count);
       ///  ServiceShopper();
     }
 
@@ -32,8 +34,9 @@ public class ShopperSystemController : MonoBehaviour
     {
         ClearShopperUI();
         List<int> tempOfchoose = new List<int>(shopperCount);
-        var fruit_image = SelectFruit();
-        Sprite fruit_icon = FruitsImage_Container.LoadImage(fruit_image);
+        var fruit_spwaned_data = SpawnFruit();
+        var namefruit = fruit_spwaned_data.Item1;
+        Sprite fruit_icon = fruit_spwaned_data.Item2;
 
         this.PerviousChoose = 0;
         for (int i = shopperCount; i > 0; i--)
@@ -50,18 +53,20 @@ public class ShopperSystemController : MonoBehaviour
 
             tempOfchoose.Add(person_choose);
         }
-        tempOfchoose.ForEach(e =>
+
+        var order = tempOfchoose.OrderBy(X => X).ToList();
+        order.ForEach(e =>
         {
             SpwanShopper(null, fruit_icon, e);
 
         });
         tempOfchoose.Clear();
     }
-    private string SelectFruit()
+    private Tuple<string, Sprite> SpawnFruit()
     {
-        int rand = UnityEngine.Random.Range(0, Fruits.Length);
-        //  Debug.Log(Fruits[rand]);
-        return Fruits[rand];
+        int rand = UnityEngine.Random.Range(0, fruitInShops.Count);
+        var fruit = Instantiate(fruitInShops[rand].prefab, FruitSpwanPlace.position, Quaternion.identity);
+        return new Tuple<string, Sprite>(fruitInShops[rand].Name, fruitInShops[rand].logo);
 
     }
     private void SpwanShopper(Sprite profile, Sprite iconFruit, int percent)
@@ -70,6 +75,7 @@ public class ShopperSystemController : MonoBehaviour
         shopper.Set(null, iconFruit, percent);
         list_indicatorShopper.Add(shopper);
     }
+
     private void ClearShopperUI()
     {
         list_indicatorShopper.ForEach(e => {
@@ -86,8 +92,6 @@ public struct Shopper
     public TMPro.TMP_Text PrecentFruit_text;
     public Image ImageFruit_image;
     public void set(string f, int p , Sprite image)
-
-
     {
         this.Fruit = f;
         this.PercentFruit = p;
@@ -95,4 +99,15 @@ public struct Shopper
         PrecentFruit_text.text = "%"+p;
         
     }
+}
+[Serializable]
+public struct FruitInShop
+{
+    public string Id;
+   
+    public string Name;
+    public float Vloume;
+    public GameObject prefab;
+    public Sprite logo;
+
 }

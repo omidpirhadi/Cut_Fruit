@@ -17,21 +17,21 @@ public class TouchController : MonoBehaviour
     private LineRenderer line;
     private RaycastHit hit;
     private Ray ray;
-  [SerializeField]  public List<GameObject> SelectedFruits;
-   [SerializeField] public List<Material> SelectedInnerMatrials;
+    [SerializeField] public List<GameObject> SelectedFruits;
+    [SerializeField] public List<Material> SelectedInnerMatrials;
     private Vector3 point1;
     private Vector3 point2;
     private Vector3 pos_click;
     private void Awake()
     {
-     
+
 
     }
     private void Start()
     {
-       
 
-        
+
+
 
         FindObjectOfType<UI>().ChangeMode += FuritSliceManager_ChangeMode;
         cutter = GetComponent<Cutter>();
@@ -40,7 +40,7 @@ public class TouchController : MonoBehaviour
         SelectedInnerMatrials = new List<Material>();
         line.positionCount = 2;
     }
-    private void FuritSliceManager_ChangeMode(bool cut ,  bool pick)
+    private void FuritSliceManager_ChangeMode(bool cut, bool pick)
     {
         IsReadyForCut = cut;
     }
@@ -52,16 +52,16 @@ public class TouchController : MonoBehaviour
     {
         Gizmos.color = Color.green;
         Gizmos.DrawLine(point1, point2);
-      //  DebugExtension.DrawCapsule(point1, point2, Color.green, 0.5f);
+        //  DebugExtension.DrawCapsule(point1, point2, Color.green, 0.5f);
 
-       
+
     }
     private void Touch()
     {
-        if(Input.touchCount>0)
+        if (Input.touchCount > 0)
         {
 
-           
+
             var touch = Input.GetTouch(0);
 
             if (touch.phase == TouchPhase.Began)
@@ -74,13 +74,13 @@ public class TouchController : MonoBehaviour
                     ray = Camera.main.ScreenPointToRay(touch.position);
                     if (Physics.Raycast(ray, out hit, 10, RayCastLayar))
                     {
-                        
+
                         point1 = hit.point;
                         line.SetPosition(0, point1);
                         line.SetPosition(1, point1);
-                      //  Debug.Log(hit.collider.name);
+                        //  Debug.Log(hit.collider.name);
                     }
-                  
+
                 }
             }
             else if (touch.phase == TouchPhase.Moved)
@@ -95,7 +95,7 @@ public class TouchController : MonoBehaviour
                         point2 = hit.point;
                         line.SetPosition(0, point1);
                         line.SetPosition(1, point2);
-                      //  Debug.Log(hit.collider.name);
+                        //  Debug.Log(hit.collider.name);
                     }
                 }
             }
@@ -121,7 +121,7 @@ public class TouchController : MonoBehaviour
                 }
             }
         }
-        
+
     }
     public void CutFruits()
     {
@@ -134,7 +134,7 @@ public class TouchController : MonoBehaviour
     }
     public void FruitSelect(GameObject fruit)
     {
-        if (!SelectedFruits.Contains(fruit) )
+        if (!SelectedFruits.Contains(fruit))
         {
             SelectedFruits.Add(fruit);
             if (fruit.GetComponent<Furit>())
@@ -147,15 +147,15 @@ public class TouchController : MonoBehaviour
             }
             Debug.Log($"Add Furit :{fruit} ");
         }
-       /* else
-        {
-            SelectedFruits.Remove(fruit);
-            SelectedInnerMatrials.Remove(innerMatrialAfterCut);
-            Debug.Log($"Removed Furit :{fruit} Matrial{ innerMatrialAfterCut.name}");
+        /* else
+         {
+             SelectedFruits.Remove(fruit);
+             SelectedInnerMatrials.Remove(innerMatrialAfterCut);
+             Debug.Log($"Removed Furit :{fruit} Matrial{ innerMatrialAfterCut.name}");
 
-        }*/
+         }*/
     }
 
-   // 
+    // 
 
 }

@@ -54,7 +54,7 @@ public class FruitPiece : MonoBehaviour
 
             var pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             var offset = transform.position - transform.TransformPoint(GetComponent<MeshFilter>().mesh.bounds.center);
-            var tt = new Vector3(pos.x, pos.y, transform.position.z) + offset;
+            var tt = new Vector3(pos.x, transform.position.y, pos.y) + offset;
             tt.z = Get_Z;
             this.transform.position = tt;
         }

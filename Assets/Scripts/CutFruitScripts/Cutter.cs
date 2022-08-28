@@ -106,7 +106,7 @@ public class Cutter : MonoBehaviour
         this.Plane.position = point1 + (dir / 2.0f);
         this.Plane.localScale = Vector3.one;
         this.Plane.forward = dir;
-        this.Plane.eulerAngles = new Vector3(this.Plane.eulerAngles.x, this.Plane.eulerAngles.y, this.Plane.eulerAngles.z);
+        this.Plane.eulerAngles = new Vector3(this.Plane.eulerAngles.x, this.Plane.eulerAngles.y, 90);
     }
 
     private SlicedHull Slice( GameObject furit, Vector3 planeWorldPosition, Vector3 planeWorldDirection, Material mat)

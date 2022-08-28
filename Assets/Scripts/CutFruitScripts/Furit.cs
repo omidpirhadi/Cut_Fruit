@@ -23,6 +23,7 @@ public class Furit : MonoBehaviour
     private UI ui;
     private int index = 0;
     //private List<Material> matrials_Temp;
+
     void Start()
     {
 
@@ -35,7 +36,7 @@ public class Furit : MonoBehaviour
         renderer = GetComponent<MeshRenderer>();
         furitSliceManager = FindObjectOfType<FuritSliceManager>();
 
-
+        FuritTag = this.gameObject.name;
           furitSliceManager.AddFuritOnStartGame(FuritTag, Volume);
 
         GetComponent<MeshCollider>().convex = true;
@@ -69,8 +70,8 @@ public class Furit : MonoBehaviour
 
             var pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             var offset = transform.position - transform.TransformPoint(GetComponent<MeshFilter>().mesh.bounds.center);
-            var tt = new Vector3(pos.x, pos.y, transform.position.z) + offset;
-            tt.z = Get_Z;
+            var tt = new Vector3(pos.x, transform.position.y, pos.y) + offset;
+           // tt.z = Get_Z;
             this.transform.position = tt;
         }
     }
