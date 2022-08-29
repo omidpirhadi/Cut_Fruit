@@ -19,13 +19,16 @@ public class Cutter : MonoBehaviour
     public void Cut(GameObject furit , Material inner)
     {
         string tag_furit = "";
+        float totalvolume = 0;
         if (furit.GetComponent<Furit>())
         {
             tag_furit = furit.GetComponent<Furit>().FuritTag;
+            totalvolume = furit.GetComponent<Furit>().Volume;
         }
         else
         {
             tag_furit = furit.GetComponent<FruitPiece>().FuritTag;
+            totalvolume = furit.GetComponent<FruitPiece>().TotalVolume;
 
         }
         if (furit != null)
@@ -33,6 +36,7 @@ public class Cutter : MonoBehaviour
             var hull = Slice(furit, Plane.transform.position, Plane.transform.up, inner);
             if (objectToSlice != null && hull !=null)
             {
+        
                 ////****************************************************************Create Lower
                 var lower = hull.CreateLowerHull(objectToSlice, inner);
                
@@ -49,6 +53,7 @@ public class Cutter : MonoBehaviour
                 var piece_lower = lower.AddComponent<FruitPiece>();
                 piece_lower.FuritTag = tag_furit;
                 piece_lower.InnerMatrialAfterCut = inner;
+                piece_lower.TotalVolume = totalvolume;
                 //piece_lower.hightlighter = hightlight_matrial;
 
                 lower.layer = LayerMask.NameToLayer("Furit");
@@ -57,10 +62,8 @@ public class Cutter : MonoBehaviour
                 DOVirtual.DelayedCall(2, () =>
                 {
                     lowerbody.isKinematic = true;
-                    colliderlower.isTrigger = true;
-                   /* var pos = lower.transform.position;
-                    pos.z = 10;
-                    lower.transform.position = pos;*/
+                  //  colliderlower.isTrigger = true;
+ 
                 });
                 ////****************************************************************Create Upper
                 var upper = hull.CreateUpperHull(objectToSlice, inner);
@@ -77,6 +80,8 @@ public class Cutter : MonoBehaviour
                 var piece_upper = upper.AddComponent<FruitPiece>();
                 piece_upper.FuritTag = tag_furit;
                 piece_upper.InnerMatrialAfterCut = inner;
+                piece_upper.TotalVolume = totalvolume;
+              
                 // piece_upper.hightlighter = hightlight_matrial;
 
                 upper.layer = LayerMask.NameToLayer("Furit");
@@ -85,10 +90,8 @@ public class Cutter : MonoBehaviour
                 DOVirtual.DelayedCall(2, () =>
                 {
                     upperbody.isKinematic = true;
-                    colliderupper.isTrigger = true;
-                  /*  var pos = upper.transform.position;
-                    pos.z = 10;
-                    upper.transform.position = pos;*/
+                   // colliderupper.isTrigger = true;
+
                 });
                 // objectToSlice.SetActive(false);
                 Destroy(objectToSlice);

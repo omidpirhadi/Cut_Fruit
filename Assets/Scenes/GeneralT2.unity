@@ -2009,7 +2009,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 244434274}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -23.215, y: 1.653, z: -3.863}
+  m_LocalPosition: {x: -23.215, y: 1.91, z: -3.937}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -3135,7 +3135,7 @@ PrefabInstance:
     - target: {fileID: 9085151144378128417, guid: ccf48ccc42bd9204bbc093c790aaddac,
         type: 3}
       propertyPath: MaxShopperCount
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 9085151144378128418, guid: ccf48ccc42bd9204bbc093c790aaddac,
         type: 3}
@@ -6638,7 +6638,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 776071318}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -23.21, y: 1.653, z: -6.144}
+  m_LocalPosition: {x: -23.21, y: 1.973, z: -5.375}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -7129,7 +7129,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 851020860}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -22.214, y: 1.437, z: -4.803}
+  m_LocalPosition: {x: -22.214, y: 1.958, z: -4.803}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -11615,7 +11615,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1408829449}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -24.077, y: 1.411, z: -4.659}
+  m_LocalPosition: {x: -24.077, y: 1.873, z: -4.659}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -15082,10 +15082,10 @@ RectTransform:
   m_Father: {fileID: 5301478106375298267}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 0.84400004}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -0.0000076293945, y: 0}
+  m_SizeDelta: {x: 0, y: 0.08154297}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1869966402
 MonoBehaviour:
@@ -20292,6 +20292,7 @@ GameObject:
   - component: {fileID: 5301478106234985638}
   - component: {fileID: 5301478106234985637}
   - component: {fileID: 5301478106234985636}
+  - component: {fileID: 5301478106234985640}
   m_Layer: 5
   m_Name: CanvasUIShop
   m_TagString: Untagged
@@ -20383,6 +20384,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &5301478106234985640
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5301478106234985635}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ff387f4f227d5546a2b14ddec272982, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  FruitSliceRefrence: {fileID: 0}
+  FuritPercent: 0
 --- !u!1 &5301478106375298266
 GameObject:
   m_ObjectHideFlags: 0
@@ -20394,6 +20409,7 @@ GameObject:
   - component: {fileID: 5301478106375298267}
   - component: {fileID: 5301478106375298269}
   - component: {fileID: 5301478106375298268}
+  - component: {fileID: 5301478106375298270}
   m_Layer: 5
   m_Name: Shopper_Panel
   m_TagString: Untagged
@@ -20417,10 +20433,10 @@ RectTransform:
   m_Father: {fileID: 5301478106234985639}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.86146}
+  m_AnchorMin: {x: 0, y: 0.061330043}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.0014648438}
-  m_SizeDelta: {x: 0, y: -0.0029296875}
+  m_AnchoredPosition: {x: 0, y: -1.7800293}
+  m_SizeDelta: {x: 0, y: 3.5454712}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &5301478106375298268
 MonoBehaviour:
@@ -20436,8 +20452,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0}
-  m_RaycastTarget: 0
-  m_Maskable: 1
+  m_RaycastTarget: 1
+  m_Maskable: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -20459,6 +20475,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5301478106375298266}
   m_CullTransparentMesh: 0
+--- !u!114 &5301478106375298270
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5301478106375298266}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ff387f4f227d5546a2b14ddec272982, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  FruitSliceRefrence: {fileID: 0}
+  FuritPercent: 0
 --- !u!222 &6013094364282340049
 CanvasRenderer:
   m_ObjectHideFlags: 0

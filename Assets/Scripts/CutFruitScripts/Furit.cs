@@ -8,22 +8,16 @@ public class Furit : MonoBehaviour
 {
     public string FuritTag;   
     public float Volume;
-    // public int SliceNumber;
-    //  public bool Sliced = false;
+    public float PercentVolume;
     public bool IsReadyPickedUp = false;
     private new MeshRenderer renderer;
     public Material InnerMatrialAfterCut;
-    //private Material default_matrial;
-    private TouchController controller;
-   private FuritSliceManager furitSliceManager;
+    private FuritSliceManager furitSliceManager;
     private Mesh meshFilter;
-
-    private float Get_Z;
-
     private UI ui;
     private int index = 0;
-    //private List<Material> matrials_Temp;
 
+    private new Rigidbody rigidbody;
     void Start()
     {
 
@@ -32,18 +26,33 @@ public class Furit : MonoBehaviour
         ui.ChangeMode += Furit_ChangeMode;
         meshFilter = GetComponent<MeshFilter>().sharedMesh;
         Volume = VolumeOfMesh(meshFilter);
-        controller = FindObjectOfType<TouchController>();
+        // controller = FindObjectOfType<TouchController>();
         renderer = GetComponent<MeshRenderer>();
         furitSliceManager = FindObjectOfType<FuritSliceManager>();
 
         FuritTag = this.gameObject.name;
-          furitSliceManager.AddFuritOnStartGame(FuritTag, Volume);
+        furitSliceManager.AddFuritOnStartGame(FuritTag, Volume);
 
         GetComponent<MeshCollider>().convex = true;
-        //  default_matrial = GetComponent<MeshRenderer>().materials[0];
+        rigidbody = GetComponent<Rigidbody>();
+
+        PercentVolume = 100;
 
     }
 
+    private void LateUpdate()
+    {
+        if(rigidbody.velocity.magnitude>20)
+        {
+            rigidbody.drag = 20;
+            rigidbody.angularDrag = 20;
+        }
+        else
+        {
+            rigidbody.drag = 1;
+            rigidbody.angularDrag = 0;
+        }
+    }
     private void Furit_ChangeMode(bool cut , bool pick)
     {
        IsReadyPickedUp = pick;
@@ -65,7 +74,7 @@ public class Furit : MonoBehaviour
 
     private void OnMouseDrag()
     {
-        if (IsReadyPickedUp)
+       /* if (IsReadyPickedUp)
         {
 
             var pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -73,26 +82,26 @@ public class Furit : MonoBehaviour
             var tt = new Vector3(pos.x, transform.position.y, pos.y) + offset;
            // tt.z = Get_Z;
             this.transform.position = tt;
-        }
+        }*/
     }
 
     private void OnMouseDown()
     {
-        if (IsReadyPickedUp)
+        /*if (IsReadyPickedUp)
         {
-            Get_Z = transform.position.z;
+            //Get_Z = transform.position.z;
             renderer.materials[0].SetFloat("_OutlineSize", 10);
             Debug.Log("PICK");
-        }
+        }*/
     }
     private void OnMouseUp()
     {
-        if (IsReadyPickedUp)
+       /* if (IsReadyPickedUp)
         {
             /// Get_Z = transform.position.z;
             renderer.materials[0].SetFloat("_OutlineSize", 0);
             Debug.Log("Drop");
-        }
+        }*/
     }
     void OnMouseEnter()
     {
@@ -152,6 +161,6 @@ public class Furit : MonoBehaviour
             volume += SignedVolumeOfTriangle(p1, p2, p3);
             /// volume *= this.transform.localScale.x * this.transform.localScale.y * this.transform.localScale.z;
         }
-        return Mathf.Abs(volume);
+        return Mathf.Abs(volume*1000);
     }
 }

@@ -26,8 +26,8 @@ public class FuritSliceManager : MonoBehaviour
         var pieces = FindObjectsOfType<FruitPiece>();
         foreach (var piece in pieces)
         {
-            AddPiecesFuritToListAfterSclice(piece.FuritTag, piece.Volume);
-            Debug.Log("CUTTtTTT" + piece.FuritTag);
+            AddPiecesFuritToListAfterSclice(piece.FuritTag, piece.Volume , piece.PercentVolume);
+           // Debug.Log("CUTTtTTT" + piece.FuritTag);
         }
        
     }
@@ -44,7 +44,7 @@ public class FuritSliceManager : MonoBehaviour
             FuritsInGame.Furits.Add(new FuritData { Tag = tag, TotalVolume = vloume, slicedPieces = new List<SlicedPieceData>() });
         
     }
-    private void AddPiecesFuritToListAfterSclice(string tag, float vloume)
+    private void AddPiecesFuritToListAfterSclice(string tag, float vloume, float percent)
     {
        // Clearpiecelist();
 
@@ -53,11 +53,14 @@ public class FuritSliceManager : MonoBehaviour
            // furit.slicedPieces.Clear();
             if (tag == furit.Tag)
             {
-                furit.slicedPieces.Add(new SlicedPieceData { Tag = tag, Volume = vloume });
+                // var  unit = furit.TotalVolume ;
+               // var percent = (vloume / furit.TotalVolume) * 100;
+                furit.slicedPieces.Add(new SlicedPieceData { Tag = tag, Volume = vloume , Percent = percent});
             }
         }
     }
-    private void Clearpiecelist()
+    [Button("Clear")]
+    public void Clearpiecelist()
     {
         foreach (var f in FuritsInGame.Furits)
         {
@@ -88,4 +91,5 @@ public struct SlicedPieceData
 {
     public string Tag;
     public float Volume;
+    public float Percent;
 }

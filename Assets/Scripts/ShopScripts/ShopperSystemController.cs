@@ -15,6 +15,8 @@ public class ShopperSystemController : MonoBehaviour
     public ShopperIndicatorUI shopperIndicatorUI;
     public RectTransform Contents;
     public int MaxShopperCount;
+    public int ShopperInWave = 0;
+    public int ServiceCountInWave = 0;
     public Transform FruitSpwanPlace;
     [SerializeField] public List<FruitInShop> fruitInShops = new List<FruitInShop>();
     private  List<int> PercentFruits = new List<int> { 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95 };
@@ -23,15 +25,45 @@ public class ShopperSystemController : MonoBehaviour
     private int PerviousChoose = 0;
     public void Start()
     {
-        var rand_Shopper_Count = UnityEngine.Random.Range(1, MaxShopperCount + 1);
-        PercentOfFruit(rand_Shopper_Count);
+
+        GenerationWave();
       ///  ServiceShopper();
     }
 
+    public void CalculateScore(float PersonPercent,   float SelectedFuritPercent)
 
-    [Button("PercentFruit")]
-    public void PercentOfFruit(int shopperCount)
     {
+
+
+        Debug.Log("Point Person" + ServiceCountInWave);
+        ServiceCountInWave++;
+        if (ServiceCountInWave == ShopperInWave )
+        {
+            StartCoroutine(ResetWave());
+            Debug.Log("Finish Service To This Wave");
+        }
+    }
+    public IEnumerator ResetWave()
+    {
+
+        ShopperInWave = 0;
+        ServiceCountInWave = 0;
+        var list_furit = GameObject.FindGameObjectsWithTag("furit");
+        yield return new WaitForSeconds(0.2f);
+
+        for (int i = 0; i < list_furit.Length; i++)
+        {
+            Destroy(list_furit[i].gameObject);
+        }
+ 
+
+        yield return new WaitForSeconds(0.3f);
+        GenerationWave();
+        Debug.Log("ResetWave");
+    }
+    public void GenerationWave()
+    {
+        int shopperCount = UnityEngine.Random.Range(1, MaxShopperCount + 1);
         ClearShopperUI();
         List<int> tempOfchoose = new List<int>(shopperCount);
         var fruit_spwaned_data = SpawnFruit();
@@ -58,9 +90,10 @@ public class ShopperSystemController : MonoBehaviour
         order.ForEach(e =>
         {
             SpwanShopper(null, fruit_icon, e);
-
+            ShopperInWave++;
         });
         tempOfchoose.Clear();
+        Debug.Log("GenrationWave");
     }
     private Tuple<string, Sprite> SpawnFruit()
     {
@@ -69,7 +102,7 @@ public class ShopperSystemController : MonoBehaviour
         return new Tuple<string, Sprite>(fruitInShops[rand].Name, fruitInShops[rand].logo);
 
     }
-    private void SpwanShopper(Sprite profile, Sprite iconFruit, int percent)
+    private void SpwanShopper(Sprite profile, Sprite iconFruit, float percent)
     {
         var shopper = Instantiate(shopperIndicatorUI, Contents);
         shopper.Set(null, iconFruit, percent);

@@ -7,20 +7,21 @@ public class FruitPiece : MonoBehaviour
     public string FuritTag;
 
     public Material InnerMatrialAfterCut;
-
+    public float TotalVolume;
     public float Volume;
+    public float PercentVolume;
     public bool IsReadyPickedUp = false;
 
     private TouchController controller;
     private Mesh meshFilter;
     private  new MeshRenderer  renderer;
     
-    //private Material default_matrial;
-   // private Material default_uv;
+
 
     private float Get_Z;
     private UI ui;
     private int index = 0;
+    private new Rigidbody rigidbody;
     void Start()
     {
 
@@ -30,10 +31,22 @@ public class FruitPiece : MonoBehaviour
         Volume = VolumeOfMesh(meshFilter);
         controller = FindObjectOfType<TouchController>();
         renderer = GetComponent<MeshRenderer>();
-       // default_matrial = GetComponent<MeshRenderer>().materials[0];
-       // default_uv = GetComponent<MeshRenderer>().materials[1];
+        rigidbody = GetComponent<Rigidbody>();
+        PercentVolume = (Volume / TotalVolume) * 100;
     }
-
+    private void LateUpdate()
+    {
+        if (rigidbody.velocity.magnitude > 20)
+        {
+            rigidbody.drag = 20;
+            rigidbody.angularDrag = 20;
+        }
+        else
+        {
+            rigidbody.drag = 1;
+            rigidbody.angularDrag = 0;
+        }
+    }
     private void Furit_ChangeMode(bool cut, bool pick)
     {
         IsReadyPickedUp = pick;
@@ -49,7 +62,7 @@ public class FruitPiece : MonoBehaviour
     }
     private void OnMouseDrag()
     {
-        if (IsReadyPickedUp)
+       /* if (IsReadyPickedUp)
         {
 
             var pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -57,17 +70,17 @@ public class FruitPiece : MonoBehaviour
             var tt = new Vector3(pos.x, transform.position.y, pos.y) + offset;
             tt.z = Get_Z;
             this.transform.position = tt;
-        }
+        }*/
     }
 
     private void OnMouseDown()
     {
-        if (IsReadyPickedUp)
+      /*  if (IsReadyPickedUp)
         {
             Get_Z = transform.position.z;
             renderer.materials[0].SetFloat("_OutlineSize", 10);
             Debug.Log("PICK");
-        }
+        }/*
     }
     private void OnMouseUp()
     {
@@ -137,9 +150,9 @@ public class FruitPiece : MonoBehaviour
             Vector3 p2 = vertices[triangles[i + 1]];
             Vector3 p3 = vertices[triangles[i + 2]];
             volume += SignedVolumeOfTriangle(p1, p2, p3);
-            /// volume *= this.transform.localScale.x * this.transform.localScale.y * this.transform.localScale.z;
+            
         }
-        return Mathf.Abs(volume);
+        return Mathf.Abs(volume*1000);
     }
 }
 
