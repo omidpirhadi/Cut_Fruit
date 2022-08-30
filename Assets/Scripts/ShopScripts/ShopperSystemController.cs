@@ -17,15 +17,19 @@ public class ShopperSystemController : MonoBehaviour
     public int MaxShopperCount;
     public int ShopperInWave = 0;
     public int ServiceCountInWave = 0;
+    public  ShopperInWorldSpwner shopperInWorldSpwner;
     public Transform FruitSpwanPlace;
+    
     [SerializeField] public List<FruitInShop> fruitInShops = new List<FruitInShop>();
+    public Transform[] ShopperServicePlace;
     private  List<int> PercentFruits = new List<int> { 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95 };
 
     private List<ShopperIndicatorUI> list_indicatorShopper = new List<ShopperIndicatorUI>();
+   
     private int PerviousChoose = 0;
     public void Start()
     {
-
+        
         GenerationWave();
       ///  ServiceShopper();
     }
@@ -89,9 +93,10 @@ public class ShopperSystemController : MonoBehaviour
         var order = tempOfchoose.OrderBy(X => X).ToList();
         order.ForEach(e =>
         {
-            SpwanShopper(null, fruit_icon, e);
+            SpwanShopperIndicator_UI(null, fruit_icon, e);
             ShopperInWave++;
         });
+        StartCoroutine(shopperInWorldSpwner.SpawnShopper(order.Count, ShopperServicePlace));
         tempOfchoose.Clear();
         Debug.Log("GenrationWave");
     }
@@ -102,7 +107,7 @@ public class ShopperSystemController : MonoBehaviour
         return new Tuple<string, Sprite>(fruitInShops[rand].Name, fruitInShops[rand].logo);
 
     }
-    private void SpwanShopper(Sprite profile, Sprite iconFruit, float percent)
+    private void SpwanShopperIndicator_UI(Sprite profile, Sprite iconFruit, float percent)
     {
         var shopper = Instantiate(shopperIndicatorUI, Contents);
         shopper.Set(null, iconFruit, percent);
