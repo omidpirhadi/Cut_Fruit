@@ -4,8 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+
 using Sirenix.OdinInspector;
-using Diaco.ImageContainerTool;
+using DG.Tweening;
 //public enum FRUITS { Apple = 0 , Orange = 1, Lemon = 2, Watermelon =3 }
 public class ShopperSystemController : MonoBehaviour
 {
@@ -17,41 +18,117 @@ public class ShopperSystemController : MonoBehaviour
     public int MaxShopperCount;
     public int ShopperInWave = 0;
     public int ServiceCountInWave = 0;
-    public  ShopperInWorldSpwner shopperInWorldSpwner;
+
+    private int shopperinplace;
+    public int ShopperInPlaceCount
+    {
+        set
+        {
+            shopperinplace = value;
+            if (shopperinplace == ShopperInWave && fruitSpawned)
+            {
+                list_indicatorShopper.ForEach((e) =>
+                {
+                    e.gameObject.SetActive(true);
+                });
+                fruitSpawned.SetActive(true);
+                // Debug.Log("SET PLACE " + shopperinplace);
+            }
+
+        }
+        get { return shopperinplace; }
+    }
+    public ShopperInWorldSpwner shopperInWorldSpwner;
     public Transform FruitSpwanPlace;
-    
+
     [SerializeField] public List<FruitInShop> fruitInShops = new List<FruitInShop>();
     public Transform[] ShopperServicePlace;
-    private  List<int> PercentFruits = new List<int> { 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95 };
+    public DestroyPlace DestroyPositionAgent;
+    private List<int> PercentFruits = new List<int> { 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95 };
+    private GameObject fruitSpawned;
 
+
+    private FuritSliceManager sliceManager;
     private List<ShopperIndicatorUI> list_indicatorShopper = new List<ShopperIndicatorUI>();
-   
+
+
     private int PerviousChoose = 0;
     public void Start()
     {
+        Application.targetFrameRate = 60;
+        sliceManager = GetComponent<FuritSliceManager>();
+        StartCoroutine(ResetWave());
         
-        GenerationWave();
-      ///  ServiceShopper();
+        //GenerationWave();
+        ///  ServiceShopper();
     }
 
-    public void CalculateScore(float PersonPercent,   float SelectedFuritPercent)
+    public void CheckSliceRun()
+    {
+        StartCoroutine(CheckSlice());
+    }
+    private IEnumerator CheckSlice()
+    {
+        sliceManager.AddToListSlicedFruit();
+        yield return new WaitForSeconds(0.1f);
+       
+        var shopper_count = list_indicatorShopper.Count;
+        var sliced_count = sliceManager.FuritsInGame.Furits[0].slicedPieces.Count;
+        yield return new WaitForSeconds(0.1f);
+        int find = 0;
+        if (shopper_count >= 1 && sliced_count == 0)
+        {
+            find = 1;
+        }
+        else
+        {
+
+            for (int i = 0; i < shopper_count; i++)
+            {
+                var percent_shopper = list_indicatorShopper[i].PercentValue;
+                for (int j = 0; j < sliced_count; j++)
+                {
+                    var percent_slice = sliceManager.FuritsInGame.Furits[0].slicedPieces[j].Percent;
+                    Debug.Log($" shopper{percent_shopper} slice{percent_slice}");
+                    if (percent_shopper <= percent_slice)
+                    {
+
+                        find++;
+                    }
+                }
+
+
+            }
+            yield return new WaitForSeconds(0.1f);
+        }
+        Debug.Log("Find" + find);
+    }
+    public void CalculateScore(float PersonPercent, float SelectedFuritPercent)
 
     {
 
 
         Debug.Log("Point Person" + ServiceCountInWave);
         ServiceCountInWave++;
-        if (ServiceCountInWave == ShopperInWave )
+        if (ServiceCountInWave == ShopperInWave)
         {
             StartCoroutine(ResetWave());
             Debug.Log("Finish Service To This Wave");
         }
     }
+
+    [Button("RESET WAVE")]
+    public void Wave()
+    {
+
+        DOVirtual.DelayedCall(3, () => { StartCoroutine(ResetWave()); });
+
+    }
     public IEnumerator ResetWave()
     {
 
-        ShopperInWave = 0;
-        ServiceCountInWave = 0;
+
+        Handler_OnAgentMove(DestroyPositionAgent.transform.position);
         var list_furit = GameObject.FindGameObjectsWithTag("furit");
         yield return new WaitForSeconds(0.2f);
 
@@ -59,9 +136,13 @@ public class ShopperSystemController : MonoBehaviour
         {
             Destroy(list_furit[i].gameObject);
         }
- 
+        ShopperInWave = 0;
+        ServiceCountInWave = 0;
+        ShopperInPlaceCount = 0;
+        fruitSpawned = null;
 
         yield return new WaitForSeconds(0.3f);
+        Handler_OnReset();
         GenerationWave();
         Debug.Log("ResetWave");
     }
@@ -102,24 +183,57 @@ public class ShopperSystemController : MonoBehaviour
     }
     private Tuple<string, Sprite> SpawnFruit()
     {
+
         int rand = UnityEngine.Random.Range(0, fruitInShops.Count);
-        var fruit = Instantiate(fruitInShops[rand].prefab, FruitSpwanPlace.position, Quaternion.identity);
+        fruitSpawned = Instantiate(fruitInShops[rand].prefab, FruitSpwanPlace.position, Quaternion.identity);
+        fruitSpawned.SetActive(false);
         return new Tuple<string, Sprite>(fruitInShops[rand].Name, fruitInShops[rand].logo);
 
     }
     private void SpwanShopperIndicator_UI(Sprite profile, Sprite iconFruit, float percent)
     {
         var shopper = Instantiate(shopperIndicatorUI, Contents);
+        shopper.gameObject.SetActive(false);
         shopper.Set(null, iconFruit, percent);
         list_indicatorShopper.Add(shopper);
     }
 
     private void ClearShopperUI()
     {
-        list_indicatorShopper.ForEach(e => {
+        list_indicatorShopper.ForEach(e =>
+        {
             Destroy(e.gameObject);
         });
         list_indicatorShopper.Clear();
+    }
+
+
+    private Action resetwave;
+    public event Action OnResetWave
+    {
+        add { resetwave += value; }
+        remove { resetwave -= value; }
+    }
+    protected void Handler_OnReset()
+    {
+        if (resetwave != null)
+        {
+            resetwave();
+        }
+    }
+
+    private Action<Vector3> agentmove;
+    public event Action<Vector3> OnAgentMove
+    {
+        add { agentmove += value; }
+        remove { agentmove -= value; }
+    }
+    protected void Handler_OnAgentMove(Vector3 des)
+    {
+        if (agentmove != null)
+        {
+            agentmove(des);
+        }
     }
 }
 [Serializable]

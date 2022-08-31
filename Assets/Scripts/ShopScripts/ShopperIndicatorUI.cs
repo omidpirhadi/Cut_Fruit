@@ -30,6 +30,8 @@ public class ShopperIndicatorUI : MonoBehaviour,IDropHandler
         }
     }
 
+
+
     public void Set(Sprite profile, Sprite fruitIcon, float percent  )
     {
         this.Character_image.sprite = profile;

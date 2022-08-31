@@ -8,38 +8,21 @@ public class FuritSliceManager : MonoBehaviour
     [SerializeField]
     public FuritsInGameData FuritsInGame;
 
-    private Cutter cut;
-    void Start()
-    {
-        
-        cut = GetComponent<Cutter>();
-        cut.OnCut += Cut_OnCut;
-        
-    }
 
-   
-
-    [Button("find",ButtonSizes.Medium)]
-    public void Cut_OnCut()
+    public void AddToListSlicedFruit()
     {
         Clearpiecelist();
         var pieces = FindObjectsOfType<FruitPiece>();
         foreach (var piece in pieces)
         {
-            AddPiecesFuritToListAfterSclice(piece.FuritTag, piece.Volume , piece.PercentVolume);
-           // Debug.Log("CUTTtTTT" + piece.FuritTag);
+            AddPiecesFuritToListAfterSclice(piece.FuritTag, piece.Volume, piece.PercentVolume);
+            // Debug.Log("CUTTtTTT" + piece.FuritTag);
         }
-       
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
     public void AddFuritOnStartGame(string tag , float  vloume)
     {
-       
+
+            FuritsInGame.Furits.Clear();
         
             FuritsInGame.Furits.Add(new FuritData { Tag = tag, TotalVolume = vloume, slicedPieces = new List<SlicedPieceData>() });
         
@@ -59,7 +42,7 @@ public class FuritSliceManager : MonoBehaviour
             }
         }
     }
-    [Button("Clear")]
+   
     public void Clearpiecelist()
     {
         foreach (var f in FuritsInGame.Furits)

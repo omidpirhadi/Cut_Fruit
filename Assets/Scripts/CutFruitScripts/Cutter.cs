@@ -95,7 +95,7 @@ public class Cutter : MonoBehaviour
                 });
                 // objectToSlice.SetActive(false);
                 Destroy(objectToSlice);
-                Handler_Cut();
+             //   Handler_Cut();
             }
         }
         // Debug.Log("Cut");
@@ -120,18 +120,5 @@ public class Cutter : MonoBehaviour
         return objectToSlice.Slice(planeWorldPosition, planeWorldDirection, mat);
     }
 
-    private Action cut;
 
-    public event Action OnCut
-    {
-        add { cut += value; }
-        remove { cut -= value; }
-    }
-    protected void Handler_Cut()
-    {
-        if(cut !=null)
-        {
-            cut();
-        }
-    }
 }

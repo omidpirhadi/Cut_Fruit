@@ -7,27 +7,34 @@ public class Char_Agent : MonoBehaviour
    // public Transform Target;
     private NavMeshAgent agent;
     public Animator animator;
+    private ShopperSystemController shopperSystem;
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
+        shopperSystem = FindObjectOfType<ShopperSystemController>();
+        shopperSystem.OnAgentMove += ShopperSystem_OnAgentMove;
+    }
+
+    private void ShopperSystem_OnAgentMove(Vector3 pos)
+    {
+        this.tag = "destroy";
+        animator.SetBool("Walk", true);
+        agent.isStopped = false;
+        agent.destination = pos;
+        
+    }
+    private void OnDestroy()
+    {
+        shopperSystem.OnAgentMove -= ShopperSystem_OnAgentMove;
     }
     private void LateUpdate()
     {
-        var dis = Vector3.Distance(transform.position, agent.destination);
-        
-        if (dis<1)
-        {
-            animator.SetBool("Walk", false);
-           
-            //   Debug.Log("as");
-            Debug.Log(dis);
-        }
+
     }
     public void SetDestination(Vector3 pos)
     {
        animator.SetBool("Walk", true);
-        agent.stoppingDistance = 1;
         agent.destination = pos;
     }
 }
