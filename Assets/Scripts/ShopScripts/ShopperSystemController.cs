@@ -34,6 +34,7 @@ public class ShopperSystemController : MonoBehaviour
                 });
                 fruitSpawned.SetActive(true);
                 cameraController.SwitchCamera(1);
+                dialogBox.Set("Cut The Fruit", 5);
                 // Debug.Log("SET PLACE " + shopperinplace);
             }
 
@@ -62,46 +63,52 @@ public class ShopperSystemController : MonoBehaviour
         StartCoroutine(ResetWave());
 
     }
-
-  
+ 
     public IEnumerator CheckSlice()
     {
         sliceManager.AddToListSlicedFruit();
+        var fruit_in_world = GameObject.FindGameObjectsWithTag("furit");
         yield return new WaitForSeconds(0.1f);
        
         var shopper_count = list_indicatorShopper.Count;
-        var sliced_count = sliceManager.FuritsInGame.Furits[0].slicedPieces.Count;
+       // var sliced_count = sliceManager.FuritsInGame.Furits[0].slicedPieces.Count;
         yield return new WaitForSeconds(0.1f);
         int find = 0;
-        if (shopper_count >= 1 && sliced_count == 0)
+        if (shopper_count > 0)
         {
-            find = 1;
-        }
-        else
-        {
-
             for (int i = 0; i < shopper_count; i++)
             {
                 var percent_shopper = list_indicatorShopper[i].PercentValue;
-                for (int j = 0; j < sliced_count; j++)
+
+                for (int j = 0; j < fruit_in_world.Length; j++)
                 {
-                    var percent_slice = sliceManager.FuritsInGame.Furits[0].slicedPieces[j].Percent;
+                    float percent_fruit = 0.0f;
+                    if (fruit_in_world[j].GetComponent<Furit>())
+                    {
+                        percent_fruit = fruit_in_world[j].GetComponent<Furit>().PercentVolume;
+                    }
+                    else
+                    {
+                        percent_fruit = fruit_in_world[j].GetComponent<FruitPiece>().PercentVolume;
+                    }
                     //Debug.Log($" shopper{percent_shopper} slice{percent_slice}");
-                    if (percent_shopper <= percent_slice)
+                    if (percent_shopper <= percent_fruit)
                     {
 
                         find++;
                     }
                 }
-
-
             }
-            yield return new WaitForSeconds(0.1f);
         }
         if(find == 0)
         {
-            StartCoroutine(ResetWave());
-            Debug.Log("There is not exist slice and Wave Reset");
+            dialogBox.Set("Doesn't Match", 2);
+            DOVirtual.DelayedCall(2.5f, () =>
+            {
+                 StartCoroutine(ResetWave());
+               
+            });
+           // Debug.Log("There is not exist slice and Wave Reset");
         }
         Debug.Log("Check Slice Exist :"+find);
     }
@@ -114,20 +121,29 @@ public class ShopperSystemController : MonoBehaviour
         if(PersonPercent <= SelectedFuritPercent)
         {
             ServiceCountInWave++;
+           
             dialogBox.Set("Well Done", 2);
+           
         }
         if (ServiceCountInWave == ShopperInWave)
         {
             dialogBox.Set("Good job Ready For Next Level", 2);
-            DOVirtual.DelayedCall(2.5f, () =>
-            {
-                StartCoroutine(ResetWave());
-            });
-            
-            Debug.Log("Finish Service To This Wave and Reset");
+
+            StartCoroutine(ResetWave());
+           // Debug.Log("Finish Service To This Wave and Reset");
         }
+        else
+        {
+            DOVirtual.DelayedCall(2, () => {
+
+                Debug.Log("OOOOO");
+                StartCoroutine(CheckSlice());
+
+            });
+        }
+
+       
         
-            StartCoroutine(CheckSlice());
     
         
     }
@@ -196,7 +212,7 @@ public class ShopperSystemController : MonoBehaviour
         });
         StartCoroutine(shopperInWorldSpwner.SpawnShopper(order.Count, ShopperServicePlace));
         tempOfchoose.Clear();
-        Debug.Log("GenrationWave");
+       // Debug.Log("GenrationWave");
     }
     private Tuple<string, Sprite> SpawnFruit()
     {
@@ -224,7 +240,11 @@ public class ShopperSystemController : MonoBehaviour
         list_indicatorShopper.Clear();
     }
 
-
+    public void DestroyIndicatorShopper( ShopperIndicatorUI shopper)
+    {
+        list_indicatorShopper.Remove(shopper);
+        Destroy(shopper.gameObject);
+    }
     private Action resetwave;
     public event Action OnResetWave
     {

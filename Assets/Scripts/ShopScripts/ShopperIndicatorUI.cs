@@ -21,11 +21,16 @@ public class ShopperIndicatorUI : MonoBehaviour,IDropHandler
         var item = FindObjectOfType<DragAndDropItem>();
         var percent_furit = item.FuritPercent;
 
-        if (percent_furit>PercentValue)
+        if (percent_furit>=PercentValue)
         {
             Destroy(item.FruitSliceRefrence);
             shopperSystem.CalculateScoreAndCheckExistServicInWave(PercentValue, percent_furit);
             this.gameObject.SetActive(false);
+            DG.Tweening.DOVirtual.DelayedCall(2, () => {
+                shopperSystem.DestroyIndicatorShopper(this);
+
+            });
+            
             
             //Debug.Log("WellDown");
         }
