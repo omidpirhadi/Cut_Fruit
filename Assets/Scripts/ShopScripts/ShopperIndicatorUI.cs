@@ -11,6 +11,11 @@ public class ShopperIndicatorUI : MonoBehaviour,IDropHandler
     public TMPro.TMP_Text Percent_text;
     public Image FuritIcon_image;
     public float PercentValue;
+    private ShopperSystemController shopperSystem;
+    private void Start()
+    {
+        shopperSystem = FindObjectOfType<ShopperSystemController>();
+    }
     public void OnDrop(PointerEventData eventData)
     {
         var item = FindObjectOfType<DragAndDropItem>();
@@ -19,14 +24,15 @@ public class ShopperIndicatorUI : MonoBehaviour,IDropHandler
         if (percent_furit>PercentValue)
         {
             Destroy(item.FruitSliceRefrence);
-            FindObjectOfType<ShopperSystemController>().CalculateScore(10, 10);
+            shopperSystem.CalculateScoreAndCheckExistServicInWave(PercentValue, percent_furit);
             this.gameObject.SetActive(false);
             
-            Debug.Log("WellDown");
+            //Debug.Log("WellDown");
         }
         else
         {
-            Debug.Log("No");
+            StartCoroutine(shopperSystem.CheckSlice());
+            //  Debug.Log("No");
         }
     }
 

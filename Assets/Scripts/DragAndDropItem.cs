@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.EventSystems;
 public class DragAndDropItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
@@ -8,10 +9,12 @@ public class DragAndDropItem : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     public GameObject FruitSliceRefrence;
     public float FuritPercent = 0;
-
+    public Image Icon_image;
+    public TMPro.TMP_Text Percent_text;
     public void OnBeginDrag(PointerEventData eventData)
     {
-        Debug.Log("Begin" +"%"+ FuritPercent);
+
+       // Debug.Log("Begin" +"%"+ FuritPercent);
     }
 
     public void OnDrag(PointerEventData eventData)

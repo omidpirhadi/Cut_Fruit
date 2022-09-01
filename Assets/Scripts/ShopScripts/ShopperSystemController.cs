@@ -12,8 +12,9 @@ public class ShopperSystemController : MonoBehaviour
 {
 
 
-
+    public CameraController cameraController;
     public ShopperIndicatorUI shopperIndicatorUI;
+    public DialogBox dialogBox;
     public RectTransform Contents;
     public int MaxShopperCount;
     public int ShopperInWave = 0;
@@ -32,6 +33,7 @@ public class ShopperSystemController : MonoBehaviour
                     e.gameObject.SetActive(true);
                 });
                 fruitSpawned.SetActive(true);
+                cameraController.SwitchCamera(1);
                 // Debug.Log("SET PLACE " + shopperinplace);
             }
 
@@ -58,16 +60,11 @@ public class ShopperSystemController : MonoBehaviour
         Application.targetFrameRate = 60;
         sliceManager = GetComponent<FuritSliceManager>();
         StartCoroutine(ResetWave());
-        
-        //GenerationWave();
-        ///  ServiceShopper();
+
     }
 
-    public void CheckSliceRun()
-    {
-        StartCoroutine(CheckSlice());
-    }
-    private IEnumerator CheckSlice()
+  
+    public IEnumerator CheckSlice()
     {
         sliceManager.AddToListSlicedFruit();
         yield return new WaitForSeconds(0.1f);
@@ -89,7 +86,7 @@ public class ShopperSystemController : MonoBehaviour
                 for (int j = 0; j < sliced_count; j++)
                 {
                     var percent_slice = sliceManager.FuritsInGame.Furits[0].slicedPieces[j].Percent;
-                    Debug.Log($" shopper{percent_shopper} slice{percent_slice}");
+                    //Debug.Log($" shopper{percent_shopper} slice{percent_slice}");
                     if (percent_shopper <= percent_slice)
                     {
 
@@ -101,20 +98,38 @@ public class ShopperSystemController : MonoBehaviour
             }
             yield return new WaitForSeconds(0.1f);
         }
-        Debug.Log("Find" + find);
+        if(find == 0)
+        {
+            StartCoroutine(ResetWave());
+            Debug.Log("There is not exist slice and Wave Reset");
+        }
+        Debug.Log("Check Slice Exist :"+find);
     }
-    public void CalculateScore(float PersonPercent, float SelectedFuritPercent)
+    public void CalculateScoreAndCheckExistServicInWave(float PersonPercent, float SelectedFuritPercent)
 
     {
 
 
-        Debug.Log("Point Person" + ServiceCountInWave);
-        ServiceCountInWave++;
+        //Debug.Log("Point Person" + ServiceCountInWave);
+        if(PersonPercent <= SelectedFuritPercent)
+        {
+            ServiceCountInWave++;
+            dialogBox.Set("Well Done", 2);
+        }
         if (ServiceCountInWave == ShopperInWave)
         {
-            StartCoroutine(ResetWave());
-            Debug.Log("Finish Service To This Wave");
+            dialogBox.Set("Good job Ready For Next Level", 2);
+            DOVirtual.DelayedCall(2.5f, () =>
+            {
+                StartCoroutine(ResetWave());
+            });
+            
+            Debug.Log("Finish Service To This Wave and Reset");
         }
+        
+            StartCoroutine(CheckSlice());
+    
+        
     }
 
     [Button("RESET WAVE")]
@@ -127,7 +142,8 @@ public class ShopperSystemController : MonoBehaviour
     public IEnumerator ResetWave()
     {
 
-
+        dialogBox.Set("Wait For The Customers");
+        Debug.Log("ResetWave");
         Handler_OnAgentMove(DestroyPositionAgent.transform.position);
         var list_furit = GameObject.FindGameObjectsWithTag("furit");
         yield return new WaitForSeconds(0.2f);
@@ -144,7 +160,8 @@ public class ShopperSystemController : MonoBehaviour
         yield return new WaitForSeconds(0.3f);
         Handler_OnReset();
         GenerationWave();
-        Debug.Log("ResetWave");
+        cameraController.SwitchCamera(0);
+       
     }
     public void GenerationWave()
     {
@@ -154,7 +171,7 @@ public class ShopperSystemController : MonoBehaviour
         var fruit_spwaned_data = SpawnFruit();
         var namefruit = fruit_spwaned_data.Item1;
         Sprite fruit_icon = fruit_spwaned_data.Item2;
-
+        FindObjectOfType<DragAndDropItem>().Icon_image.sprite = fruit_icon;
         this.PerviousChoose = 0;
         for (int i = shopperCount; i > 0; i--)
         {

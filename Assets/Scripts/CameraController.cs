@@ -17,39 +17,41 @@ public class CameraController : MonoBehaviour
     {
         var color = new Color();
         color = Fade_image.color;
-        DOVirtual.Float(0, 1, FadeDuration, (alpha) =>
+        if ((index == 0 && !CamShop.activeSelf) || (index == 1 && !CamCut.activeSelf))
         {
-
-            color.a = alpha;
-            Fade_image.color = color;
-        }).OnComplete(() =>
-        {
-
-            DOVirtual.Float(1, 0, FadeDuration, (alpha) =>
+            DOVirtual.Float(0, 1, FadeDuration, (alpha) =>
             {
 
                 color.a = alpha;
                 Fade_image.color = color;
+            }).OnComplete(() =>
+            {
+
+                DOVirtual.Float(1, 0, FadeDuration, (alpha) =>
+                {
+
+                    color.a = alpha;
+                    Fade_image.color = color;
+                });
+                if (index == 0)
+                {
+
+                    CamCut.tag = "Untagged";
+                    CamShop.tag = "MainCamera";
+
+                    CamShop.SetActive(true);
+                    CamCut.SetActive(false);
+                }
+                else if (index == 1)
+                {
+                    CamShop.tag = "Untagged";
+                    CamCut.tag = "MainCamera";
+
+                    CamShop.SetActive(false);
+                    CamCut.SetActive(true);
+                }
             });
-            if (index == 0)
-            {
 
-                CamCut.tag = "Untagged";
-                CamShop.tag = "MainCamera";
-                
-                CamShop.SetActive(true);
-                CamCut.SetActive(false);
-            }
-            else
-            {
-                CamShop.tag = "Untagged";
-                CamCut.tag = "MainCamera";
-               
-                CamShop.SetActive(false);
-                CamCut.SetActive(true);
-            }
-        });
-      
-
+        }
     }
 }

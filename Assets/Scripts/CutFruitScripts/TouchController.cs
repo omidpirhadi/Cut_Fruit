@@ -93,13 +93,15 @@ public class TouchController : MonoBehaviour
                         {
                             DragItem.FuritPercent = f.PercentVolume;
                             DragItem.FruitSliceRefrence = f.gameObject;
-                            Debug.Log("Fruit Data:" + f.Volume);
+                            DragItem.Percent_text.text = f.Volume + "%";
+                            //Debug.Log("Fruit Data:" + f.Volume);
                         }
                         else if (f_p)
                         {
                             DragItem.FuritPercent = f_p.PercentVolume;
                             DragItem.FruitSliceRefrence = f_p.gameObject;
-                            Debug.Log("Fruit Piece Data:" + f_p.PercentVolume);
+                            DragItem.Percent_text.text = f_p.PercentVolume + "%";
+                          //  Debug.Log("Fruit Piece Data:" + f_p.PercentVolume);
                         }
                     }
                 }
