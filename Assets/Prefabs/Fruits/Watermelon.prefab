@@ -111,7 +111,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 1
   m_Constraints: 0
-  m_CollisionDetection: 1
+  m_CollisionDetection: 3
 --- !u!114 &7949512646418660124
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -126,6 +126,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   FuritTag: 
   Volume: 0
+  PercentVolume: 0
   IsReadyPickedUp: 0
   InnerMatrialAfterCut: {fileID: 2100000, guid: 85dbd03ef66791e4dbb98301b8f5a713,
     type: 2}

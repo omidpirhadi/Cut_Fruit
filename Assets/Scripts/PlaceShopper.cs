@@ -6,6 +6,7 @@ using DG.Tweening;
 public class PlaceShopper : MonoBehaviour
 {
 
+    public Transform TargetViweCharacter;
     private ShopperSystemController shopperSystem;
     public bool HaveShopper = false;
     private void Start()
@@ -24,14 +25,14 @@ public class PlaceShopper : MonoBehaviour
         if (obj.tag == "shopper" && HaveShopper== false)
         {
             HaveShopper = true;
-            Vector3 cam_forward = Camera.main.transform.position;
+           
             var agent = obj.GetComponent<NavMeshAgent>();
             var animator = obj.GetComponent<Animator>();
             agent.isStopped = true;
             animator.SetBool("Walk", false);
-
+            obj.transform.DOLookAt(TargetViweCharacter.position, 2);
             shopperSystem.ShopperInPlaceCount++;
-            //obj.transform.DOLookAt(cam_forward, 2);
+        
            // Debug.Log("AAAAAAAA");
         }
     }

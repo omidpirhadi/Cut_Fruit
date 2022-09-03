@@ -35,6 +35,8 @@ public class ShopperSystemController : MonoBehaviour
                 fruitSpawned.SetActive(true);
                 cameraController.SwitchCamera(1);
                 dialogBox.Set("Cut The Fruit", 5);
+                DOVirtual.DelayedCall(2, () => { Handler_OnChangePhase(PhaseGame.Cut); });
+                
                 // Debug.Log("SET PLACE " + shopperinplace);
             }
 
@@ -44,21 +46,47 @@ public class ShopperSystemController : MonoBehaviour
     public ShopperInWorldSpwner shopperInWorldSpwner;
     public Transform FruitSpwanPlace;
 
-    [SerializeField] public List<FruitInShop> fruitInShops = new List<FruitInShop>();
+    
     public Transform[] ShopperServicePlace;
     public DestroyPlace DestroyPositionAgent;
-    private List<int> PercentFruits = new List<int> { 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95 };
+
+    public Button Shop_Button;
+    public Button Cut_button;
+    public Button Pickup_Button;
+
+    public PickedUpFruitData PickedUpFruit;
+
     private GameObject fruitSpawned;
 
 
     private FuritSliceManager sliceManager;
+    private DragAndDropItem DragAndDrop;
+    private int PerviousChoose = 0;
+
+    [SerializeField]
+    public List<FruitInShop> fruitInShops = new List<FruitInShop>();
+    private List<int> PercentFruits = new List<int> { 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95 };
     private List<ShopperIndicatorUI> list_indicatorShopper = new List<ShopperIndicatorUI>();
 
 
-    private int PerviousChoose = 0;
+    
     public void Start()
     {
         Application.targetFrameRate = 60;
+        Shop_Button.onClick.AddListener(() => {
+            cameraController.SwitchCamera(0);
+            Handler_OnChangePhase(PhaseGame.Wait);
+        });
+        Cut_button.onClick.AddListener(() => {
+
+            cameraController.SwitchCamera(1);
+            Handler_OnChangePhase(PhaseGame.Cut);
+        });
+        Pickup_Button.onClick.AddListener(() => {
+            cameraController.SwitchCamera(1);
+            Handler_OnChangePhase(PhaseGame.Pickup);
+        });
+        DragAndDrop = FindObjectOfType<DragAndDropItem>();
         sliceManager = GetComponent<FuritSliceManager>();
         StartCoroutine(ResetWave());
 
@@ -100,17 +128,22 @@ public class ShopperSystemController : MonoBehaviour
                 }
             }
         }
-        if(find == 0)
+        if (find == 0)
         {
             dialogBox.Set("Doesn't Match", 2);
+            Handler_OnChangePhase(PhaseGame.Lose);
             DOVirtual.DelayedCall(2.5f, () =>
             {
-                 StartCoroutine(ResetWave());
-               
+                StartCoroutine(ResetWave());
+
             });
-           // Debug.Log("There is not exist slice and Wave Reset");
+            // Debug.Log("There is not exist slice and Wave Reset");
         }
-        Debug.Log("Check Slice Exist :"+find);
+        else
+        {
+            Handler_OnChangePhase(PhaseGame.Pickup);
+            Debug.Log("Check Slice Exist :" + find);
+        }
     }
     public void CalculateScoreAndCheckExistServicInWave(float PersonPercent, float SelectedFuritPercent)
 
@@ -128,37 +161,40 @@ public class ShopperSystemController : MonoBehaviour
         if (ServiceCountInWave == ShopperInWave)
         {
             dialogBox.Set("Good job Ready For Next Level", 2);
-
+           
             StartCoroutine(ResetWave());
            // Debug.Log("Finish Service To This Wave and Reset");
         }
         else
         {
+
+            Handler_OnChangePhase(PhaseGame.Wait);
             DOVirtual.DelayedCall(2, () => {
 
-                Debug.Log("OOOOO");
+               
                 StartCoroutine(CheckSlice());
 
             });
         }
 
-       
+        DragAndDrop.Percent_text.text = 0 + "%";
         
     
         
     }
 
-    [Button("RESET WAVE")]
+    /*[Button("RESET WAVE")]
     public void Wave()
     {
 
         DOVirtual.DelayedCall(3, () => { StartCoroutine(ResetWave()); });
 
-    }
+    }*/
     public IEnumerator ResetWave()
     {
 
         dialogBox.Set("Wait For The Customers");
+        Handler_OnChangePhase(PhaseGame.Wait);
         Debug.Log("ResetWave");
         Handler_OnAgentMove(DestroyPositionAgent.transform.position);
         var list_furit = GameObject.FindGameObjectsWithTag("furit");
@@ -187,7 +223,7 @@ public class ShopperSystemController : MonoBehaviour
         var fruit_spwaned_data = SpawnFruit();
         var namefruit = fruit_spwaned_data.Item1;
         Sprite fruit_icon = fruit_spwaned_data.Item2;
-        FindObjectOfType<DragAndDropItem>().Icon_image.sprite = fruit_icon;
+        DragAndDrop.Icon_image.sprite = fruit_icon;
         this.PerviousChoose = 0;
         for (int i = shopperCount; i > 0; i--)
         {
@@ -218,6 +254,8 @@ public class ShopperSystemController : MonoBehaviour
     {
 
         int rand = UnityEngine.Random.Range(0, fruitInShops.Count);
+        var pos = FruitSpwanPlace.position;
+        pos.y = 1.18f;
         fruitSpawned = Instantiate(fruitInShops[rand].prefab, FruitSpwanPlace.position, Quaternion.identity);
         fruitSpawned.SetActive(false);
         return new Tuple<string, Sprite>(fruitInShops[rand].Name, fruitInShops[rand].logo);
@@ -272,6 +310,22 @@ public class ShopperSystemController : MonoBehaviour
             agentmove(des);
         }
     }
+
+    
+    public enum PhaseGame { None = 0 ,  Wait = 1, Cut = 2, Pickup = 3,Win = 4, Lose = 5}
+    private Action<PhaseGame> phase;
+    public event Action<PhaseGame> OnChangePhase
+    {
+        add { phase += value; }
+        remove { phase -= value; }
+    }
+    protected void Handler_OnChangePhase(PhaseGame phasegame)
+    {
+        if (phase != null)
+        {
+            phase(phasegame);
+        }
+    }
 }
 [Serializable]
 public struct Shopper
@@ -299,4 +353,13 @@ public struct FruitInShop
     public GameObject prefab;
     public Sprite logo;
 
+}
+
+[Serializable]
+public struct PickedUpFruitData
+{
+    public GameObject FruitSliceRefrence;   
+    public Image Icon_image;
+    public TMPro.TMP_Text Percent_text;
+    public float PickedUpFuritPercent;
 }

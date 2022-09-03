@@ -11,6 +11,7 @@ public class TouchController : MonoBehaviour
     public Text log;
     public Selector selector;
     public bool IsReadyForCut = true;
+    public bool IsTouchReady = true;
     public LayerMask RayCastLayar;
     public LayerMask MaskFruit;
     private Cutter cutter;
@@ -22,7 +23,8 @@ public class TouchController : MonoBehaviour
     private Vector3 point1;
     private Vector3 point2;
     private Vector3 pos_click;
-    public DragAndDropItem DragItem;
+    private DragAndDropItem DragItem;
+    private ShopperSystemController shopperSystem;
     private void Awake()
     {
 
@@ -34,7 +36,8 @@ public class TouchController : MonoBehaviour
 
 
         DragItem = FindObjectOfType<DragAndDropItem>();
-        FindObjectOfType<UI>().ChangeMode += FuritSliceManager_ChangeMode;
+        shopperSystem = GetComponent<ShopperSystemController>();
+        shopperSystem.OnChangePhase += ShopperSystem_OnChangePhase;
         cutter = GetComponent<Cutter>();
         line = GetComponent<LineRenderer>();
         SelectedFruits = new List<GameObject>();
@@ -42,13 +45,32 @@ public class TouchController : MonoBehaviour
         line.positionCount = 2;
         
     }
-    private void FuritSliceManager_ChangeMode(bool cut, bool pick)
+
+    private void ShopperSystem_OnChangePhase(ShopperSystemController.PhaseGame phase)
     {
-        IsReadyForCut = cut;
+        if (phase == ShopperSystemController.PhaseGame.Cut)
+        {
+            IsTouchReady = true;
+            IsReadyForCut = true;
+        }
+        else if (phase == ShopperSystemController.PhaseGame.Pickup)
+        {
+            IsTouchReady = true;
+            IsReadyForCut = false;
+        }
+        else if (phase == ShopperSystemController.PhaseGame.Wait)
+        {
+            IsTouchReady = false;
+            IsReadyForCut = false;
+
+        }
     }
+
+
     private void Update()
     {
-        Touch();
+        if (IsTouchReady)
+            Touch();
     }
     private void OnDrawGizmos()
     {
