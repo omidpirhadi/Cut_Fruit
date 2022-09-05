@@ -14,7 +14,7 @@ public class Cutter : MonoBehaviour
     public PhysicMaterial physicMaterial;
   //  public Material hightlight_matrial;
     public Transform Plane;
-
+    
 
     public void Cut(GameObject furit , Material inner)
     {
@@ -49,7 +49,7 @@ public class Cutter : MonoBehaviour
                 lowerbody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
                 lowerbody.interpolation = RigidbodyInterpolation.Interpolate;
                 lowerbody.AddForce(-Plane.transform.up*0.1f , ForceMode.Impulse);
-
+                lowerbody.AddForce(-Plane.transform.right * 0.5f, ForceMode.Impulse);
                 var piece_lower = lower.AddComponent<FruitPiece>();
                 piece_lower.FuritTag = tag_furit;
                 piece_lower.InnerMatrialAfterCut = inner;
@@ -76,7 +76,7 @@ public class Cutter : MonoBehaviour
                 upperbody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
                 upperbody.interpolation = RigidbodyInterpolation.Interpolate;
                 upperbody.AddForce(Plane.transform.up*0.1f , ForceMode.Impulse);
-
+                upperbody.AddForce(Plane.transform.right * 0.5f, ForceMode.Impulse);
                 var piece_upper = upper.AddComponent<FruitPiece>();
                 piece_upper.FuritTag = tag_furit;
                 piece_upper.InnerMatrialAfterCut = inner;
@@ -95,21 +95,37 @@ public class Cutter : MonoBehaviour
                 });
                 // objectToSlice.SetActive(false);
                 Destroy(objectToSlice);
-             //   Handler_Cut();
+                Handler_OnCut();
             }
         }
         // Debug.Log("Cut");
     }
-    public void SetCutPlane(Vector3 point1, Vector3 point2, float muliply = 1)
+    public Vector3 SetCutPlane(Vector3 point1, Vector3 point2, float muliply = 1)
     {
         var dir = point2 - point1;
         var dis = Vector3.Distance(point1, point2);
+        var rot_z = Vector3.Angle(dir.normalized, Vector3.forward);
+        var rot_x = Vector3.Angle(dir.normalized, Vector3.right);
+       // Debug.Log("Angel Z :" + rot_z);
+        //Debug.Log("Angel X :" + rot_x);
+
+
         var initscale = this.Plane.localScale;
         var newscale = (initscale * dis) * muliply;
         this.Plane.position = point1 + (dir / 2.0f);
         this.Plane.localScale = Vector3.one;
         this.Plane.forward = dir;
-        this.Plane.eulerAngles = new Vector3(this.Plane.eulerAngles.x, this.Plane.eulerAngles.y, 90);
+
+
+        var screen_point = Camera.main.WorldToScreenPoint(Plane.position);
+        var ray = Camera.main.ScreenPointToRay(screen_point);
+        this.Plane.position = ray.origin;
+        this.Plane.forward = ray.direction;
+        if (rot_z > 90)
+            this.Plane.eulerAngles = new Vector3(this.Plane.eulerAngles.x, this.Plane.eulerAngles.y, -rot_x);
+        else
+            this.Plane.eulerAngles = new Vector3(this.Plane.eulerAngles.x, this.Plane.eulerAngles.y, rot_x);
+        return this.Plane.position;
     }
 
     private SlicedHull Slice( GameObject furit, Vector3 planeWorldPosition, Vector3 planeWorldDirection, Material mat)
@@ -120,5 +136,17 @@ public class Cutter : MonoBehaviour
         return objectToSlice.Slice(planeWorldPosition, planeWorldDirection, mat);
     }
 
-
+    private Action cut;
+    public event Action OnCut
+    {
+        add { cut += value; }
+        remove { cut -= value; }
+    }
+    protected void Handler_OnCut()
+    {
+        if (cut != null)
+        {
+            cut();
+        }
+    }
 }

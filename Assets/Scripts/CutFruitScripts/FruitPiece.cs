@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FruitPiece : MonoBehaviour
+public class FruitPiece : MonoBehaviour,IFruit
 {
     public string FuritTag;
 
@@ -21,7 +21,8 @@ public class FruitPiece : MonoBehaviour
     private float Get_Z;
     private UI ui;
     private int index = 0;
-    private new Rigidbody rigidbody;
+    public new Rigidbody rigidbody;
+    public Vector3 OffsetCenter;
     void Start()
     {
 
@@ -32,6 +33,7 @@ public class FruitPiece : MonoBehaviour
         renderer = GetComponent<MeshRenderer>();
         rigidbody = GetComponent<Rigidbody>();
         PercentVolume = (Volume / TotalVolume) * 100;
+        OffsetCenter = transform.position - transform.TransformPoint(meshFilter.bounds.center);
     }
     private void LateUpdate()
     {

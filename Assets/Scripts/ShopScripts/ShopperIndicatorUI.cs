@@ -5,50 +5,44 @@ using UnityEngine.UI;
 
 using UnityEngine.EventSystems;
 using TMPro;
-public class ShopperIndicatorUI : MonoBehaviour,IDropHandler
+public class ShopperIndicatorUI : MonoBehaviour
 {
     public Image Character_image;
     public TMPro.TMP_Text Percent_text;
     public Image FuritIcon_image;
-    public float PercentValue;
-    private ShopperSystemController shopperSystem;
+    public Image Prograssbar;
+    public float NeedPercentValue;
+   // private ShopperSystemController shopperSystem;
     private void Start()
     {
-        shopperSystem = FindObjectOfType<ShopperSystemController>();
+      //  shopperSystem = FindObjectOfType<ShopperSystemController>();
     }
-    public void OnDrop(PointerEventData eventData)
-    {
-        var item = FindObjectOfType<DragAndDropItem>();
-        var percent_furit = item.FuritPercent;
-
-        if (percent_furit>=PercentValue)
-        {
-            Destroy(item.FruitSliceRefrence);
-            shopperSystem.CalculateScoreAndCheckExistServicInWave(PercentValue, percent_furit);
-            this.gameObject.SetActive(false);
-            DG.Tweening.DOVirtual.DelayedCall(2, () => {
-                shopperSystem.DestroyIndicatorShopper(this);
-
-            });
-            
-            
-            //Debug.Log("WellDown");
-        }
-        else
-        {
-            StartCoroutine(shopperSystem.CheckSlice());
-            //  Debug.Log("No");
-        }
-    }
-
 
 
     public void Set(Sprite profile, Sprite fruitIcon, float percent  )
     {
         this.Character_image.sprite = profile;
         this.FuritIcon_image.sprite = fruitIcon;
-        this.Percent_text.text = "%" + percent;
-        this.PercentValue = percent;
        
+        this.NeedPercentValue = percent;
+       
+    }
+    public void PrograssbarSet(float amount)
+    {
+        var unit = 1 / NeedPercentValue;
+        Prograssbar.fillAmount = amount / NeedPercentValue;
+        if(Prograssbar.fillAmount>0.5)
+        {
+            Prograssbar.color = Color.green;
+        }
+        else if (Prograssbar.fillAmount >0.25 && Prograssbar.fillAmount < 0.5)
+        {
+            Prograssbar.color = Color.yellow;
+        }
+        else if (Prograssbar.fillAmount > 0 && Prograssbar.fillAmount < 0.25)
+        {
+            Prograssbar.color = Color.red;
+        }
+        this.Percent_text.text = (Mathf.Clamp(amount / NeedPercentValue, 0, 1) * 100).ToString("0");
     }
 }

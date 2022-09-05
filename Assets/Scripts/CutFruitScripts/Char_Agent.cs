@@ -32,6 +32,9 @@ public class Char_Agent : MonoBehaviour
     {
 
     }
+
+ 
+
     public void SetDestination(Vector3 pos)
     {
        animator.SetBool("Walk", true);

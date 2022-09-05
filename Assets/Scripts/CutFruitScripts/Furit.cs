@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(MeshCollider),typeof(Rigidbody))]
-public class Furit : MonoBehaviour
+public class Furit : MonoBehaviour,IFruit
 {
     public string FuritTag;   
     public float Volume;
@@ -17,7 +17,8 @@ public class Furit : MonoBehaviour
     private UI ui;
     private int index = 0;
 
-    private new Rigidbody rigidbody;
+    public new Rigidbody rigidbody;
+    public Vector3 OffsetCenter;
     void Start()
     {
 
@@ -33,7 +34,7 @@ public class Furit : MonoBehaviour
 
         GetComponent<MeshCollider>().convex = true;
         rigidbody = GetComponent<Rigidbody>();
-
+        OffsetCenter = transform.position - transform.TransformPoint(meshFilter.bounds.center);
         PercentVolume = 100;
 
     }
