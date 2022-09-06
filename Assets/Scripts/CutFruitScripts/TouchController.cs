@@ -122,14 +122,14 @@ public class TouchController : MonoBehaviour
                             fruit_slice = f.gameObject;
                             offsetOfSelect = f.OffsetCenter;
                             rigidbody_selected_fruit = f.rigidbody;
-                            Debug.Log("Fruit Data:" + f.Volume);
+                           // Debug.Log("Fruit Data:" + f.Volume);
                         }
                         else if (f_p)
                         {
                             fruit_slice = f_p.gameObject;
                             offsetOfSelect = f_p.OffsetCenter;
                             rigidbody_selected_fruit = f_p.rigidbody;
-                            Debug.Log("Fruit Piece Data:" + f_p.PercentVolume);
+                         //   Debug.Log("Fruit Piece Data:" + f_p.PercentVolume);
                         }
                        
                         FirstPosBeforSelect = fruit_slice.transform.position;
@@ -201,14 +201,16 @@ public class TouchController : MonoBehaviour
                         if (hit.collider.tag == "shopper")
                         {
                             Destroy(fruit_slice);
-                            Debug.Log("END" + hit.collider.name);
+                         //   Debug.Log("END" + hit.collider.name);
                         }
                         else
                         {
-                            fruit_slice.transform.position = FirstPosBeforSelect;
-                            rigidbody_selected_fruit.isKinematic = false;
-                            
+                            if (fruit_slice)
+                            {
+                                fruit_slice.transform.position = FirstPosBeforSelect;
+                                rigidbody_selected_fruit.isKinematic = false;
 
+                            }
                         }
                         fruit_slice = null;
                         rigidbody_selected_fruit = null;

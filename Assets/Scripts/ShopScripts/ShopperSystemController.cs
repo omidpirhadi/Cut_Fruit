@@ -356,7 +356,7 @@ public struct Shopper
         this.PercentFruit = p;
         this.ImageFruit_image.sprite = image;
         PrecentFruit_text.text = "%"+p;
-        
+
     }
 }
 [Serializable]
