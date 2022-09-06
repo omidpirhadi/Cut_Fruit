@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.AI;
 public class Char_Agent : MonoBehaviour
 {
-   // public Transform Target;
+    // public Transform Target;
+    public int ID;
     private NavMeshAgent agent;
     public Animator animator;
     private ShopperSystemController shopperSystem;
@@ -28,11 +29,7 @@ public class Char_Agent : MonoBehaviour
     {
         shopperSystem.OnAgentMove -= ShopperSystem_OnAgentMove;
     }
-    private void LateUpdate()
-    {
-
-    }
-
+ 
  
 
     public void SetDestination(Vector3 pos)

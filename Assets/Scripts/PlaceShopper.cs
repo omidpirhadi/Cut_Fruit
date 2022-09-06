@@ -17,6 +17,7 @@ public class PlaceShopper : MonoBehaviour
 
     private void ShopperSystem_OnResetWave()
     {
+       
         HaveShopper = false;
     }
 

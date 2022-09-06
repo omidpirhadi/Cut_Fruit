@@ -23,14 +23,15 @@ public class ShopperIndicatorUI : MonoBehaviour
     {
         this.Character_image.sprite = profile;
         this.FuritIcon_image.sprite = fruitIcon;
-       
+        Percent_text.text = percent.ToString("0")+"%";
         this.NeedPercentValue = percent;
        
     }
     public void PrograssbarSet(float amount)
     {
-        var unit = 1 / NeedPercentValue;
-        Prograssbar.fillAmount = amount / NeedPercentValue;
+        var unit = amount / NeedPercentValue;
+
+        Prograssbar.fillAmount += unit;
         if(Prograssbar.fillAmount>0.5)
         {
             Prograssbar.color = Color.green;
@@ -43,6 +44,6 @@ public class ShopperIndicatorUI : MonoBehaviour
         {
             Prograssbar.color = Color.red;
         }
-        this.Percent_text.text = (Mathf.Clamp(amount / NeedPercentValue, 0, 1) * 100).ToString("0");
+      //  this.Percent_text.text = (Mathf.Clamp(amount / NeedPercentValue, 0, 1) * 100).ToString("0");
     }
 }

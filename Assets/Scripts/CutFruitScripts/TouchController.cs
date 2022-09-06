@@ -28,7 +28,8 @@ public class TouchController : MonoBehaviour
     private DragAndDropItem DragItem;
     private ShopperSystemController shopperSystem;
 
-    private GameObject fruit_slice;
+    public GameObject fruit_slice;
+    private float precent_fruit;
     private Vector3 FirstPosBeforSelect;
     private Vector3 offsetOfSelect;
     private  Rigidbody rigidbody_selected_fruit;
@@ -118,24 +119,28 @@ public class TouchController : MonoBehaviour
                         var f_p = hit.collider.GetComponent<FruitPiece>();
                         if (f)
                         {
-                            
+
                             fruit_slice = f.gameObject;
+                            precent_fruit = f.PercentVolume;
                             offsetOfSelect = f.OffsetCenter;
                             rigidbody_selected_fruit = f.rigidbody;
-                           // Debug.Log("Fruit Data:" + f.Volume);
+                            shopperSystem.SetPickedUpFruitData(f.PercentVolume);
+                            // Debug.Log("Fruit Data:" + f.Volume);
                         }
                         else if (f_p)
                         {
                             fruit_slice = f_p.gameObject;
+                            precent_fruit = f_p.PercentVolume;
                             offsetOfSelect = f_p.OffsetCenter;
                             rigidbody_selected_fruit = f_p.rigidbody;
-                         //   Debug.Log("Fruit Piece Data:" + f_p.PercentVolume);
+                            shopperSystem.SetPickedUpFruitData(f_p.PercentVolume);
+                            //   Debug.Log("Fruit Piece Data:" + f_p.PercentVolume);
                         }
-                       
+
                         FirstPosBeforSelect = fruit_slice.transform.position;
                         rigidbody_selected_fruit.isKinematic = true;
 
-                        
+
                     }
                 }
 
@@ -162,7 +167,7 @@ public class TouchController : MonoBehaviour
                     {
                         if (fruit_slice)
                         {
-                            fruit_slice.transform.position =  hit.point + offsetOfSelect;
+                            fruit_slice.transform.position = hit.point + offsetOfSelect;
                         }
 
                     }
@@ -200,14 +205,16 @@ public class TouchController : MonoBehaviour
                     {
                         if (hit.collider.tag == "shopper")
                         {
+                            var id = hit.collider.GetComponent<Char_Agent>().ID;
+                            shopperSystem.SetShopperPrograssbar_UIIndicator(id, precent_fruit);
                             Destroy(fruit_slice);
-                         //   Debug.Log("END" + hit.collider.name);
+                            //   Debug.Log("END" + hit.collider.name);
                         }
                         else
                         {
                             if (fruit_slice)
                             {
-                                fruit_slice.transform.position = FirstPosBeforSelect;
+                                //fruit_slice.transform.position = FirstPosBeforSelect;
                                 rigidbody_selected_fruit.isKinematic = false;
 
                             }
@@ -215,6 +222,7 @@ public class TouchController : MonoBehaviour
                         fruit_slice = null;
                         rigidbody_selected_fruit = null;
                         FirstPosBeforSelect = Vector3.zero;
+                        shopperSystem.SetPickedUpFruitData(0);
                     }
                 }
 
