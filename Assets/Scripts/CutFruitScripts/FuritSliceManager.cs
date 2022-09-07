@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
+
 public class FuritSliceManager : MonoBehaviour
 {
     [SerializeField]
@@ -51,6 +52,9 @@ public class FuritSliceManager : MonoBehaviour
         }
         
     }
+
+   
+ 
 }
 [Serializable]
 public struct FuritsInGameData

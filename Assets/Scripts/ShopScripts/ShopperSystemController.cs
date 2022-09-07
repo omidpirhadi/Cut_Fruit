@@ -327,8 +327,8 @@ public class ShopperSystemController : MonoBehaviour
     public IEnumerator OnlySpawnFruit()
     {
      
-        ShopperInPlaceCount = 0;
-        fruitSpawned = null;
+        //ShopperInPlaceCount = 0;
+       // fruitSpawned = null;
         dialogBox.Set("Wait For Change Fruit", 3);
         Handler_OnChangePhase(PhaseGame.Wait);
         var list_furit = GameObject.FindGameObjectsWithTag("furit");

@@ -39,7 +39,9 @@ public class Cutter : MonoBehaviour
         
                 ////****************************************************************Create Lower
                 var lower = hull.CreateLowerHull(objectToSlice, inner);
-               
+                var upper = hull.CreateUpperHull(objectToSlice, inner);
+
+
                 var colliderlower = lower.AddComponent<MeshCollider>();
                 colliderlower.convex = true;
                 colliderlower.material = physicMaterial;
@@ -66,7 +68,7 @@ public class Cutter : MonoBehaviour
  
                 });
                 ////****************************************************************Create Upper
-                var upper = hull.CreateUpperHull(objectToSlice, inner);
+                
                 var colliderupper = upper.AddComponent<MeshCollider>();
                 colliderupper.material = physicMaterial;
                 colliderupper.convex = true;
@@ -113,7 +115,7 @@ public class Cutter : MonoBehaviour
         var initscale = this.Plane.localScale;
         var newscale = (initscale * dis) * muliply;
         this.Plane.position = point1 + (dir / 2.0f);
-        this.Plane.localScale = Vector3.one;
+      //  this.Plane.localScale = Vector3.one;
         this.Plane.forward = dir;
 
 
