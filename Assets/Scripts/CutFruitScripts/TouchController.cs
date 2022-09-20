@@ -3,13 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using EzySlice;
+using DG.Tweening;
 //using GameAnalyticsSDK;
 //using GoogleMobileAds.Api;
 using UnityEngine.UI;
 public class TouchController : MonoBehaviour
 {
-    public Transform ttt;
-    public Text log;
+   // public Transform ttt;
+   // public Text log;
     public Selector selector;
     public bool IsReadyForCut = true;
     public bool IsTouchReady = true;
@@ -25,7 +26,9 @@ public class TouchController : MonoBehaviour
     private Vector3 point1;
     private Vector3 point2;
     private Vector3 pos_click;
-    private DragAndDropItem DragItem;
+
+    private CrossHairControll crossHair;
+   // private DragAndDropItem DragItem;
     private ShopperSystemController shopperSystem;
 
     public GameObject fruit_slice;
@@ -42,8 +45,8 @@ public class TouchController : MonoBehaviour
     {
 
 
-
-        DragItem = FindObjectOfType<DragAndDropItem>();
+        crossHair = FindObjectOfType<CrossHairControll>();
+        //DragItem = FindObjectOfType<DragAndDropItem>();
         shopperSystem = GetComponent<ShopperSystemController>();
         shopperSystem.OnChangePhase += ShopperSystem_OnChangePhase;
         cutter = GetComponent<Cutter>();
@@ -117,6 +120,7 @@ public class TouchController : MonoBehaviour
                     {
                         var f = hit.collider.GetComponent<Furit>();
                         var f_p = hit.collider.GetComponent<FruitPiece>();
+                        
                         if (f)
                         {
 
@@ -125,6 +129,7 @@ public class TouchController : MonoBehaviour
                             offsetOfSelect = f.OffsetCenter;
                             rigidbody_selected_fruit = f.rigidbody;
                             shopperSystem.SetPickedUpFruitData(f.PercentVolume);
+                            crossHair.SetVisible(true);
                             // Debug.Log("Fruit Data:" + f.Volume);
                         }
                         else if (f_p)
@@ -134,9 +139,10 @@ public class TouchController : MonoBehaviour
                             offsetOfSelect = f_p.OffsetCenter;
                             rigidbody_selected_fruit = f_p.rigidbody;
                             shopperSystem.SetPickedUpFruitData(f_p.PercentVolume);
+                            crossHair.SetVisible(true);
                             //   Debug.Log("Fruit Piece Data:" + f_p.PercentVolume);
                         }
-
+                        
                         FirstPosBeforSelect = fruit_slice.transform.position;
                         rigidbody_selected_fruit.isKinematic = true;
 
@@ -168,6 +174,7 @@ public class TouchController : MonoBehaviour
                         if (fruit_slice)
                         {
                             fruit_slice.transform.position = hit.point + offsetOfSelect;
+                            
                         }
 
                     }
@@ -205,9 +212,15 @@ public class TouchController : MonoBehaviour
                     {
                         if (hit.collider.tag == "shopper")
                         {
-                            var id = hit.collider.GetComponent<Char_Agent>().ID;
-                            shopperSystem.SetShopperPrograssbar_UIIndicator(id, precent_fruit);
+                         //   var pos = FindObjectOfType<DestroyPlace>().transform.position;
+                            var char_agent_temp = hit.collider.GetComponent<Char_Agent>();
+                           // var id = char_agent_temp.ID;
+                            char_agent_temp.PrograssbarAndPointSet( precent_fruit);
+                            
                             Destroy(fruit_slice);
+
+                          //  DOVirtual.DelayedCall(1, () => { char_agent_temp.AgentMoveToDestroy(pos); });
+                           
                             //   Debug.Log("END" + hit.collider.name);
                         }
                         else
@@ -216,14 +229,16 @@ public class TouchController : MonoBehaviour
                             {
                                 //fruit_slice.transform.position = FirstPosBeforSelect;
                                 rigidbody_selected_fruit.isKinematic = false;
-
+                              
                             }
                         }
                         fruit_slice = null;
                         rigidbody_selected_fruit = null;
                         FirstPosBeforSelect = Vector3.zero;
                         shopperSystem.SetPickedUpFruitData(0);
+                        
                     }
+                    crossHair.SetVisible(false);
                 }
 
             }

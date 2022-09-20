@@ -17,33 +17,31 @@ public class ShopperSystemController : MonoBehaviour
     public DialogBox dialogBox;
     public RectTransform Contents;
     public int MaxShopperCount;
-    public int ShopperInWave = 0;
-    public int ServiceCountInWave = 0;
+    public TMPro.TMP_Text Point_Text;
+    public float ScorePoint = 0;
 
-    private int shopperinplace;
-    public int ShopperInPlaceCount
+    private int customerinwave = -1;
+    public int CustomerInWave
     {
-        set
-        {
-            shopperinplace = value;
-            if (shopperinplace == ShopperInWave && fruitSpawned)
+        set {
+            customerinwave = value;
+            if(customerinwave == 0)
             {
-                list_indicatorShopper.ForEach((e) =>
-                {
-                    e.gameObject.SetActive(true);
-                });
-                fruitSpawned.SetActive(true);
-
-                dialogBox.Set("CUT", 3);
-                Handler_OnChangePhase(PhaseGame.Cut);
-                Debug.Log("Ready For Cut");
-
+               
+                StartCoroutine(ResetWave());
             }
 
         }
-        get { return shopperinplace; }
+        get { return customerinwave; }
     }
-    public ShopperInWorldSpwner shopperInWorldSpwner;
+
+ 
+
+
+    public float TimeResponseCustomer = 40;
+    public float TimeBetweenEverySpawn = 1;
+    public Char_Agent[] Humen_prefab;
+
     public Transform FruitSpwanPlace;
 
 
@@ -121,7 +119,7 @@ public class ShopperSystemController : MonoBehaviour
          }
      }*/
 
-    public IEnumerator CheckSlice()
+    /*public IEnumerator CheckSlice()
     {
         sliceManager.AddToListSlicedFruit();
         var fruit_in_world = GameObject.FindGameObjectsWithTag("furit");
@@ -172,55 +170,92 @@ public class ShopperSystemController : MonoBehaviour
 
             Debug.Log("Check Slice Exist :" + find);
         }
+    }*/
+
+
+    /* public void CalculateScoreAndCheckExistServicInWave(float PersonPercent, float SelectedFuritPercent)
+
+     {
+
+
+         //Debug.Log("Point Person" + ServiceCountInWave);
+         if (PersonPercent <= SelectedFuritPercent)
+         {
+             //ServiceCountInWave++;
+
+             dialogBox.Set("Well Done", 2);
+
+         }
+        if (ServiceCountInWave == ShopperInWave)
+         {
+             dialogBox.Set("Good job Ready For Next Level", 2);
+
+             StartCoroutine(ResetWave());
+             // Debug.Log("Finish Service To This Wave and Reset");
+         }
+         else
+         {
+
+             Handler_OnChangePhase(PhaseGame.Wait);
+             DOVirtual.DelayedCall(2, () =>
+             {
+
+
+                 StartCoroutine(CheckSlice());
+
+             });
+         }
+
+        /// DragAndDrop.Percent_text.text = 0 + "%";
+
+
+
+     }*/
+
+    public void CalculateScore(float pointoffset)
+    {
+        var tempscore = 1000;
+        if(pointoffset <=2)
+        {
+            tempscore = 1000;
+        }
+        else if(pointoffset>2 && pointoffset<=5)
+        {
+            tempscore -= 300;
+        }
+        else if(pointoffset>=5 && pointoffset<11)
+        {
+            tempscore -= 500;
+        }
+        else if(pointoffset>15)
+        {
+            tempscore -= 0;
+        }
+        ScorePoint += tempscore;
+        Point_Text.text = ScorePoint.ToString();
     }
-
-    
-    public void CalculateScoreAndCheckExistServicInWave(float PersonPercent, float SelectedFuritPercent)
-
+    public IEnumerator SpawnShopper(List<int> FruitPercents, Sprite FruitIcon, Transform[] ShopperPlaceService)
     {
 
-
-        //Debug.Log("Point Person" + ServiceCountInWave);
-        if (PersonPercent <= SelectedFuritPercent)
+        for (int i = 0; i < FruitPercents.Count; i++)
         {
-            ServiceCountInWave++;
-
-            dialogBox.Set("Well Done", 2);
-
+            var rand = UnityEngine.Random.Range(0, Humen_prefab.Length);
+            var shopper = Instantiate(Humen_prefab[rand], transform.position, Quaternion.identity);
+            shopper.ID = i;
+            shopper.SetUI(null, FruitIcon, FruitPercents[i], TimeResponseCustomer);
+            yield return new WaitForSecondsRealtime(TimeBetweenEverySpawn);
+            shopper.SetDestination(ShopperPlaceService[i].position);
+            //ShopperInWave++;
         }
-        if (ServiceCountInWave == ShopperInWave)
-        {
-            dialogBox.Set("Good job Ready For Next Level", 2);
-
-            StartCoroutine(ResetWave());
-            // Debug.Log("Finish Service To This Wave and Reset");
-        }
-        else
-        {
-
-            Handler_OnChangePhase(PhaseGame.Wait);
-            DOVirtual.DelayedCall(2, () =>
-            {
-
-
-                StartCoroutine(CheckSlice());
-
-            });
-        }
-
-       /// DragAndDrop.Percent_text.text = 0 + "%";
-
-
-
     }
-
     public IEnumerator ResetWave()
     {
-
-        dialogBox.Set("Wait For The Customers");
+        dialogBox.Set("Wait For The Customers", 5);
+        yield return new WaitForSeconds(5f);
+        
         Handler_OnChangePhase(PhaseGame.Wait);
-        Debug.Log("ResetWave");
-        Handler_OnAgentMove(DestroyPositionAgent.transform.position);
+       
+       // Handler_OnAgentMove(DestroyPositionAgent.transform.position);
         var list_furit = GameObject.FindGameObjectsWithTag("furit");
         yield return new WaitForSeconds(0.2f);
 
@@ -228,16 +263,14 @@ public class ShopperSystemController : MonoBehaviour
         {
             Destroy(list_furit[i].gameObject);
         }
-        ShopperInWave = 0;
-        ServiceCountInWave = 0;
-        ShopperInPlaceCount = 0;
-        fruitSpawned = null;
-
+        
         yield return new WaitForSeconds(0.3f);
-
+        fruitSpawned = null;
+        CustomerInWave = -1;
         Handler_OnReset();
         GenerationWave();
         cameraController.SwitchCamera(0);
+        
 
     }
     public void GenerationWave()
@@ -267,13 +300,14 @@ public class ShopperSystemController : MonoBehaviour
         }
 
         var order = tempOfchoose.OrderBy(X => X).ToList();
-        order.ForEach(e =>
-        {
-            SpwanShopperIndicator_UI(null, fruit_icon, e);
-            Debug.Log("Percent:" + e);
-            ShopperInWave++;
-        });
-        StartCoroutine(shopperInWorldSpwner.SpawnShopper(order.Count, ShopperServicePlace));
+        /*   order.ForEach(e =>
+           {
+               SpwanShopperIndicator_UI(null, fruit_icon, e);
+               Debug.Log("Percent:" + e);
+
+           });*/
+        StartCoroutine(SpawnShopper(order, fruit_icon, ShopperServicePlace));
+        CustomerInWave = order.Count;
         tempOfchoose.Clear();
         // Debug.Log("GenrationWave");
     }
@@ -284,7 +318,7 @@ public class ShopperSystemController : MonoBehaviour
         var pos = FruitSpwanPlace.position;
         pos.y = 1.18f;
         fruitSpawned = Instantiate(fruitInShops[rand].prefab, FruitSpwanPlace.position, Quaternion.identity);
-        fruitSpawned.SetActive(false);
+     //   fruitSpawned.SetActive(false);
         return new Tuple<string, Sprite ,GameObject>(fruitInShops[rand].Name, fruitInShops[rand].logo, fruitSpawned);
 
     }
@@ -296,7 +330,7 @@ public class ShopperSystemController : MonoBehaviour
         //100.65656565665
         PickedUpFruit.Percent_text.text = precent.ToString("0") + "%";
     }
-    private void SpwanShopperIndicator_UI(Sprite profile, Sprite iconFruit, float percent)
+   /* private void SpwanShopperIndicator_UI(Sprite profile, Sprite iconFruit, float percent)
     {
         var shopper = Instantiate(shopperIndicatorUI, Contents);
         shopper.gameObject.SetActive(false);
@@ -308,7 +342,7 @@ public class ShopperSystemController : MonoBehaviour
     public void SetShopperPrograssbar_UIIndicator(int index , float amount)
     {
         list_indicatorShopper[index].PrograssbarSet(amount);
-    }
+    }*/
     private void ClearShopperUI()
     {
         list_indicatorShopper.ForEach(e =>

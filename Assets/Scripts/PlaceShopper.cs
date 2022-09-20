@@ -12,27 +12,31 @@ public class PlaceShopper : MonoBehaviour
     private void Start()
     {
         shopperSystem = FindObjectOfType<ShopperSystemController>();
-        shopperSystem.OnResetWave += ShopperSystem_OnResetWave;
+        //shopperSystem.OnResetWave += ShopperSystem_OnResetWave;
     }
 
     private void ShopperSystem_OnResetWave()
     {
        
-        HaveShopper = false;
+        //HaveShopper = false;
     }
 
     private void OnTriggerEnter(Collider obj)
     {
-        if (obj.tag == "shopper" && HaveShopper== false)
+        if (obj.tag == "shopper" )
         {
-            HaveShopper = true;
+            
            
             var agent = obj.GetComponent<NavMeshAgent>();
+            var char_agent = obj.GetComponent<Char_Agent>();
             var animator = obj.GetComponent<Animator>();
             agent.isStopped = true;
             animator.SetBool("Walk", false);
-            obj.transform.DOLookAt(TargetViweCharacter.position, 2);
-            shopperSystem.ShopperInPlaceCount++;
+
+
+            obj.transform.DORotate(new Vector3(0, -180, 0), 2);
+            char_agent.CalculateTime(shopperSystem.TimeResponseCustomer);
+            //shopperSystem.ShopperInPlaceCount++;
         
            // Debug.Log("AAAAAAAA");
         }

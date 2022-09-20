@@ -8,9 +8,10 @@ public class DialogBox : MonoBehaviour
     
     public void Set(string context , float duration = 5)
     {
+      
         this.Context.text = context;
         this.gameObject.SetActive(true);
-        DOVirtual.DelayedCall(duration, () => { Hide(); });
+      DOVirtual.DelayedCall(duration, () => { Hide(); });
     }
     public void Hide()
     {
