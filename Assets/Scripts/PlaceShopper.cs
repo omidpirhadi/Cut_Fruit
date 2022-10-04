@@ -15,11 +15,7 @@ public class PlaceShopper : MonoBehaviour
         //shopperSystem.OnResetWave += ShopperSystem_OnResetWave;
     }
 
-    private void ShopperSystem_OnResetWave()
-    {
-       
-        //HaveShopper = false;
-    }
+
 
     private void OnTriggerEnter(Collider obj)
     {
@@ -37,8 +33,9 @@ public class PlaceShopper : MonoBehaviour
             obj.transform.DORotate(new Vector3(0, -180, 0), 2);
             char_agent.CalculateTime(shopperSystem.TimeResponseCustomer);
             //shopperSystem.ShopperInPlaceCount++;
-        
-           // Debug.Log("AAAAAAAA");
+
+            // Debug.Log("AAAAAAAA");
+            
         }
     }
 }

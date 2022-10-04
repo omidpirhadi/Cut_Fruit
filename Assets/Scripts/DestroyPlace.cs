@@ -14,7 +14,10 @@ public class DestroyPlace : MonoBehaviour
     {
         if (obj.tag == "destroy")
         {
-            //shopperSystem.ShopperInPlaceCount--;
+            var id = obj.GetComponent<Char_Agent>().IDPlace;
+            shopperSystem.FreePlaceAfterDestroyCustomer(id);
+            shopperSystem.QueueCapacity++;
+            StartCoroutine(shopperSystem.SpawnCustomer(1));
             Destroy(obj.gameObject);
             //obj.transform.DOLookAt(cam_forward, 2);
          //  Debug.Log("AAAAAAAA");

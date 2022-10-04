@@ -8,7 +8,7 @@ using DG.Tweening;
 public class Char_Agent : MonoBehaviour
 {
     // public Transform Target;
-    public int ID;
+    public int IDPlace;
     
     public Transform Canvas;
     public Image Character_image;
@@ -65,7 +65,7 @@ public class Char_Agent : MonoBehaviour
         animator.SetBool("Walk", true);
         agent.isStopped = false;
         agent.destination = pos;
-        shopperSystem.CustomerInWave--;
+       // shopperSystem.CustomerInWave--;
     }
     private void OnDestroy()
     {
@@ -78,6 +78,7 @@ public class Char_Agent : MonoBehaviour
     {
        animator.SetBool("Walk", true);
         agent.destination = pos;
+        Debug.Log("POS SET");
     }
 
 

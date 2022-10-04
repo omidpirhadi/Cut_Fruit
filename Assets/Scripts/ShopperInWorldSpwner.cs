@@ -16,9 +16,9 @@ public class ShopperInWorldSpwner : MonoBehaviour
         {
             var rand = UnityEngine.Random.Range(0, Humen_prefab.Length);
             var shopper = Instantiate(Humen_prefab[rand], transform.position, Quaternion.identity);
-            shopper.ID = i;
+            shopper.IDPlace = i;
             yield return new WaitForSecondsRealtime(TimeBetweenEverySpawn);
-            shopper.SetDestination(ShopperPlaceService[i].position);
+            //shopper.SetDestination(ShopperPlaceService[i].position);
         }
     }
 

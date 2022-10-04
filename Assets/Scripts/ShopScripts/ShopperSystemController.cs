@@ -28,7 +28,7 @@ public class ShopperSystemController : MonoBehaviour
             if(customerinwave == 0)
             {
                
-                StartCoroutine(ResetWave());
+                //StartCoroutine(ResetWave());
             }
 
         }
@@ -45,7 +45,7 @@ public class ShopperSystemController : MonoBehaviour
     public Transform FruitSpwanPlace;
 
 
-    public Transform[] ShopperServicePlace;
+    public PlaceShopper[] ShopperServicePlace;
     public DestroyPlace DestroyPositionAgent;
 
     public Button SpawnFruit_Button;
@@ -56,10 +56,10 @@ public class ShopperSystemController : MonoBehaviour
     //public TMPro.TMP_Text CutCount_Text;
     //private Cutter cutter;
     //private int CutCount = 0;
-    private GameObject fruitSpawned;
+    //private GameObject fruitSpawned;
 
 
-    private FuritSliceManager sliceManager;
+   // private FuritSliceManager sliceManager;
    // private DragAndDropItem DragAndDrop;
     private int PerviousChoose = 0;
 
@@ -67,19 +67,21 @@ public class ShopperSystemController : MonoBehaviour
     public List<FruitInShop> fruitInShops = new List<FruitInShop>();
     private List<int> PercentFruits = new List<int> { 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95 };
     private List<ShopperIndicatorUI> list_indicatorShopper = new List<ShopperIndicatorUI>();
-
-
+    private CustomerData customerData;
+    public int QueueCapacity = 4;
     private bool InResetWave = false;
     public void Start()
     {
         Application.targetFrameRate = 60;
-     
-        SpawnFruit_Button.onClick.AddListener(() =>
+        customerData = new CustomerData();
+        customerData.customers = new Queue<Customer>();
+        GenerationWave(10);
+        /*SpawnFruit_Button.onClick.AddListener(() =>
         {
 
             StartCoroutine(OnlySpawnFruit());
             
-        });
+        });*/
         Cut_button.onClick.AddListener(() =>
         {
 
@@ -93,14 +95,16 @@ public class ShopperSystemController : MonoBehaviour
         });
         Reset_Button.onClick.AddListener(() =>
         {
-            StartCoroutine(ResetWave());
+           // StartCoroutine(ResetWave());
         });
+        StartCoroutine(SpawnCustomer(4));
         /* DragAndDrop = FindObjectOfType<DragAndDropItem>();*/
-        sliceManager = GetComponent<FuritSliceManager>();
+       // sliceManager = GetComponent<FuritSliceManager>();
         // cutter = GetComponent<Cutter>();
         //   cutter.OnCut += Cutter_OnCut;
-        StartCoroutine(ResetWave());
-
+      //  StartCoroutine(ResetWave());
+        
+       
     }
 
     /* private void Cutter_OnCut()
@@ -234,21 +238,8 @@ public class ShopperSystemController : MonoBehaviour
         ScorePoint += tempscore;
         Point_Text.text = ScorePoint.ToString();
     }
-    public IEnumerator SpawnShopper(List<int> FruitPercents, Sprite FruitIcon, Transform[] ShopperPlaceService)
-    {
-
-        for (int i = 0; i < FruitPercents.Count; i++)
-        {
-            var rand = UnityEngine.Random.Range(0, Humen_prefab.Length);
-            var shopper = Instantiate(Humen_prefab[rand], transform.position, Quaternion.identity);
-            shopper.ID = i;
-            shopper.SetUI(null, FruitIcon, FruitPercents[i], TimeResponseCustomer);
-            yield return new WaitForSecondsRealtime(TimeBetweenEverySpawn);
-            shopper.SetDestination(ShopperPlaceService[i].position);
-            //ShopperInWave++;
-        }
-    }
-    public IEnumerator ResetWave()
+   
+  /*  public IEnumerator ResetWave()
     {
         dialogBox.Set("Wait For The Customers", 5);
         yield return new WaitForSeconds(5f);
@@ -265,66 +256,137 @@ public class ShopperSystemController : MonoBehaviour
         }
         
         yield return new WaitForSeconds(0.3f);
-        fruitSpawned = null;
-        CustomerInWave = -1;
+        //fruitSpawned = null;
+       // CustomerInWave = -1;
         Handler_OnReset();
-        GenerationWave();
+        //GenerationWave();
         cameraController.SwitchCamera(0);
         
 
-    }
-    public void GenerationWave()
+    }*/
+
+
+    [Button ("DebugCustomer", ButtonSizes.Medium)]
+    public void logwave()
     {
-        int shopperCount = UnityEngine.Random.Range(1, MaxShopperCount + 1);
-        ClearShopperUI();
-        List<int> tempOfchoose = new List<int>(shopperCount);
-        var fruit_spwaned_data = SpawnFruit();
-        var namefruit = fruit_spwaned_data.Item1;
-        Sprite fruit_icon = fruit_spwaned_data.Item2;
-
-        PickedUpFruit.Icon_image.sprite = fruit_icon;
-        this.PerviousChoose = 0;
-        for (int i = shopperCount; i > 0; i--)
+        foreach(var x in customerData.customers)
         {
-            var remining = PercentFruits[PercentFruits.Count - 1] - this.PerviousChoose;
-            var indexPreviousChoose = PercentFruits.IndexOf(remining);
-
-            var list_choose = PercentFruits.GetRange(0, (indexPreviousChoose) - (i - 1));
-            var choose_rand = UnityEngine.Random.Range(0, list_choose.Count);
-
-            var person_choose = list_choose[choose_rand];
-
-            this.PerviousChoose += person_choose;
-
-            tempOfchoose.Add(person_choose);
+            Debug.Log($"Data: FruitName:{x.Fruit}Percent:{x.PercentFruit}");
         }
-
-        var order = tempOfchoose.OrderBy(X => X).ToList();
-        /*   order.ForEach(e =>
-           {
-               SpwanShopperIndicator_UI(null, fruit_icon, e);
-               Debug.Log("Percent:" + e);
-
-           });*/
-        StartCoroutine(SpawnShopper(order, fruit_icon, ShopperServicePlace));
-        CustomerInWave = order.Count;
-        tempOfchoose.Clear();
-        // Debug.Log("GenrationWave");
     }
-    private Tuple<string, Sprite, GameObject> SpawnFruit()
+    [Button("GenerateCustomer", ButtonSizes.Medium)]
+    public void GenerationWave(int countwave)
+    {
+        for (int b = 0; b <= countwave; b++)
+        {
+
+
+            int shopperCount = UnityEngine.Random.Range(1, MaxShopperCount + 1);
+            ClearShopperUI();
+            List<int> tempOfchoose = new List<int>(shopperCount);
+            var fruit_spwaned_data = ChooseFruitForCustomer();
+            var namefruit = fruit_spwaned_data.Item1;
+            Sprite fruit_icon = fruit_spwaned_data.Item2;
+
+            PickedUpFruit.Icon_image.sprite = fruit_icon;
+            this.PerviousChoose = 0;
+            for (int i = shopperCount; i > 0; i--)
+            {
+                var remining = PercentFruits[PercentFruits.Count - 1] - this.PerviousChoose;
+                var indexPreviousChoose = PercentFruits.IndexOf(remining);
+
+                var list_choose = PercentFruits.GetRange(0, (indexPreviousChoose) - (i - 1));
+                var choose_rand = UnityEngine.Random.Range(0, list_choose.Count);
+
+                var person_choose = list_choose[choose_rand];
+
+                this.PerviousChoose += person_choose;
+
+                tempOfchoose.Add(person_choose);
+            }
+
+            var order = tempOfchoose.OrderBy(X => X).ToList();
+
+            order.ForEach(e =>
+            {
+                customerData.customers.Enqueue(new Customer { Fruit = namefruit, PercentFruit = e, logo = fruit_icon });
+                Debug.Log($"Data: FruitName:{namefruit}Percent:{e}");
+
+            });
+
+
+            // StartCoroutine(SpawnShopper(order, fruit_icon, ShopperServicePlace));
+            //   CustomerInWave = order.Count;
+            tempOfchoose.Clear();
+            // Debug.Log("GenrationWave");
+        }
+    }
+    private Tuple<string, Sprite> ChooseFruitForCustomer()
     {
 
         int rand = UnityEngine.Random.Range(0, fruitInShops.Count);
         var pos = FruitSpwanPlace.position;
         pos.y = 1.18f;
-        fruitSpawned = Instantiate(fruitInShops[rand].prefab, FruitSpwanPlace.position, Quaternion.identity);
-     //   fruitSpawned.SetActive(false);
-        return new Tuple<string, Sprite ,GameObject>(fruitInShops[rand].Name, fruitInShops[rand].logo, fruitSpawned);
+      //  Instantiate(fruitInShops[rand].prefab, FruitSpwanPlace.position, Quaternion.identity);
+        //   fruitSpawned.SetActive(false);
+        return new Tuple<string, Sprite>(fruitInShops[rand].Name, fruitInShops[rand].logo);
 
     }
+    [Button("SpawnCustomer", ButtonSizes.Medium)]
+    public void StartSSSS()
+    {
+        
+    }
+    public IEnumerator SpawnCustomer(int repeatSpawn)
+    {
+        for (int i = 0; i < repeatSpawn; i++)
+        {
 
 
+            if (QueueCapacity <= 4)
+            {
 
+                var position_data = QueueCustomerControll();
+                var idplace = position_data.Item1;
+                var pos = position_data.Item2;
+                var data = customerData.customers.Dequeue();
+                var rand = UnityEngine.Random.Range(0, Humen_prefab.Length);
+                yield return new WaitForSecondsRealtime(TimeBetweenEverySpawn);
+
+                var shopper = Instantiate(Humen_prefab[rand], transform.position, Quaternion.identity);
+                yield return new WaitForSecondsRealtime(0.1f);
+                shopper.IDPlace = idplace;
+                shopper.SetUI(null, data.logo, data.PercentFruit, TimeResponseCustomer);
+                shopper.SetDestination(pos);
+                //ShopperInWave++;
+                Debug.Log("AAA");
+
+            }
+        }
+    }
+    
+    public Tuple<int , Vector3> QueueCustomerControll()
+    {
+        Vector3 pos = new Vector3();
+        int index = 0;
+        for (int i = 0; i < ShopperServicePlace.Length; i++)
+        {
+            if(!ShopperServicePlace[i].HaveShopper)
+            {
+                pos = ShopperServicePlace[i].transform.position;
+                index = i;
+                QueueCapacity--;
+                ShopperServicePlace[i].HaveShopper = true;
+                Debug.Log("Find Place:" + pos);
+                break;
+            }
+        }
+        return new Tuple<int, Vector3>(index, pos);
+    }
+    public void FreePlaceAfterDestroyCustomer(int idPlace)
+    {
+        ShopperServicePlace[idPlace].HaveShopper = false;
+    }
     public void SetPickedUpFruitData(float precent)
     {
         //100.65656565665
@@ -358,36 +420,6 @@ public class ShopperSystemController : MonoBehaviour
         Destroy(shopper.gameObject);
     }
 
-    public IEnumerator OnlySpawnFruit()
-    {
-     
-        //ShopperInPlaceCount = 0;
-       // fruitSpawned = null;
-        dialogBox.Set("Wait For Change Fruit", 3);
-        Handler_OnChangePhase(PhaseGame.Wait);
-        var list_furit = GameObject.FindGameObjectsWithTag("furit");
-        yield return new WaitForSeconds(0.1f);
-
-        for (int i = 0; i < list_furit.Length; i++)
-        {
-            Destroy(list_furit[i].gameObject);
-        }
-        yield return new WaitForSeconds(0.1f);
-        var spawnedfruitData = SpawnFruit();
-        var ref_obj = spawnedfruitData.Item3;
-        var icon = spawnedfruitData.Item2;
-        for (int i = 0; i < list_indicatorShopper.Count; i++)
-        {
-            list_indicatorShopper[i].FuritIcon_image.sprite = icon;
-        }
-        PickedUpFruit.Icon_image.sprite = icon;
-        ref_obj.SetActive(true);
-        SetPickedUpFruitData(0);
-        yield return new WaitForSeconds(2f);
-        dialogBox.Set("Cut", 3);
-        Handler_OnChangePhase(PhaseGame.Cut);
-
-    }
 
     private Action resetwave;
     public event Action OnResetWave
@@ -455,7 +487,7 @@ public struct FruitInShop
     public string Id;
    
     public string Name;
-    public float Vloume;
+    public float Volume;
     public GameObject prefab;
     public Sprite logo;
 
@@ -468,4 +500,16 @@ public struct PickedUpFruitData
     public Image Icon_image;
     public TMPro.TMP_Text Percent_text;
     
+}
+[Serializable]
+public struct Customer
+{
+    public int PercentFruit;
+    public string Fruit;
+    public Sprite logo;
+}
+[Serializable]
+public struct CustomerData
+{
+    public Queue<Customer> customers;
 }
