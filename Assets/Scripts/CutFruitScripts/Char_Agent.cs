@@ -39,6 +39,10 @@ public class Char_Agent : MonoBehaviour
     {
         
     }
+    private void OnDestroy()
+    {
+       
+    }
     public void HappyMotion()
     {
         this.tag = "destroy";
@@ -67,10 +71,7 @@ public class Char_Agent : MonoBehaviour
         agent.destination = pos;
        // shopperSystem.CustomerInWave--;
     }
-    private void OnDestroy()
-    {
-       
-    }
+   
  
  
 
@@ -78,7 +79,7 @@ public class Char_Agent : MonoBehaviour
     {
        animator.SetBool("Walk", true);
         agent.destination = pos;
-        Debug.Log("POS SET");
+        //Debug.Log("POS SET");
     }
 
 

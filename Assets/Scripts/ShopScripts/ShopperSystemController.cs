@@ -254,7 +254,7 @@ public class ShopperSystemController : MonoBehaviour
                 shopper.SetUI(null, data.logo, data.PercentFruit, TimeResponseCustomer);
                 shopper.SetDestination(pos);
                 //ShopperInWave++;
-                Debug.Log("AAA");
+                //Debug.Log("AAA");
 
             }
         }
