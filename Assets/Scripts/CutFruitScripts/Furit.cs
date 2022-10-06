@@ -14,8 +14,8 @@ public class Furit : MonoBehaviour,IFruit
     public Material InnerMatrialAfterCut;
     private FuritSliceManager furitSliceManager;
     private Mesh meshFilter;
-    private UI ui;
-    private int index = 0;
+   // private UI ui;
+   // private int index = 0;
 
     public new Rigidbody rigidbody;
     public Vector3 OffsetCenter;
@@ -29,13 +29,14 @@ public class Furit : MonoBehaviour,IFruit
         renderer = GetComponent<MeshRenderer>();
         furitSliceManager = FindObjectOfType<FuritSliceManager>();
 
-        FuritTag = this.gameObject.name;
+       // FuritTag = this.gameObject.name;
         furitSliceManager.AddFuritOnStartGame(FuritTag, Volume);
 
         GetComponent<MeshCollider>().convex = true;
         rigidbody = GetComponent<Rigidbody>();
         OffsetCenter = transform.position - transform.TransformPoint(meshFilter.bounds.center);
         PercentVolume = 100;
+
 
     }
 
@@ -51,6 +52,7 @@ public class Furit : MonoBehaviour,IFruit
             rigidbody.drag = 1;
             rigidbody.angularDrag = 0;
         }
+   //     transform.position = new Vector3(transform.position.x, 1.5f, transform.position.z);
     }
 
 

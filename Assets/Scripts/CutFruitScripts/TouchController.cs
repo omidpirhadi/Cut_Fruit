@@ -16,6 +16,7 @@ public class TouchController : MonoBehaviour
     public bool IsTouchReady = true;
     public LayerMask MaskForCut;
     public LayerMask MaskForFruit;
+    public LayerMask MaskForMoney;
     public LayerMask MaskForHumen;
     private Cutter cutter;
     private LineRenderer line;
@@ -33,6 +34,7 @@ public class TouchController : MonoBehaviour
 
     public GameObject fruit_slice;
     private float precent_fruit;
+    private string name_fruit_select;
     private Vector3 FirstPosBeforSelect;
     private Vector3 offsetOfSelect;
     private  Rigidbody rigidbody_selected_fruit;
@@ -54,7 +56,7 @@ public class TouchController : MonoBehaviour
         SelectedFruits = new List<GameObject>();
         SelectedInnerMatrials = new List<Material>();
         line.positionCount = 2;
-        
+
     }
    
     private void Update()
@@ -99,12 +101,26 @@ public class TouchController : MonoBehaviour
 
             if (touch.phase == TouchPhase.Began)
             {
+                ///////
+                ///For Click On Money Box On Grand
+
                 ray = Camera.main.ScreenPointToRay(touch.position);
+                if (Physics.Raycast(ray, out hit, 50, MaskForMoney))
+                {
+                    
+                    if (hit.collider.gameObject.GetComponent<Money>())
+                    {
+                        hit.collider.gameObject.GetComponent<Money>().ReciveCash();
+                       Debug.Log(hit.collider.name);
+                    }
+                }
 
                 if (IsReadyForCut)
                 {
                     if (Physics.Raycast(ray, out hit, 10, MaskForCut))
                     {
+
+
                         SelectedFruits.Clear();
                         SelectedInnerMatrials.Clear();
                         line.positionCount = 2;
@@ -112,6 +128,8 @@ public class TouchController : MonoBehaviour
                         line.SetPosition(0, point1);
                         line.SetPosition(1, point1);
                         //  Debug.Log(hit.collider.name);
+
+
                     }
                 }
                 else
@@ -120,13 +138,14 @@ public class TouchController : MonoBehaviour
                     {
                         var f = hit.collider.GetComponent<Furit>();
                         var f_p = hit.collider.GetComponent<FruitPiece>();
-                        
+
                         if (f)
                         {
 
                             fruit_slice = f.gameObject;
                             precent_fruit = f.PercentVolume;
                             offsetOfSelect = f.OffsetCenter;
+                            name_fruit_select = f.FuritTag;
                             rigidbody_selected_fruit = f.rigidbody;
                             shopperSystem.SetPickedUpFruitData(f.PercentVolume);
                             crossHair.SetVisible(true);
@@ -137,20 +156,20 @@ public class TouchController : MonoBehaviour
                             fruit_slice = f_p.gameObject;
                             precent_fruit = f_p.PercentVolume;
                             offsetOfSelect = f_p.OffsetCenter;
+                            name_fruit_select = f_p.FuritTag;
                             rigidbody_selected_fruit = f_p.rigidbody;
                             shopperSystem.SetPickedUpFruitData(f_p.PercentVolume);
                             crossHair.SetVisible(true);
                             //   Debug.Log("Fruit Piece Data:" + f_p.PercentVolume);
                         }
-                        
+
                         FirstPosBeforSelect = fruit_slice.transform.position;
                         rigidbody_selected_fruit.isKinematic = true;
 
 
                     }
+
                 }
-
-
             }
             else if (touch.phase == TouchPhase.Moved)
             {
@@ -169,11 +188,13 @@ public class TouchController : MonoBehaviour
                 }
                 else
                 {
-                    if (Physics.Raycast(ray, out hit, 1000, MaskForHumen))
+                    if (Physics.Raycast(ray, out hit, 10, MaskForHumen))
                     {
                         if (fruit_slice)
                         {
-                            fruit_slice.transform.position = hit.point + offsetOfSelect;
+                            var ss = hit.point + offsetOfSelect;
+                            ss.y += 0.2f;
+                            fruit_slice.transform.position = ss;
                             
                         }
 
@@ -214,8 +235,8 @@ public class TouchController : MonoBehaviour
                         {
                          //   var pos = FindObjectOfType<DestroyPlace>().transform.position;
                             var char_agent_temp = hit.collider.GetComponent<Char_Agent>();
-                           // var id = char_agent_temp.ID;
-                            char_agent_temp.PrograssbarAndPointSet( precent_fruit);
+                            // var id = char_agent_temp.ID;
+                            char_agent_temp.PrograssbarAndPointSet(precent_fruit, name_fruit_select);
                             
                             Destroy(fruit_slice);
 
@@ -234,6 +255,7 @@ public class TouchController : MonoBehaviour
                         }
                         fruit_slice = null;
                         rigidbody_selected_fruit = null;
+                        name_fruit_select = "";
                         FirstPosBeforSelect = Vector3.zero;
                         shopperSystem.SetPickedUpFruitData(0);
                         

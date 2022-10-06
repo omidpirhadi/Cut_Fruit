@@ -356,8 +356,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0bd649ee29ed59459851e1461ff474b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ID: 0
-  Canvas: {fileID: 6476436615858163939}
+  IDPlace: 0
+  CashPrefab: {fileID: 1974642295132470175, guid: da40ef9ec04bf0c4bab26c8cbc0f4aea,
+    type: 3}
   Character_image: {fileID: 7309061108981952707}
   Percent_text: {fileID: 4928058566566582123}
   FuritIcon_image: {fileID: 4928058568361823624}

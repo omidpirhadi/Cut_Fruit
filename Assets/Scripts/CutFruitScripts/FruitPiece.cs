@@ -20,7 +20,7 @@ public class FruitPiece : MonoBehaviour,IFruit
 
    // private float Get_Z;
     //private UI ui;
-    private int index = 0;
+  //  private int index = 0;
     public new Rigidbody rigidbody;
     public Vector3 OffsetCenter;
     void Start()
@@ -47,6 +47,7 @@ public class FruitPiece : MonoBehaviour,IFruit
             rigidbody.drag = 1;
             rigidbody.angularDrag = 0;
         }
+     //   transform.position = new Vector3(transform.position.x, 1.5f, transform.position.z);
     }
 
     [Button("Set Pivot")]

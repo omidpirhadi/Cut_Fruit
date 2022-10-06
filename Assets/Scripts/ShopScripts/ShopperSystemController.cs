@@ -17,7 +17,7 @@ public class ShopperSystemController : MonoBehaviour
     public DialogBox dialogBox;
     public RectTransform Contents;
     public int MaxShopperCount;
-    public TMPro.TMP_Text Point_Text;
+    public TMPro.TMP_Text TotalCash_Text;
 
     public float TotalCash;
     public float SliceCash;
@@ -66,7 +66,7 @@ public class ShopperSystemController : MonoBehaviour
     private CustomerData customerData;
     private int PerviousChoose = 0;
   
-    private bool InResetWave = false;
+  //  private bool InResetWave = false;
     public void Start()
     {
         Application.targetFrameRate = 60;
@@ -91,34 +91,13 @@ public class ShopperSystemController : MonoBehaviour
         });*/
         StartCoroutine(SpawnCustomer(4));
 
-        
+        SetTextForTotalCash(TotalCash.ToString("0"));
        
     }
 
 
 
-    public void CalculateScore(float pointoffset)
-    {
-        var tempscore = 1000;
-        if(pointoffset <=2)
-        {
-            tempscore = 1000;
-        }
-        else if(pointoffset>2 && pointoffset<=5)
-        {
-            tempscore -= 300;
-        }
-        else if(pointoffset>=5 && pointoffset<11)
-        {
-            tempscore -= 500;
-        }
-        else if(pointoffset>15)
-        {
-            tempscore -= 0;
-        }
-        ScorePoint += tempscore;
-        Point_Text.text = ScorePoint.ToString();
-    }
+    
    
 
 
@@ -202,16 +181,18 @@ public class ShopperSystemController : MonoBehaviour
                 {
                     if (TotalCash > price)
                     {
-                        Instantiate(fruit.prefab, FruitSpwanPlace.position, Quaternion.identity);
+                       var s =  Instantiate(fruit.prefab, FruitSpwanPlace.position, Quaternion.identity);
+                        s.GetComponent<Furit>().FuritTag = fruit.Name;
                         this.SliceCash = cashSlice;
                         TotalCash -= price;
-                        dialogBox.Set("Ready For Cut");
+                        dialogBox.Set("Ready For Cut",3);
+                        SetTextForTotalCash(TotalCash.ToString("0"));
                         Debug.Log("FruitSpawned");
                     }
                     else
                     {
-                        dialogBox.Set("Ready For Cut");
-                        Debug.Log("FruitSpawned");
+                        dialogBox.Set("No Enoghe Cash",3);
+                        Debug.Log("Cant Spawn Fruit");
                     }
 
                 }
@@ -251,6 +232,7 @@ public class ShopperSystemController : MonoBehaviour
                 var shopper = Instantiate(Humen_prefab[rand], transform.position, Quaternion.identity);
                 yield return new WaitForSecondsRealtime(0.1f);
                 shopper.IDPlace = idplace;
+                shopper.fruitname = data.Fruit;
                 shopper.SetUI(null, data.logo, data.PercentFruit, TimeResponseCustomer);
                 shopper.SetDestination(pos);
                 //ShopperInWave++;
@@ -287,7 +269,16 @@ public class ShopperSystemController : MonoBehaviour
         //100.65656565665
         PickedUpFruit.Percent_text.text = precent.ToString("0") + "%";
     }
- 
+ public void AddCash(float amount)
+    {
+        TotalCash += amount;
+        SetTextForTotalCash(TotalCash.ToString("0"));
+        Debug.Log("TotalCash:" + TotalCash);
+    }
+    public void  SetTextForTotalCash(string amount)
+    {
+        TotalCash_Text.text = amount;
+    }
     private void ClearShopperUI()
     {
         list_indicatorShopper.ForEach(e =>

@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using DG.Tweening;
 public class InventoryFruitItem : MonoBehaviour
 {
     public string FruitName;
@@ -10,15 +10,17 @@ public class InventoryFruitItem : MonoBehaviour
     public TMPro.TextMeshProUGUI price_text;
     private ShopperSystemController shopperSystem;
     private UnityEngine.UI.Button slot_btn;
+  //  [SerializeField] private GameObject ParentUI;
     private void OnEnable()
     {
         if (!shopperSystem)
             shopperSystem = FindObjectOfType<ShopperSystemController>();
         slot_btn = GetComponent<UnityEngine.UI.Button>();
-        slot_btn.onClick.AddListener(() => {
-            Debug.Log("Fruit Button Click");
-            StartCoroutine(shopperSystem.SpawFruit(FruitName, Price, CashSlice));
+        slot_btn.onClick.AddListener(() =>
+        {
 
+            StartCoroutine(shopperSystem.SpawFruit(FruitName, Price, CashSlice));
+            Debug.Log("Fruit Button Click");
         });
         price_text.text = Price.ToString();
     }
