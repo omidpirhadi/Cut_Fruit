@@ -364,7 +364,11 @@ MonoBehaviour:
   FuritIcon_image: {fileID: 4928058568361823624}
   Prograssbar_time: {fileID: 4125598970914113752}
   Prograssbar_satisfaction: {fileID: 8024790447668996254}
+  Canvans: {fileID: 6476436615858163939}
+  UI: {fileID: 7309061110825231594}
   NeedPercentValue: 0
+  fruitname: 
+  IsReadyToGiveFruit: 0
 --- !u!195 &6836562911694397905
 NavMeshAgent:
   m_ObjectHideFlags: 0

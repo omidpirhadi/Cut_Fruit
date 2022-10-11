@@ -18,6 +18,9 @@ public class Char_Agent : MonoBehaviour
     public Image FuritIcon_image;
     public Image Prograssbar_time;
     public Image Prograssbar_satisfaction;
+    public RectTransform Canvans;
+
+    public RectTransform UI;
     public float NeedPercentValue;
     public string fruitname;
 
@@ -42,7 +45,7 @@ public class Char_Agent : MonoBehaviour
     }
     private void LateUpdate()
     {
-        
+        UI.forward = -(Camera.main.transform.position - transform.position);
     }
     private void OnDestroy()
     {
@@ -57,6 +60,7 @@ public class Char_Agent : MonoBehaviour
             AgentMoveToDestroy(pos);
         });
         IsReadyToGiveFruit = false;
+        //shopperSystem.QueueCapacity++;
     }
     public void AngryMotion()
     {
@@ -67,6 +71,11 @@ public class Char_Agent : MonoBehaviour
             AgentMoveToDestroy(pos);
         });
         IsReadyToGiveFruit = false;
+      //  shopperSystem.QueueCapacity++;
+    }
+    public void ForWhatMotion()
+    {
+        Debug.Log("For What Motion");
     }
     public void AgentMoveToDestroy(Vector3 pos)
     {
@@ -101,7 +110,11 @@ public class Char_Agent : MonoBehaviour
         this.NeedPercentValue = percent;
         this.Timeresponse = timereponse;
         this.Prograssbar_time.fillAmount = 1;
-       // CalculateTime(timereponse);
+        if (IDPlace > 1)
+            UI.DOScale(5, 0.1f);
+        else
+            UI.DOScale(4, 0.1f);
+        // CalculateTime(timereponse);
     }
 
     public void PrograssbarAndPointSet(float amount , string fruitname)
@@ -142,6 +155,10 @@ public class Char_Agent : MonoBehaviour
                 }
 
                 SpawnDollerCash(point_offset);
+            }
+            else
+            {
+                ForWhatMotion();
             }
         }
     }

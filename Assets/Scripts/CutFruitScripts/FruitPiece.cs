@@ -50,7 +50,17 @@ public class FruitPiece : MonoBehaviour,IFruit
      //   transform.position = new Vector3(transform.position.x, 1.5f, transform.position.z);
     }
 
-    [Button("Set Pivot")]
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.tag == "floor")
+        {
+            Destroy(this.gameObject, 0.2f);
+            Debug.Log("Desss");
+        }
+    }
+
+
+    //[Button("Set Pivot")]
     public void CalculatePivot()
     {
         var vertices = meshFilter.vertices;

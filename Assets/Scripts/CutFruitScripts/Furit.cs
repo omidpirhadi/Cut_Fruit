@@ -54,7 +54,14 @@ public class Furit : MonoBehaviour,IFruit
         }
    //     transform.position = new Vector3(transform.position.x, 1.5f, transform.position.z);
     }
-
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "floor")
+        {
+            Destroy(this.gameObject, 0.2f);
+            Debug.Log("Desss");
+        }
+    }
 
 
     public float SignedVolumeOfTriangle(Vector3 p1, Vector3 p2, Vector3 p3)
