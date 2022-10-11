@@ -30,7 +30,7 @@ public class PlaceShopper : MonoBehaviour
             animator.SetBool("Walk", false);
 
 
-            obj.transform.DORotate(new Vector3(0, -180, 0), 2);
+            obj.transform.DORotate(new Vector3(0, -180, 0), 1);
             char_agent.CalculateTime(shopperSystem.TimeResponseCustomer);
             //shopperSystem.ShopperInPlaceCount++;
 

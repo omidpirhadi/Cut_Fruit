@@ -73,8 +73,15 @@ public class Char_Agent : MonoBehaviour
         IsReadyToGiveFruit = false;
       //  shopperSystem.QueueCapacity++;
     }
+
     public void ForWhatMotion()
     {
+        animator.SetBool("Sad", true);
+        DOVirtual.DelayedCall(2, () => {
+            var pos = FindObjectOfType<DestroyPlace>().transform.position;
+            AgentMoveToDestroy(pos);
+        });
+        IsReadyToGiveFruit = false;
         Debug.Log("For What Motion");
     }
     public void AgentMoveToDestroy(Vector3 pos)

@@ -54,8 +54,9 @@ public class FruitPiece : MonoBehaviour,IFruit
     {
         if(collision.gameObject.tag == "floor")
         {
-            Destroy(this.gameObject, 0.2f);
-            Debug.Log("Desss");
+            
+            Destroy(this.gameObject, 0.1f);
+            Debug.Log("Fruit droped On Floor And Destroyed");
         }
     }
 

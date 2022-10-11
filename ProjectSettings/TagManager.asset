@@ -8,6 +8,7 @@ TagManager:
   - Beach
   - shopper
   - destroy
+  - floor
   layers:
   - Default
   - TransparentFX

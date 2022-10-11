@@ -59,7 +59,7 @@ public class Furit : MonoBehaviour,IFruit
         if (collision.gameObject.tag == "floor")
         {
             Destroy(this.gameObject, 0.2f);
-            Debug.Log("Desss");
+            Debug.Log("Fruit droped On Floor And Destroyed");
         }
     }
 
