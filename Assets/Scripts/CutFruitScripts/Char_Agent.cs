@@ -173,7 +173,7 @@ public class Char_Agent : MonoBehaviour
 
                 SpawnDollerCash(point_offset);
             }
-            else
+            else if (this.fruitname != fruitname)
             {
                 ForWhatMotion();
             }

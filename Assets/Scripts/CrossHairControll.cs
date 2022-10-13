@@ -10,16 +10,20 @@ public class CrossHairControll : MonoBehaviour, IPointerClickHandler,IDragHandle
     public  RectTransform Parent_rect;
     public RectTransform cross_rect;
     public CanvasGroup canvasGroup;
+    public float Min_Y = 0;
+    public float Max_Y = 0;
     public Vector2 Offset;
+    private Tweener tweenr;
     void Start()
     {
         //cross_rect = this.GetComponent<RectTransform>();
     }
     public void SetVisible(bool show)
     {
-        if (show && canvasGroup.alpha < 0.99f)
+        tweenr.Kill();
+        if (show && canvasGroup.alpha < 1.0f)
             DOVirtual.Float(0, 1, 0.5f, x => { canvasGroup.alpha = x; });
-        else if (!show && canvasGroup.alpha > 0.99f)
+        else if (!show && canvasGroup.alpha > 0.0f)
             DOVirtual.Float(1, 0, 0.5f, x => { canvasGroup.alpha = x; });
 
     }
@@ -28,7 +32,9 @@ public class CrossHairControll : MonoBehaviour, IPointerClickHandler,IDragHandle
         Vector2 pos = new Vector2();
         if (RectTransformUtility.ScreenPointToLocalPointInRectangle(Parent_rect, eventData.position, eventData.enterEventCamera, out pos))
         {
-            cross_rect.anchoredPosition = pos;
+            var temp = pos + Offset;
+            cross_rect.anchoredPosition = new Vector2(temp.x, Mathf.Clamp(temp.y, Min_Y, Max_Y));
+          
 
         }
 
@@ -39,7 +45,8 @@ public class CrossHairControll : MonoBehaviour, IPointerClickHandler,IDragHandle
         Vector2 pos = new Vector2();
         if (RectTransformUtility.ScreenPointToLocalPointInRectangle(Parent_rect, eventData.position, eventData.enterEventCamera, out pos))
         {
-            cross_rect.anchoredPosition = pos + Offset;
+            var temp = pos + Offset;
+            cross_rect.anchoredPosition = new Vector2(temp.x, Mathf.Clamp(temp.y, Min_Y, Max_Y));
 
         }
     }

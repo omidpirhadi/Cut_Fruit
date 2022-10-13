@@ -107,11 +107,11 @@ public class TouchController : MonoBehaviour
                 ray = Camera.main.ScreenPointToRay(touch.position);
                 if (Physics.Raycast(ray, out hit, 50, MaskForMoney))
                 {
-                    
+
                     if (hit.collider.gameObject.GetComponent<Money>())
                     {
                         hit.collider.gameObject.GetComponent<Money>().ReciveCash();
-                       Debug.Log(hit.collider.name);
+                        Debug.Log(hit.collider.name);
                     }
                 }
 
@@ -195,7 +195,7 @@ public class TouchController : MonoBehaviour
                             var ss = hit.point + offsetOfSelect;
                             ss.y += 0.2f;
                             fruit_slice.transform.position = ss;
-                            
+
                         }
 
                     }
@@ -231,17 +231,18 @@ public class TouchController : MonoBehaviour
                 {
                     if (Physics.Raycast(ray, out hit, 1000, MaskForHumen))
                     {
-                        if (hit.collider.tag == "shopper")
+                        if (hit.collider.tag == "shopper" && fruit_slice != null )
                         {
-                         //   var pos = FindObjectOfType<DestroyPlace>().transform.position;
+                            //   var pos = FindObjectOfType<DestroyPlace>().transform.position;
                             var char_agent_temp = hit.collider.GetComponent<Char_Agent>();
                             // var id = char_agent_temp.ID;
                             char_agent_temp.PrograssbarAndPointSet(precent_fruit, name_fruit_select);
                             
+
                             Destroy(fruit_slice);
 
-                          //  DOVirtual.DelayedCall(1, () => { char_agent_temp.AgentMoveToDestroy(pos); });
-                           
+                            //  DOVirtual.DelayedCall(1, () => { char_agent_temp.AgentMoveToDestroy(pos); });
+
                             //   Debug.Log("END" + hit.collider.name);
                         }
                         else
@@ -250,7 +251,7 @@ public class TouchController : MonoBehaviour
                             {
                                 //fruit_slice.transform.position = FirstPosBeforSelect;
                                 rigidbody_selected_fruit.isKinematic = false;
-                              
+
                             }
                         }
                         fruit_slice = null;
@@ -258,11 +259,11 @@ public class TouchController : MonoBehaviour
                         name_fruit_select = "";
                         FirstPosBeforSelect = Vector3.zero;
                         shopperSystem.SetPickedUpFruitData(0);
-                        
-                    }
-                    crossHair.SetVisible(false);
-                }
 
+                    }
+
+                }
+                crossHair.SetVisible(false);
             }
         }
 
