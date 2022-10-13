@@ -4,8 +4,9 @@
 Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: Water
   m_Shader: {fileID: 4800000, guid: 032c21f6809483a449cfed1a7c519f45, type: 3}
   m_ShaderKeywords: 
@@ -166,14 +167,14 @@ Material:
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
-    - _DistortionIntensity: 0.254
+    - _DistortionIntensity: 0.403
     - _DistortionTiling: 40
     - _DstBlend: 0
     - _Float0: 9.16
     - _Float1: 0.07
     - _FresnelIntenity: 0.44
     - _FresnelIntensity: 1.23
-    - _FresnelPower: 3.61
+    - _FresnelPower: 9.04
     - _Gloss: 0.721
     - _Glossiness: 0.5
     - _MaxWarp: 0
@@ -188,7 +189,7 @@ Material:
     - _Tiling: 0.07
     - _UVSec: 0
     - _WarpIntenisty: 0.11
-    - _WaterTiling: 30
+    - _WaterTiling: 31.59
     - _WavesSpeed: 1
     - _ZWrite: 1
     - __dirty: 0
@@ -211,9 +212,9 @@ Material:
     - _Color: {r: 0.40451992, g: 0.41587368, b: 0.6397059, a: 1}
     - _DistortionSpeed: {r: -0.03, g: 0.22, b: 0, a: 0}
     - _EmissionColor: {r: 0.1676038, g: 0.32625875, b: 0.36764705, a: 1}
-    - _FresnelColor: {r: 0.057671774, g: 0.1321121, b: 0.1509434, a: 0}
+    - _FresnelColor: {r: 0, g: 0, b: 0, a: 0}
     - _NoiseTile: {r: 1, g: 1, b: 0, a: 0}
-    - _WaterColor: {r: 0.20754719, g: 0.20754719, b: 0.20754719, a: 0}
+    - _WaterColor: {r: 0, g: 0, b: 0, a: 0}
     - _WaterColorVariation: {r: 0.2236159, g: 0.46295327, b: 0.64705884, a: 1}
     - _WaterSpeed: {r: 0.02, g: 0.01, b: 0, a: 0}
     - _WaterTextureTile: {r: 0.02, g: 0.01, b: 0, a: 0}
