@@ -22,6 +22,10 @@ public class InventoryFruitItem : MonoBehaviour
             StartCoroutine(shopperSystem.SpawFruit(FruitName, Price, CashSlice));
             Debug.Log("Fruit Button Click");
         });
+        if (Price < shopperSystem.TotalCash)
+            price_text.color = Color.green;
+        else
+            price_text.color = Color.red;
         price_text.text = Price.ToString();
     }
     private void OnDisable()

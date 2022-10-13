@@ -51,6 +51,16 @@ public class Char_Agent : MonoBehaviour
     {
        
     }
+    public void CustomerInPlace()
+    {
+       
+        agent.isStopped = true;
+        animator.SetBool("Walk", false);
+
+
+        transform.DORotate(new Vector3(0, -180, 0), 1);
+        CalculateTime(shopperSystem.TimeResponseCustomer);
+    }
     public void HappyMotion()
     {
         this.tag = "destroy";
@@ -193,7 +203,7 @@ public class Char_Agent : MonoBehaviour
         }
         return tempscore;
     }
-    public void CalculateTime(float time)
+    private void CalculateTime(float time)
     {
         H = 0;
         M = 0;

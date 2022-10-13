@@ -1,18 +1,16 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿
 using UnityEngine;
-using UnityEngine.AI;
-using DG.Tweening;
+
 public class PlaceShopper : MonoBehaviour
 {
 
+    public int ID;
     public Transform TargetViweCharacter;
-    private ShopperSystemController shopperSystem;
+
     public bool HaveShopper = false;
     private void Start()
     {
-        shopperSystem = FindObjectOfType<ShopperSystemController>();
-        //shopperSystem.OnResetWave += ShopperSystem_OnResetWave;
+
     }
 
 
@@ -23,18 +21,14 @@ public class PlaceShopper : MonoBehaviour
         {
             
            
-            var agent = obj.GetComponent<NavMeshAgent>();
+            
+            
             var char_agent = obj.GetComponent<Char_Agent>();
-            var animator = obj.GetComponent<Animator>();
-            agent.isStopped = true;
-            animator.SetBool("Walk", false);
+            if (char_agent.IDPlace == ID)
+            {
+                char_agent.CustomerInPlace();
+            }
 
-
-            obj.transform.DORotate(new Vector3(0, -180, 0), 1);
-            char_agent.CalculateTime(shopperSystem.TimeResponseCustomer);
-            //shopperSystem.ShopperInPlaceCount++;
-
-            // Debug.Log("AAAAAAAA");
             
         }
     }

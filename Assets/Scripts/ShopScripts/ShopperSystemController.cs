@@ -30,6 +30,7 @@ public class ShopperSystemController : MonoBehaviour
     public int QueueCapacity = 4;
     public float TimeBetweenEverySpawn = 1;
     public GameFlowData gameFlow;
+    public Flow InfinityFlow;
     public PickedUpFruitData PickedUpFruit;
     public Char_Agent[] Humen_prefab;
     public PlaceShopper[] ShopperServicePlace;
@@ -39,9 +40,9 @@ public class ShopperSystemController : MonoBehaviour
     [HideInInspector]
     public  float TimeResponseCustomer = 40;
 
-    private int currentflow_temp = 0;
-    private int flowSpawn_Temp = 0;
-    private int Repeatflow_Temp = 0;
+     [SerializeField] private int currentflow_temp = 0;
+     [SerializeField]private int flowSpawn_Temp = 0;
+     [SerializeField]private int Repeatflow_Temp = 0;
 
     private int PerviousChoose = 0;
     private const int MaxShopperCount = 4;
@@ -49,8 +50,10 @@ public class ShopperSystemController : MonoBehaviour
 
     private bool TryToSelectFruit = false;
     private bool TryToInitialzFlow = false;
-    private bool EnableRandomSelectFlow = false;
-
+    [SerializeField] private bool EnableNormalMode = true;
+    [SerializeField] private bool EnableRandomMode = false;
+    [SerializeField] private int repeatedRandomMode = 0;
+    [SerializeField] private bool EnableInfinityMode = false;
     private List<int> PercentFruits = new List<int> { 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95 };
 
     private CustomerData customerData;
@@ -201,27 +204,58 @@ public class ShopperSystemController : MonoBehaviour
         if (TryToInitialzFlow == false)
         {
             TryToInitialzFlow = true;
-            if (Repeatflow_Temp > 0)
+            if (Repeatflow_Temp > 0 && EnableRandomMode == false)
             {
                 Repeatflow_Temp--;
                 flowSpawn_Temp = Mathf.Clamp(flowSpawn_Temp, 1, 4);
             }
-            else if (Repeatflow_Temp == 0)
+           else if ( EnableNormalMode == true)
             {
-                Nextflow();
+                if (Repeatflow_Temp == 0)
+                {
+                    NextflowMode();
+                    Debug.Log("1");
+                }
             }
-            
-            yield return new WaitUntil(() => QueueCapacity == 4);
+            else if (EnableRandomMode == true  )
+            {
+                if (repeatedRandomMode < 3)
+                {
+                    RandomModeFlow();
+                    Debug.Log("2");
+                }
+            }
+            else if(EnableInfinityMode == true)
+            {
+                InfinityMode();
+                 Debug.Log("3");
+            }
 
-            StartCoroutine(SpawnCustomer(flowSpawn_Temp));
-            Debug.Log("CapacityQueue:" + QueueCapacity + "Flow:" + flowSpawn_Temp);
+
+
+            if (EnableNormalMode || EnableRandomMode)
+            {
+                yield return new WaitUntil(() => QueueCapacity == 4);
+                StartCoroutine(SpawnCustomer(flowSpawn_Temp));
+                Debug.Log("CapacityQueue:" + QueueCapacity + "Flow:" + flowSpawn_Temp);
+            }
+            else
+            {
+                StartCoroutine(SpawnCustomer(QueueCapacity));
+                Debug.Log("CapacityQueue:" + QueueCapacity + "Flow infinity" );
+            }
+           
             // Debug.Log("Flow_Run");
         }
     }
-    private void Nextflow()
+    private void NextflowMode()
 
     {
-        if (EnableRandomSelectFlow == false)
+        Debug.Log("XXXX NextFlow XXXX");
+
+
+
+        if (EnableRandomMode == false)
         {
             currentflow_temp++;
             currentflow_temp = Mathf.Clamp(currentflow_temp, 0, gameFlow.flows.Count - 1);
@@ -229,18 +263,42 @@ public class ShopperSystemController : MonoBehaviour
             Repeatflow_Temp = gameFlow.flows[currentflow_temp].RepeatFlow;
             flowSpawn_Temp = gameFlow.flows[currentflow_temp].CustomerInQueue;
         }
-        else
+
+        if (currentflow_temp == gameFlow.flows.Count - 1 && EnableRandomMode == false)
         {
-            var randomselectFlow = UnityEngine.Random.Range(0, gameFlow.flows.Count);
-            SelectFlow(randomselectFlow);
-        }
-        if(currentflow_temp == gameFlow.flows.Count - 1 && EnableRandomSelectFlow == false)
-        {
-            EnableRandomSelectFlow = true;
+            EnableNormalMode = false;
+            EnableInfinityMode = false;
+            EnableRandomMode = true;
             Debug.Log("Random Flow Enabled");
         }
+
     }
  
+    private void RandomModeFlow()
+    {
+        var randomselectFlow = UnityEngine.Random.Range(0, gameFlow.flows.Count);
+        SelectFlow(randomselectFlow);
+        repeatedRandomMode++;
+        Debug.Log("XXXX Random Mode XXXX");
+        if (repeatedRandomMode == 30)
+        {
+            EnableInfinityMode = true;
+            EnableRandomMode = false;
+            EnableNormalMode = false;
+            InfinityMode();
+           
+        }
+        
+    }
+    private void  InfinityMode()
+    {
+        currentflow_temp = -100;
+        
+        TimeResponseCustomer = InfinityFlow.CustomerTimeResponse;
+        Repeatflow_Temp = 1000;
+        flowSpawn_Temp = InfinityFlow.CustomerInQueue;
+        Debug.Log("XXXX infinity Mode initialaz XXXX");
+    }
     private void SelectFlow(int index)
 
     {
@@ -256,12 +314,13 @@ public class ShopperSystemController : MonoBehaviour
     {
         Vector3 pos = new Vector3();
         int index = 0;
+
         for (int i = 0; i < ShopperServicePlace.Length; i++)
         {
             if (!ShopperServicePlace[i].HaveShopper)
             {
                 pos = ShopperServicePlace[i].transform.position;
-                index = i;
+                index = ShopperServicePlace[i].ID;
                 QueueCapacity--;
                 ShopperServicePlace[i].HaveShopper = true;
                 //    Debug.Log("Find Place:" + pos);
@@ -270,6 +329,26 @@ public class ShopperSystemController : MonoBehaviour
         }
         return new Tuple<int, Vector3>(index, pos);
     }
+
+    /*
+    private Tuple<int, Vector3> FindFreePlaceInQueueForCustomer()
+    {
+        Vector3 pos = new Vector3();
+        int index = 0;
+        var freeplace = ShopperServicePlace.Where(x => x.HaveShopper = true).ToList();
+        if (freeplace.Count > 0)
+        {
+            var rand = UnityEngine.Random.Range(0, freeplace.Count);
+            ShopperServicePlace[rand].HaveShopper = true;
+            pos = ShopperServicePlace[rand].transform.position;
+            index = ShopperServicePlace[rand].ID;
+            QueueCapacity--;
+
+        }
+
+        return new Tuple<int, Vector3>(index, pos);
+    }*/
+
     public void FreePlaceAfterDestroyCustomer(int idPlace)
     {
 

@@ -61,7 +61,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 4ece9c91fc0a6e440ba0a9d4ff2e2c65, type: 2}
+  - {fileID: 2100000, guid: b5ce597c88dd50944a36612ddea66c66, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -130,3 +130,5 @@ MonoBehaviour:
   IsReadyPickedUp: 0
   InnerMatrialAfterCut: {fileID: 2100000, guid: 8a3f7ed753447194ea96ea4a88485a4c,
     type: 2}
+  rigidbody: {fileID: 0}
+  OffsetCenter: {x: 0, y: 0, z: 0}
