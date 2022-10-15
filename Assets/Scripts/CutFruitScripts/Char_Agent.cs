@@ -33,11 +33,11 @@ public class Char_Agent : MonoBehaviour
     private float H;
     private float M;
     private float S;
-
+    private float point_offset = -1000; 
    [SerializeField] private bool IsReadyToGiveFruit = false;
     void Start()
     {
-
+        point_offset = -1000;
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
         shopperSystem = FindObjectOfType<ShopperSystemController>();
@@ -58,7 +58,7 @@ public class Char_Agent : MonoBehaviour
         animator.SetBool("Walk", false);
 
 
-        transform.DORotate(new Vector3(0, -180, 0), 1);
+        transform.DORotate(new Vector3(0, -180, 0), 2);
         CalculateTime(shopperSystem.TimeResponseCustomer);
     }
     public void HappyMotion()
@@ -67,7 +67,9 @@ public class Char_Agent : MonoBehaviour
         animator.SetBool("Happy", true);
         DOVirtual.DelayedCall(5, () => {
             var pos = FindObjectOfType<DestroyPlace>().transform.position;
+            var pos_spawn_doller = transform.position;
             AgentMoveToDestroy(pos);
+         
         });
         IsReadyToGiveFruit = false;
         //shopperSystem.QueueCapacity++;
@@ -78,7 +80,9 @@ public class Char_Agent : MonoBehaviour
         animator.SetBool("Angry", true);
         DOVirtual.DelayedCall(5, () => {
             var pos = FindObjectOfType<DestroyPlace>().transform.position;
+            var pos_spawn_doller = transform.position;
             AgentMoveToDestroy(pos);
+            
         });
         IsReadyToGiveFruit = false;
       //  shopperSystem.QueueCapacity++;
@@ -96,6 +100,7 @@ public class Char_Agent : MonoBehaviour
     }
     public void AgentMoveToDestroy(Vector3 pos)
     {
+      
         this.tag = "destroy";
         animator.SetBool("Angry", false);
         animator.SetBool("Happy", false);
@@ -103,6 +108,19 @@ public class Char_Agent : MonoBehaviour
         agent.isStopped = false;
         agent.destination = pos;
         IsReadyToGiveFruit = false;
+        var pos_spawn_doller = transform.position;
+        if (point_offset != -1000)
+        {
+            DOVirtual.DelayedCall(0.5f, () => { SpawnDollerCash(point_offset, pos_spawn_doller); });
+            point_offset = -1000;
+            
+        }
+        else if (point_offset == -1000)
+        {
+            shopperSystem.SetHealth();
+           
+        }
+       
         // shopperSystem.CustomerInWave--;
     }
    
@@ -123,7 +141,7 @@ public class Char_Agent : MonoBehaviour
     {
         this.Character_image.sprite = profile;
         this.FuritIcon_image.sprite = fruitIcon;
-        this.Percent_text.text = percent.ToString("0") + "%";
+        this.Percent_text.text = percent.ToString("0") + "gr";
         this.NeedPercentValue = percent;
         this.Timeresponse = timereponse;
         this.Prograssbar_time.fillAmount = 1;
@@ -159,7 +177,7 @@ public class Char_Agent : MonoBehaviour
 
                 }
                 //  this.Percent_text.text = (Mathf.Clamp(amount / NeedPercentValue, 0, 1) * 100).ToString("0"); 
-                var point_offset = (NeedPercentValue - amount);
+                point_offset = (NeedPercentValue - amount);
                 /// nagative offset mean  Customer is happy
                 ///  positive offset mean  Customer is angery
                 if (point_offset <= 5)
@@ -170,8 +188,9 @@ public class Char_Agent : MonoBehaviour
                 {
                     AngryMotion();
                 }
-
-                SpawnDollerCash(point_offset);
+                 
+             
+                
             }
             else if (this.fruitname != fruitname)
             {
@@ -180,9 +199,9 @@ public class Char_Agent : MonoBehaviour
         }
     }
 
-    private void SpawnDollerCash(float offset)
+    private void SpawnDollerCash(float offset, Vector3 pos)
     {
-        var cash_obj = Instantiate(CashPrefab, transform.position, CashPrefab.transform.rotation);
+        var cash_obj = Instantiate(CashPrefab, pos, CashPrefab.transform.rotation);
         var amount = CalculateScore(offset);
         cash_obj.AmountCash = amount;
         Debug.Log("CASH SPAWN :" + amount);

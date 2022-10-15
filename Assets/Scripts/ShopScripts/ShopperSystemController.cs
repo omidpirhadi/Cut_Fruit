@@ -24,23 +24,29 @@ public class ShopperSystemController : MonoBehaviour
     public Button Cut_button;
     public Button Pickup_Button;
     public Button Shop_Button;
-
+    public Slider Flow_slider;
+    public int Health = 3;
     public float TotalCash;
     public float SliceCash;
     public int QueueCapacity = 4;
     public float TimeBetweenEverySpawn = 1;
+    public int RandomModeRepeate = 30;
+   
+    
     public GameFlowData gameFlow;
+    
     public Flow InfinityFlow;
+    
     public PickedUpFruitData PickedUpFruit;
     public Char_Agent[] Humen_prefab;
-    public PlaceShopper[] ShopperServicePlace;
+    public List< PlaceShopper> ShopperServicePlace;
    
     public List<FruitInShop> fruitInShops = new List<FruitInShop>();
-
+    public List<Image> List_Health_images = new List<Image>();
     [HideInInspector]
     public  float TimeResponseCustomer = 40;
-
-     [SerializeField] private int currentflow_temp = 0;
+    [SerializeField] private float CountFlow = 0;
+    [SerializeField] private int currentflow_temp = 0;
      [SerializeField]private int flowSpawn_Temp = 0;
      [SerializeField]private int Repeatflow_Temp = 0;
 
@@ -50,9 +56,10 @@ public class ShopperSystemController : MonoBehaviour
 
     private bool TryToSelectFruit = false;
     private bool TryToInitialzFlow = false;
+
     [SerializeField] private bool EnableNormalMode = true;
     [SerializeField] private bool EnableRandomMode = false;
-    [SerializeField] private int repeatedRandomMode = 0;
+    [SerializeField] private int CountrepeatedRandomMode = 0;
     [SerializeField] private bool EnableInfinityMode = false;
     private List<int> PercentFruits = new List<int> { 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95 };
 
@@ -66,6 +73,7 @@ public class ShopperSystemController : MonoBehaviour
         customerData.customers = new Queue<Customer>();
 
         GenerationWave(10);
+
         Cut_button.onClick.AddListener(() =>
         {
 
@@ -84,10 +92,11 @@ public class ShopperSystemController : MonoBehaviour
 
 
         SelectFlow(0);
+        SetFlowSlider();
+        SetTextForTotalCash(TotalCash.ToString("0"));
         StartCoroutine(FlowSpwanCustomer());
 
-        SetTextForTotalCash(TotalCash.ToString("0"));
-
+       
     }
 
 
@@ -152,7 +161,7 @@ public class ShopperSystemController : MonoBehaviour
     private void RegenerationWaveAfterEmptyQueue()
     {
         GenerationWave(10);
-        Debug.Log("Regenration Wave");
+     //   Debug.Log("Regenration Wave");
     }
     private IEnumerator SpawnCustomer(int repeatSpawn)
     {
@@ -171,14 +180,14 @@ public class ShopperSystemController : MonoBehaviour
                 var rand = UnityEngine.Random.Range(0, Humen_prefab.Length);
                 yield return new WaitForSecondsRealtime(TimeBetweenEverySpawn);
 
-                var shopper = Instantiate(Humen_prefab[rand], CustomerPlaceSpwan.position, Quaternion.identity);
+                var shopper = Instantiate(Humen_prefab[rand], CustomerPlaceSpwan.position, CustomerPlaceSpwan.rotation);
 
                 yield return new WaitForSecondsRealtime(0.1f);
                 shopper.IDPlace = idplace;
                 shopper.fruitname = data.Fruit;
                 shopper.SetUI(null, data.logo, data.PercentFruit, TimeResponseCustomer);
                 shopper.SetDestination(pos);
-
+             //   Debug.Log("ShopperPOS" + pos);
 
 
             }
@@ -214,35 +223,39 @@ public class ShopperSystemController : MonoBehaviour
                 if (Repeatflow_Temp == 0)
                 {
                     NextflowMode();
-                    Debug.Log("1");
+                    //Debug.Log("1");
                 }
             }
             else if (EnableRandomMode == true  )
             {
-                if (repeatedRandomMode < 3)
+                if (CountrepeatedRandomMode < 3)
                 {
                     RandomModeFlow();
-                    Debug.Log("2");
+                   // Debug.Log("2");
                 }
             }
             else if(EnableInfinityMode == true)
             {
                 InfinityMode();
-                 Debug.Log("3");
+                 //Debug.Log("3");
             }
 
 
 
             if (EnableNormalMode || EnableRandomMode)
             {
+              /*  StartCoroutine(MessUpPlacePositionArray());
+                yield return new WaitForSecondsRealtime(0.2f);*/
                 yield return new WaitUntil(() => QueueCapacity == 4);
                 StartCoroutine(SpawnCustomer(flowSpawn_Temp));
-                Debug.Log("CapacityQueue:" + QueueCapacity + "Flow:" + flowSpawn_Temp);
+                SliderAddStep();
+             //   Debug.Log("CapacityQueue:" + QueueCapacity + "Flow:" + flowSpawn_Temp);
             }
             else
             {
                 StartCoroutine(SpawnCustomer(QueueCapacity));
-                Debug.Log("CapacityQueue:" + QueueCapacity + "Flow infinity" );
+                SliderAddStep();
+                //  Debug.Log("CapacityQueue:" + QueueCapacity + "Flow infinity" );
             }
            
             // Debug.Log("Flow_Run");
@@ -251,7 +264,7 @@ public class ShopperSystemController : MonoBehaviour
     private void NextflowMode()
 
     {
-        Debug.Log("XXXX NextFlow XXXX");
+      //  Debug.Log("XXXX NextFlow XXXX");
 
 
 
@@ -269,7 +282,7 @@ public class ShopperSystemController : MonoBehaviour
             EnableNormalMode = false;
             EnableInfinityMode = false;
             EnableRandomMode = true;
-            Debug.Log("Random Flow Enabled");
+         //   Debug.Log("Random Flow Enabled");
         }
 
     }
@@ -278,9 +291,9 @@ public class ShopperSystemController : MonoBehaviour
     {
         var randomselectFlow = UnityEngine.Random.Range(0, gameFlow.flows.Count);
         SelectFlow(randomselectFlow);
-        repeatedRandomMode++;
-        Debug.Log("XXXX Random Mode XXXX");
-        if (repeatedRandomMode == 30)
+        CountrepeatedRandomMode++;
+     //   Debug.Log("XXXX Random Mode XXXX");
+        if (CountrepeatedRandomMode == RandomModeRepeate)
         {
             EnableInfinityMode = true;
             EnableRandomMode = false;
@@ -297,7 +310,7 @@ public class ShopperSystemController : MonoBehaviour
         TimeResponseCustomer = InfinityFlow.CustomerTimeResponse;
         Repeatflow_Temp = 1000;
         flowSpawn_Temp = InfinityFlow.CustomerInQueue;
-        Debug.Log("XXXX infinity Mode initialaz XXXX");
+      //  Debug.Log("XXXX infinity Mode initialaz XXXX");
     }
     private void SelectFlow(int index)
 
@@ -310,12 +323,37 @@ public class ShopperSystemController : MonoBehaviour
     }
 
 
+
+    private IEnumerator MessUpPlacePositionArray()
+    {
+
+        List<PlaceShopper> temp = new List<PlaceShopper>();
+        int rand = 0;
+        PlaceShopper place;
+        for (int i = 0; i < ShopperServicePlace.Count; i++)
+        {
+            do
+            {
+                rand = UnityEngine.Random.Range(0, ShopperServicePlace.Count);
+               /// Debug.Log(".............."+ rand);
+                place = ShopperServicePlace[rand];
+            } while (temp.Contains(place));
+            temp.Add(place);
+        }
+        yield return new WaitForSecondsRealtime(0.1f);
+        ShopperServicePlace.Clear();
+        yield return new WaitForSecondsRealtime(0.1f);
+        temp.ForEach(e => {
+            ShopperServicePlace.Add(e);
+        });
+        yield return new WaitForSecondsRealtime(0.1f);
+    }
     private Tuple<int, Vector3> FindFreePlaceInQueueForCustomer()
     {
         Vector3 pos = new Vector3();
         int index = 0;
 
-        for (int i = 0; i < ShopperServicePlace.Length; i++)
+        for (int i = 0; i < ShopperServicePlace.Count; i++)
         {
             if (!ShopperServicePlace[i].HaveShopper)
             {
@@ -330,24 +368,6 @@ public class ShopperSystemController : MonoBehaviour
         return new Tuple<int, Vector3>(index, pos);
     }
 
-    /*
-    private Tuple<int, Vector3> FindFreePlaceInQueueForCustomer()
-    {
-        Vector3 pos = new Vector3();
-        int index = 0;
-        var freeplace = ShopperServicePlace.Where(x => x.HaveShopper = true).ToList();
-        if (freeplace.Count > 0)
-        {
-            var rand = UnityEngine.Random.Range(0, freeplace.Count);
-            ShopperServicePlace[rand].HaveShopper = true;
-            pos = ShopperServicePlace[rand].transform.position;
-            index = ShopperServicePlace[rand].ID;
-            QueueCapacity--;
-
-        }
-
-        return new Tuple<int, Vector3>(index, pos);
-    }*/
 
     public void FreePlaceAfterDestroyCustomer(int idPlace)
     {
@@ -375,17 +395,16 @@ public class ShopperSystemController : MonoBehaviour
                         var s = Instantiate(fruit.prefab, FruitSpwanPlace.position, Quaternion.identity);
                         s.GetComponent<Furit>().FuritTag = fruit.Name;
                         this.SliceCash = cashSlice;
-                        TotalCash -= price;
-                        dialogBox.Set("Ready For Cut", 3);
-                        SetTextForTotalCash(TotalCash.ToString("0"));
+                        AmountCash(-price);
                         TryToSelectFruit = false;
-                        Debug.Log("FruitSpawned");
+                        dialogBox.Set("Ready For Cut", 3);
+                        //Debug.Log("FruitSpawned");
                     }
                     else
                     {
                         dialogBox.Set("No Enoghe Cash", 3);
                         TryToSelectFruit = false;
-                        Debug.Log("Cant Spawn Fruit");
+                      //  Debug.Log("Cant Spawn Fruit");
                     }
 
                 }
@@ -418,21 +437,49 @@ public class ShopperSystemController : MonoBehaviour
     public void SetPickedUpFruitData(float precent)
     {
         //100.65656565665
-        PickedUpFruit.Percent_text.text = precent.ToString("0") + "%";
+        PickedUpFruit.Percent_text.text = precent.ToString("0") + "gr";
     }
-    public void AddCash(float amount)
+    public void AmountCash(float amount)
     {
         TotalCash += amount;
         SetTextForTotalCash(TotalCash.ToString("0"));
-        Debug.Log("TotalCash:" + TotalCash);
+      //  Debug.Log("TotalCash:" + TotalCash);
     }
     private void SetTextForTotalCash(string amount)
     {
         TotalCash_Text.text = amount;
     }
 
+    float stepSliderflow = 0.0f;
+    private void SetFlowSlider()
+
+    {
+        int a = gameFlow.CountFlowRepeat();
+        int b = InfinityFlow.RepeatFlow;
+        CountFlow = a + b + RandomModeRepeate;
+        stepSliderflow = 1.0f / CountFlow;
+        //Debug.Log(stepSliderflow);
+        Flow_slider.value = 0;
+    }
+    private void SliderAddStep()
+    {
+        Flow_slider.value += stepSliderflow;
+    }
+
+    Tweener tweener;
+    public void SetHealth()
+    {
+
+        List_Health_images[Health - 1].DOFillAmount(0, 0.5f);
+        Health--;
 
 
+
+        if (Health == 0)
+        {
+            Debug.Log("Game OVERRRRRRRRRRRRRRRRRRRRRRRRR");
+        }
+    }
 
     #region Events
     private Action resetwave;
@@ -525,5 +572,14 @@ public struct Flow
 public struct GameFlowData
 {
   public  List<Flow> flows;
+    public int CountFlowRepeat()
+    {
+        int c = 0;
+        for (int i = 0; i < flows.Count; i++)
+        {
+            c += flows[i].RepeatFlow;
+        }
+        return c;
+    }
 }
 #endregion

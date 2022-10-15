@@ -19,7 +19,7 @@ public class Money : MonoBehaviour
 
     public void ReciveCash()
     {
-        shopperSystem.AddCash(AmountCash);
+        shopperSystem.AmountCash(AmountCash);
         Destroy(this.gameObject);
     }
     [Button("Set",ButtonSizes.Medium)]
