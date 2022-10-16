@@ -90,13 +90,13 @@ public class ShopperSystemController : MonoBehaviour
         Repeatflow_Temp = gameFlow.flows[currentflow_temp].RepeatFlow;
         flowSpawn_Temp = gameFlow.flows[currentflow_temp].CustomerInQueue;
 
-
-        SelectFlow(0);
         SetFlowSlider();
         SetTextForTotalCash(TotalCash.ToString("0"));
+
+        SelectFlow(0);
         StartCoroutine(FlowSpwanCustomer());
 
-       
+
     }
 
 
@@ -165,17 +165,16 @@ public class ShopperSystemController : MonoBehaviour
     }
     private IEnumerator SpawnCustomer(int repeatSpawn)
     {
+        yield return new WaitForSecondsRealtime(0.1f);
         if (repeatSpawn <= QueueCapacity)
         {
             for (int i = 0; i < repeatSpawn; i++)
             {
 
-
-
-
                 var position_data = FindFreePlaceInQueueForCustomer();
                 var idplace = position_data.Item1;
                 var pos = position_data.Item2;
+                yield return new WaitForSecondsRealtime(0.1f);
                 var data = customerData.customers.Dequeue();
                 var rand = UnityEngine.Random.Range(0, Humen_prefab.Length);
                 yield return new WaitForSecondsRealtime(TimeBetweenEverySpawn);
@@ -189,13 +188,9 @@ public class ShopperSystemController : MonoBehaviour
                 shopper.SetDestination(pos);
              //   Debug.Log("ShopperPOS" + pos);
 
-
             }
         }
-        else
-        {
 
-        }
         if (customerData.customers.Count < 4)
         {
             RegenerationWaveAfterEmptyQueue();
@@ -244,8 +239,8 @@ public class ShopperSystemController : MonoBehaviour
 
             if (EnableNormalMode || EnableRandomMode)
             {
-              /*  StartCoroutine(MessUpPlacePositionArray());
-                yield return new WaitForSecondsRealtime(0.2f);*/
+              StartCoroutine(MessUpPlacePositionArray());
+                yield return new WaitForSecondsRealtime(0.2f);
                 yield return new WaitUntil(() => QueueCapacity == 4);
                 StartCoroutine(SpawnCustomer(flowSpawn_Temp));
                 SliderAddStep();
@@ -329,23 +324,30 @@ public class ShopperSystemController : MonoBehaviour
 
         List<PlaceShopper> temp = new List<PlaceShopper>();
         int rand = 0;
-        PlaceShopper place;
+        PlaceShopper place = new PlaceShopper();
         for (int i = 0; i < ShopperServicePlace.Count; i++)
         {
             do
             {
                 rand = UnityEngine.Random.Range(0, ShopperServicePlace.Count);
-               /// Debug.Log(".............."+ rand);
+                
                 place = ShopperServicePlace[rand];
             } while (temp.Contains(place));
             temp.Add(place);
+            Debug.Log(".............." + rand);
         }
-        yield return new WaitForSecondsRealtime(0.1f);
+        
         ShopperServicePlace.Clear();
         yield return new WaitForSecondsRealtime(0.1f);
-        temp.ForEach(e => {
-            ShopperServicePlace.Add(e);
-        });
+
+
+        for (int i = 0; i < temp.Count; i++)
+        {
+            temp[i].ID = i;
+            ShopperServicePlace.Add(temp[i]);
+        }
+
+       /// Debug.Log(".............." + place.transform.position);
         yield return new WaitForSecondsRealtime(0.1f);
     }
     private Tuple<int, Vector3> FindFreePlaceInQueueForCustomer()
@@ -373,6 +375,7 @@ public class ShopperSystemController : MonoBehaviour
     {
 
         ShopperServicePlace[idPlace].HaveShopper = false;
+
     }
 
    

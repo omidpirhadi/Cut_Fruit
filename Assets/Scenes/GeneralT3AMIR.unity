@@ -19060,8 +19060,8 @@ GameObject:
   m_Component:
   - component: {fileID: 9085151144671484738}
   - component: {fileID: 9085151144671484737}
-  - component: {fileID: 709666803}
   - component: {fileID: 709666801}
+  - component: {fileID: 709666803}
   - component: {fileID: 709666802}
   - component: {fileID: 709666800}
   m_Layer: 0
@@ -19106,8 +19106,8 @@ MonoBehaviour:
   gameFlow:
     flows:
     - CustomerTimeResponse: 2
-      CustomerInQueue: 1
-      RepeatFlow: 2
+      CustomerInQueue: 4
+      RepeatFlow: 100
     - CustomerTimeResponse: 2
       CustomerInQueue: 2
       RepeatFlow: 2

@@ -33,7 +33,8 @@ public class Char_Agent : MonoBehaviour
     private float H;
     private float M;
     private float S;
-    private float point_offset = -1000; 
+    private float point_offset = -1000;
+    private Vector3 des_pos;
    [SerializeField] private bool IsReadyToGiveFruit = false;
     void Start()
     {
@@ -45,6 +46,7 @@ public class Char_Agent : MonoBehaviour
     }
     private void LateUpdate()
     {
+        
         UI.forward = -(Camera.main.transform.position - transform.position);
     }
     private void OnDestroy()
@@ -123,13 +125,18 @@ public class Char_Agent : MonoBehaviour
        
         // shopperSystem.CustomerInWave--;
     }
-   
- 
- 
+
+
+
 
     public void SetDestination(Vector3 pos)
     {
-       animator.SetBool("Walk", true);
+        animator.SetBool("Walk", true);
+        if(pos.Equals(Vector3.zero))
+        {
+            pos = shopperSystem.ShopperServicePlace[IDPlace].transform.position;
+            Debug.Log("..........................ZEROOOOOOOOOOOOOOO");
+        }
         agent.destination = pos;
         IsReadyToGiveFruit = false;
         //Debug.Log("POS SET");
