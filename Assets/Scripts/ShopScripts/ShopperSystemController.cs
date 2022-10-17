@@ -15,15 +15,19 @@ public class ShopperSystemController : MonoBehaviour
     public CameraController cameraController;
     public ShopperIndicatorUI shopperIndicatorUI;
     public DialogBox dialogBox;
-    public RectTransform Contents;
+   // public RectTransform Contents;
     public TMPro.TMP_Text TotalCash_Text;
     public Transform CustomerPlaceSpwan;
     public Transform FruitSpwanPlace;
     public DestroyPlace DestroyPositionAgent;
+    public GameObject HUDPanel;
     public GameObject InventoryPanel;
+    public GameObject PausePanel;
+    public GameObject HomePanel;
     public Button Cut_button;
     public Button Pickup_Button;
     public Button Shop_Button;
+    public Button Pause_Button;
     public Slider Flow_slider;
     public int Health = 3;
     public float TotalCash;
@@ -31,24 +35,26 @@ public class ShopperSystemController : MonoBehaviour
     public int QueueCapacity = 4;
     public float TimeBetweenEverySpawn = 1;
     public int RandomModeRepeate = 30;
+
+    public bool TutorialMode = false;
+
    
-    
     public GameFlowData gameFlow;
-    
     public Flow InfinityFlow;
-    
+
     public PickedUpFruitData PickedUpFruit;
     public Char_Agent[] Humen_prefab;
-    public List< PlaceShopper> ShopperServicePlace;
-   
+    public List<PlaceShopper> ShopperServicePlace;
+
     public List<FruitInShop> fruitInShops = new List<FruitInShop>();
     public List<Image> List_Health_images = new List<Image>();
     [HideInInspector]
-    public  float TimeResponseCustomer = 40;
-    [SerializeField] private float CountFlow = 0;
-    [SerializeField] private int currentflow_temp = 0;
-     [SerializeField]private int flowSpawn_Temp = 0;
-     [SerializeField]private int Repeatflow_Temp = 0;
+    public float TimeResponseCustomer = 40;
+
+    private float CountFlow = 0;
+    private int currentflow_temp = 0;
+    private int flowSpawn_Temp = 0;
+    private int Repeatflow_Temp = 0;
 
     private int PerviousChoose = 0;
     private const int MaxShopperCount = 4;
@@ -57,46 +63,23 @@ public class ShopperSystemController : MonoBehaviour
     private bool TryToSelectFruit = false;
     private bool TryToInitialzFlow = false;
 
-    [SerializeField] private bool EnableNormalMode = true;
-    [SerializeField] private bool EnableRandomMode = false;
-    [SerializeField] private int CountrepeatedRandomMode = 0;
-    [SerializeField] private bool EnableInfinityMode = false;
+    private bool EnableNormalMode = true;
+    private bool EnableRandomMode = false;
+    private int CountrepeatedRandomMode = 0;
+    private bool EnableInfinityMode = false;
+    private CustomerData customerData;
+    private int CountCustomerInQueue = 0;
+
     private List<int> PercentFruits = new List<int> { 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95 };
 
-    private CustomerData customerData;
 
 
     public void Start()
     {
         Application.targetFrameRate = 60;
-        customerData = new CustomerData();
-        customerData.customers = new Queue<Customer>();
 
-        GenerationWave(10);
-
-        Cut_button.onClick.AddListener(() =>
-        {
-
-            //  cameraController.SwitchCamera(1);
-            Handler_OnChangePhase(PhaseGame.Cut);
-        });
-        Pickup_Button.onClick.AddListener(() =>
-        {
-            // cameraController.SwitchCamera(1);
-            Handler_OnChangePhase(PhaseGame.Pickup);
-        });
-
-        TimeResponseCustomer = gameFlow.flows[currentflow_temp].CustomerTimeResponse;
-        Repeatflow_Temp = gameFlow.flows[currentflow_temp].RepeatFlow;
-        flowSpawn_Temp = gameFlow.flows[currentflow_temp].CustomerInQueue;
-
-        SetFlowSlider();
-        SetTextForTotalCash(TotalCash.ToString("0"));
-
-        SelectFlow(0);
-        StartCoroutine(FlowSpwanCustomer());
-
-
+        
+       
     }
 
 
@@ -124,7 +107,7 @@ public class ShopperSystemController : MonoBehaviour
             var namefruit = fruit_spwaned_data.Item1;
             Sprite fruit_icon = fruit_spwaned_data.Item2;
 
-            PickedUpFruit.Icon_image.sprite = fruit_icon;
+            // PickedUpFruit.Icon_image.sprite = fruit_icon;
             this.PerviousChoose = 0;
             for (int i = shopperCount; i > 0; i--)
             {
@@ -145,23 +128,37 @@ public class ShopperSystemController : MonoBehaviour
 
             order.ForEach(e =>
             {
-                customerData.customers.Enqueue(new Customer { Fruit = namefruit, PercentFruit = e, logo = fruit_icon });
+                //customerData.customers.Enqueue(new Customer { Fruit = namefruit, PercentFruit = e, logo = fruit_icon });
+
+
+
+                if (TutorialMode == true && CountCustomerInQueue < 4)
+                {
+
+                    customerData.customers.Enqueue(new Customer { Fruit = "Apple", PercentFruit = 30, logo = fruitInShops[0].logo });
+                  //  Debug.Log("TUTORIAL ADDED DATA");
+                }
+                else 
+                {
+                    customerData.customers.Enqueue(new Customer { Fruit = namefruit, PercentFruit = e, logo = fruit_icon });
+                }
+                CountCustomerInQueue++;
                 // Debug.Log($"Data: FruitName:{namefruit}Percent:{e}");
 
             });
 
-
+            
             // StartCoroutine(SpawnShopper(order, fruit_icon, ShopperServicePlace));
             //   CustomerInWave = order.Count;
             tempOfchoose.Clear();
-            // Debug.Log("GenrationWave");
+           //  Debug.Log("GenrationWave");
         }
     }
 
     private void RegenerationWaveAfterEmptyQueue()
     {
         GenerationWave(10);
-     //   Debug.Log("Regenration Wave");
+        //   Debug.Log("Regenration Wave");
     }
     private IEnumerator SpawnCustomer(int repeatSpawn)
     {
@@ -186,7 +183,7 @@ public class ShopperSystemController : MonoBehaviour
                 shopper.fruitname = data.Fruit;
                 shopper.SetUI(null, data.logo, data.PercentFruit, TimeResponseCustomer);
                 shopper.SetDestination(pos);
-             //   Debug.Log("ShopperPOS" + pos);
+              //    Debug.Log("ShopperPOS" + pos);
 
             }
         }
@@ -213,53 +210,54 @@ public class ShopperSystemController : MonoBehaviour
                 Repeatflow_Temp--;
                 flowSpawn_Temp = Mathf.Clamp(flowSpawn_Temp, 1, 4);
             }
-           else if ( EnableNormalMode == true)
+            else if (EnableNormalMode == true)
             {
                 if (Repeatflow_Temp == 0)
                 {
                     NextflowMode();
-                    //Debug.Log("1");
+                //    Debug.Log("1");
                 }
             }
-            else if (EnableRandomMode == true  )
+            else if (EnableRandomMode == true)
             {
                 if (CountrepeatedRandomMode < 3)
                 {
                     RandomModeFlow();
-                   // Debug.Log("2");
+                  //  Debug.Log("2");
                 }
             }
-            else if(EnableInfinityMode == true)
+            else if (EnableInfinityMode == true)
             {
                 InfinityMode();
-                 //Debug.Log("3");
+               // Debug.Log("3");
             }
 
 
 
             if (EnableNormalMode || EnableRandomMode)
             {
-              StartCoroutine(MessUpPlacePositionArray());
-                yield return new WaitForSecondsRealtime(0.2f);
+
                 yield return new WaitUntil(() => QueueCapacity == 4);
+                StartCoroutine(MessUpPlacePositionArray());
+                yield return new WaitForSecondsRealtime(0.2f);
                 StartCoroutine(SpawnCustomer(flowSpawn_Temp));
                 SliderAddStep();
-             //   Debug.Log("CapacityQueue:" + QueueCapacity + "Flow:" + flowSpawn_Temp);
+                // Debug.Log("CapacityQueue:" + QueueCapacity + "Flow:" + flowSpawn_Temp);
             }
             else
             {
                 StartCoroutine(SpawnCustomer(QueueCapacity));
                 SliderAddStep();
-                //  Debug.Log("CapacityQueue:" + QueueCapacity + "Flow infinity" );
+                 // Debug.Log("CapacityQueue:" + QueueCapacity + "Flow infinity" );
             }
-           
+
             // Debug.Log("Flow_Run");
         }
     }
     private void NextflowMode()
 
     {
-      //  Debug.Log("XXXX NextFlow XXXX");
+        //  Debug.Log("XXXX NextFlow XXXX");
 
 
 
@@ -277,35 +275,35 @@ public class ShopperSystemController : MonoBehaviour
             EnableNormalMode = false;
             EnableInfinityMode = false;
             EnableRandomMode = true;
-         //   Debug.Log("Random Flow Enabled");
+            //   Debug.Log("Random Flow Enabled");
         }
 
     }
- 
+
     private void RandomModeFlow()
     {
         var randomselectFlow = UnityEngine.Random.Range(0, gameFlow.flows.Count);
         SelectFlow(randomselectFlow);
         CountrepeatedRandomMode++;
-     //   Debug.Log("XXXX Random Mode XXXX");
+        //   Debug.Log("XXXX Random Mode XXXX");
         if (CountrepeatedRandomMode == RandomModeRepeate)
         {
             EnableInfinityMode = true;
             EnableRandomMode = false;
             EnableNormalMode = false;
             InfinityMode();
-           
+
         }
-        
+
     }
-    private void  InfinityMode()
+    private void InfinityMode()
     {
         currentflow_temp = -100;
-        
+
         TimeResponseCustomer = InfinityFlow.CustomerTimeResponse;
         Repeatflow_Temp = 1000;
         flowSpawn_Temp = InfinityFlow.CustomerInQueue;
-      //  Debug.Log("XXXX infinity Mode initialaz XXXX");
+        //  Debug.Log("XXXX infinity Mode initialaz XXXX");
     }
     private void SelectFlow(int index)
 
@@ -315,6 +313,7 @@ public class ShopperSystemController : MonoBehaviour
         TimeResponseCustomer = gameFlow.flows[currentflow_temp].CustomerTimeResponse;
         Repeatflow_Temp = gameFlow.flows[currentflow_temp].RepeatFlow;
         flowSpawn_Temp = gameFlow.flows[currentflow_temp].CustomerInQueue;
+      ///  Debug.Log("ZZZZZZZZZZZZZZZZZZZZZZ");
     }
 
 
@@ -330,13 +329,13 @@ public class ShopperSystemController : MonoBehaviour
             do
             {
                 rand = UnityEngine.Random.Range(0, ShopperServicePlace.Count);
-                
+
                 place = ShopperServicePlace[rand];
             } while (temp.Contains(place));
             temp.Add(place);
-            Debug.Log(".............." + rand);
+           /// Debug.Log(".............." + rand);
         }
-        
+
         ShopperServicePlace.Clear();
         yield return new WaitForSecondsRealtime(0.1f);
 
@@ -347,7 +346,7 @@ public class ShopperSystemController : MonoBehaviour
             ShopperServicePlace.Add(temp[i]);
         }
 
-       /// Debug.Log(".............." + place.transform.position);
+        /// Debug.Log(".............." + place.transform.position);
         yield return new WaitForSecondsRealtime(0.1f);
     }
     private Tuple<int, Vector3> FindFreePlaceInQueueForCustomer()
@@ -378,7 +377,7 @@ public class ShopperSystemController : MonoBehaviour
 
     }
 
-   
+
     public IEnumerator SpawFruit(string name, float price, float cashSlice)
     {
         // Debug.Log("AAAAAAAAAAAA:"+inJob);
@@ -407,7 +406,7 @@ public class ShopperSystemController : MonoBehaviour
                     {
                         dialogBox.Set("No Enoghe Cash", 3);
                         TryToSelectFruit = false;
-                      //  Debug.Log("Cant Spawn Fruit");
+                        //  Debug.Log("Cant Spawn Fruit");
                     }
 
                 }
@@ -446,7 +445,7 @@ public class ShopperSystemController : MonoBehaviour
     {
         TotalCash += amount;
         SetTextForTotalCash(TotalCash.ToString("0"));
-      //  Debug.Log("TotalCash:" + TotalCash);
+        //  Debug.Log("TotalCash:" + TotalCash);
     }
     private void SetTextForTotalCash(string amount)
     {
@@ -469,7 +468,7 @@ public class ShopperSystemController : MonoBehaviour
         Flow_slider.value += stepSliderflow;
     }
 
-    Tweener tweener;
+    
     public void SetHealth()
     {
 
@@ -480,8 +479,106 @@ public class ShopperSystemController : MonoBehaviour
 
         if (Health == 0)
         {
-            Debug.Log("Game OVERRRRRRRRRRRRRRRRRRRRRRRRR");
+            StartCoroutine(EndGame());
         }
+    }
+    
+
+    public IEnumerator StartGame()
+    {
+        customerData = new CustomerData();
+        customerData.customers = new Queue<Customer>();
+        HUDPanel.SetActive(true);
+      
+        GenerationWave(10);
+
+        if (TutorialMode == true)
+        {
+            SelectFlow(0);
+            Debug.Log(".................");
+        }
+        else
+        {
+            SelectFlow(1);
+            Debug.Log("XXXXXXXXXXXXXXXXXXXX");
+
+        }
+        yield return new WaitForSecondsRealtime(0.1f);
+        StartCoroutine(FlowSpwanCustomer());
+
+
+        yield return new WaitForSecondsRealtime(0.1f);
+        SetFlowSlider();
+        SetTextForTotalCash(TotalCash.ToString("0"));
+        Cut_button.onClick.AddListener(() =>
+        {
+
+            //  cameraController.SwitchCamera(1);
+            Handler_OnChangePhase(PhaseGame.Cut);
+        });
+        Pickup_Button.onClick.AddListener(() =>
+        {
+            // cameraController.SwitchCamera(1);
+            Handler_OnChangePhase(PhaseGame.Pickup);
+        });
+        Pause_Button.onClick.AddListener(() =>
+        {
+
+
+            PausePanel.SetActive(true);
+        });
+        Debug.Log("GameStart");
+        yield return new WaitForSecondsRealtime(0.1f);
+        HomePanel.SetActive(false);
+        PausePanel.SetActive(false);
+        
+    }
+    public IEnumerator EndGame()
+    {
+        HomePanel.SetActive(true);
+
+        yield return new WaitForSecondsRealtime(0.1f);
+
+       
+        yield return new WaitForSecondsRealtime(0.1f);
+        ClearSceneInEndGame();
+        yield return new WaitForSecondsRealtime(0.1f);
+        StartCoroutine(ClearFruitInScene());
+        yield return new WaitForSecondsRealtime(0.1f);
+      
+        TutorialMode = false;
+        QueueCapacity = 4;
+
+        ShopperServicePlace.ForEach(e => { e.HaveShopper = false; });
+        Cut_button.onClick.RemoveAllListeners();
+        
+        Pickup_Button.onClick.RemoveAllListeners();
+        Pause_Button.onClick.RemoveAllListeners();
+        Debug.Log("Game OVERRRRRRRRRRRRRRRRRRRRRRRRR");
+        yield return new WaitForSecondsRealtime(0.1f);
+        PausePanel.SetActive(false);
+        HUDPanel.SetActive(false);
+        yield return null;
+    }
+    private void ClearSceneInEndGame()
+    {
+        var humen = FindObjectsOfType<Char_Agent>().ToList();
+        humen.ForEach(e =>
+        {
+            Destroy(e.gameObject);
+        });
+        CountFlow = 0;
+        currentflow_temp = 0;
+        flowSpawn_Temp = 0;
+        Repeatflow_Temp = 0;
+        PerviousChoose = 0;
+        TryToSelectFruit = false;
+        TryToInitialzFlow = false;
+        EnableNormalMode = true;
+        EnableRandomMode = false;
+        CountrepeatedRandomMode = 0;
+        EnableInfinityMode = false;
+        CountCustomerInQueue = 0;
     }
 
     #region Events
