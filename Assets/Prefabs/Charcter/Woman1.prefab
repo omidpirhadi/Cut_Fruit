@@ -787,6 +787,7 @@ MonoBehaviour:
   UI: {fileID: 5093325626531462940}
   NeedPercentValue: 0
   fruitname: 
+  agent: {fileID: 0}
   IsReadyToGiveFruit: 0
 --- !u!195 &-8012051066487189790
 NavMeshAgent:
@@ -807,7 +808,7 @@ NavMeshAgent:
   m_AutoBraking: 0
   m_AutoRepath: 1
   m_Height: 2
-  m_BaseOffset: 0
+  m_BaseOffset: -0.07
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
 --- !u!54 &467209959677255544

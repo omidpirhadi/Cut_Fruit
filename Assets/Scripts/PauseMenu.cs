@@ -22,6 +22,7 @@ public class PauseMenu : MonoBehaviour
         });
         Resume_button.onClick.AddListener(() => {
             Time.timeScale = 1;
+            shopperSystem.HUDPanel.SetActive(true);
             this.gameObject.SetActive(false);
         });
         Gold_text.text = shopperSystem.TotalCash.ToString();

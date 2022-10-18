@@ -302,153 +302,153 @@ ModelImporter:
       scale: {x: 1, y: 1, z: 1}
     - name: basic_rig
       parentName: common_people_female_1(Clone)
-      position: {x: -8.940696e-12, y: 0.004198928, z: -0.000056135876}
+      position: {x: -8.9406954e-10, y: 0.41989273, z: -0.005613588}
       rotation: {x: -0.50000036, y: 0.49999967, z: 0.49999967, w: 0.50000036}
       scale: {x: 0.99999994, y: 0.99999994, z: 1}
     - name: basic_rig Pelvis
       parentName: basic_rig
-      position: {x: 0, y: 0, z: 0.00013020381}
+      position: {x: 0, y: 0, z: 0.013020381}
       rotation: {x: -0.5, y: 0.5, z: 0.4999993, w: 0.5000007}
       scale: {x: 1, y: 1, z: 1}
     - name: basic_rig Spine
       parentName: basic_rig Pelvis
-      position: {x: -0.0007994443, y: -0.0000015770806, z: 0.0000000011108552}
+      position: {x: -0.07994442, y: -0.00015770807, z: 0.00000011108552}
       rotation: {x: -0.000002080476, y: 0.000000693676, z: -0.000398159, w: 0.99999994}
       scale: {x: 1, y: 1, z: 1}
     - name: basic_rig Spine1
       parentName: basic_rig Spine
-      position: {x: -0.0019808477, y: -0.0000015772998, z: -4.3747918e-12}
+      position: {x: -0.19808477, y: -0.00015772998, z: -4.3747914e-10}
       rotation: {x: -3.0117673e-14, y: 0, z: -0, w: 1}
       scale: {x: 1, y: 1, z: 1}
     - name: basic_rig L Clavicle
       parentName: basic_rig Spine1
-      position: {x: -0.0014689644, y: -0.00048363488, z: 0.000507287}
+      position: {x: -0.14689644, y: -0.048363484, z: 0.050728697}
       rotation: {x: -0.60876137, y: -0.00024348815, z: 0.79335326, w: -0.0003150326}
       scale: {x: 1, y: 1, z: 1}
     - name: basic_rig L UpperArm
       parentName: basic_rig L Clavicle
-      position: {x: -0.0010972277, y: 0, z: 0}
+      position: {x: -0.10972277, y: 0, z: 0}
       rotation: {x: 0.00782581, y: 0.11115792, z: -0.0012217844, w: 0.99377126}
       scale: {x: 1, y: 1, z: 1}
     - name: basic_rig L Forearm
       parentName: basic_rig L UpperArm
-      position: {x: -0.0016260806, y: 0, z: 0}
+      position: {x: -0.16260804, y: 0, z: 0}
       rotation: {x: 0.0000000021686402, y: -0.000000014874753, z: 0.012733232, w: 0.99991894}
       scale: {x: 1, y: 1, z: 1}
     - name: basic_rig L Hand
       parentName: basic_rig L Forearm
-      position: {x: -0.0016748568, y: -3.5762785e-11, z: 0}
+      position: {x: -0.16748567, y: -0.0000000035762782, z: 0}
       rotation: {x: -0.70510024, y: -0.049390063, z: -0.04935075, w: 0.70566195}
       scale: {x: 1, y: 1, z: 1}
     - name: L_hand_grap_point
       parentName: basic_rig L Hand
-      position: {x: -0.000835469, y: 0.0004163795, z: 0.000000078356265}
+      position: {x: -0.0835469, y: 0.04163795, z: 0.000007835625}
       rotation: {x: -0.00000023819344, y: -0.0000000011076258, z: 0.000000028355045,
         w: 1}
       scale: {x: 0.26276, y: 0.26276, z: 0.26276}
     - name: basic_rig L Finger0
       parentName: basic_rig L Hand
-      position: {x: -0.00046438986, y: -0.00007878398, z: -0.00039995307}
+      position: {x: -0.046438985, y: -0.0078783985, z: -0.03999531}
       rotation: {x: -0.07481257, y: -0.24372122, z: -0.080375746, w: 0.9636093}
       scale: {x: 1, y: 1, z: 1}
     - name: basic_rig L Finger2
       parentName: basic_rig L Hand
-      position: {x: -0.001238683, y: 0.000023279572, z: 0.00037064805}
+      position: {x: -0.1238683, y: 0.0023279572, z: 0.037064802}
       rotation: {x: -0.00038227794, y: 0.27959305, z: -0.000111329784, w: 0.96011853}
       scale: {x: 1, y: 1, z: 1}
     - name: basic_rig L Finger1
       parentName: basic_rig L Hand
-      position: {x: -0.0014264428, y: 0.000019901274, z: -0.00012510596}
+      position: {x: -0.14264427, y: 0.0019901271, z: -0.012510596}
       rotation: {x: -0.0003981592, y: -4.5972823e-10, z: -0.000000014901346, w: 0.99999994}
       scale: {x: 1, y: 1, z: 1}
     - name: basic_rig R Clavicle
       parentName: basic_rig Spine1
-      position: {x: -0.0014689644, y: -0.0004836321, z: -0.0005072899}
+      position: {x: -0.14689644, y: -0.048363205, z: -0.050728984}
       rotation: {x: 0.60876137, y: 0.0002412877, z: 0.79335326, w: -0.00031672104}
       scale: {x: 1, y: 1, z: 1}
     - name: basic_rig UpperArm
       parentName: basic_rig R Clavicle
-      position: {x: -0.0010972277, y: 0, z: 0}
+      position: {x: -0.10972277, y: 0, z: 0}
       rotation: {x: -0.007825852, y: -0.11115625, z: -0.0012216019, w: 0.9937714}
       scale: {x: 1, y: 1, z: 1}
     - name: basic_rig R Forearm
       parentName: basic_rig UpperArm
-      position: {x: -0.0016260806, y: -7.152557e-11, z: 0}
+      position: {x: -0.16260804, y: -0.0000000071525563, z: 0}
       rotation: {x: -0.0000000023711897, y: -0.000000014932564, z: 0.012733233, w: 0.99991894}
       scale: {x: 1, y: 1, z: 1}
     - name: basic_rig R Hand
       parentName: basic_rig R Forearm
-      position: {x: -0.0016748572, y: 0, z: 0}
+      position: {x: -0.16748573, y: 0, z: 0}
       rotation: {x: 0.70510024, y: 0.049390078, z: -0.049350765, w: 0.70566195}
       scale: {x: 1, y: 1, z: 1}
     - name: R_hand_grap_point
       parentName: basic_rig R Hand
-      position: {x: -0.00083546794, y: 0.00041638073, z: -0.00000008815527}
+      position: {x: -0.083546795, y: 0.04163807, z: -0.000008815526}
       rotation: {x: 1, y: -0.00000028355146, z: 0.0000007154105, w: 0.0000014782831}
       scale: {x: -0.26276, y: -0.26276, z: -0.26276}
     - name: basic_rig R Finger0
       parentName: basic_rig R Hand
-      position: {x: -0.00046439, y: -0.000078783414, z: 0.00039995307}
+      position: {x: -0.046438996, y: -0.007878342, z: 0.03999531}
       rotation: {x: 0.07481256, y: 0.24372122, z: -0.08037573, w: 0.9636093}
       scale: {x: 1, y: 1, z: 1}
     - name: basic_rig R Finger2
       parentName: basic_rig R Hand
-      position: {x: -0.0012386831, y: 0.000023279572, z: -0.00037064805}
+      position: {x: -0.1238683, y: 0.0023279572, z: -0.037064802}
       rotation: {x: 0.00038227852, y: -0.27959305, z: -0.00011132963, w: 0.96011853}
       scale: {x: 1, y: 1, z: 1}
     - name: basic_rig R Finger1
       parentName: basic_rig R Hand
-      position: {x: -0.001426443, y: 0.000019901849, z: 0.00012510596}
+      position: {x: -0.1426443, y: 0.001990185, z: 0.012510596}
       rotation: {x: 0.00039815973, y: -2.3283063e-10, z: 9.2703785e-14, w: 0.99999994}
       scale: {x: 1, y: 1, z: 1}
     - name: basic_rig Neck
       parentName: basic_rig Spine1
-      position: {x: -0.001983197, y: -0.0001721187, z: -1.4188971e-12}
+      position: {x: -0.19831967, y: -0.01721187, z: -1.4188971e-10}
       rotation: {x: -2.652536e-15, y: 0.00000012098273, z: -0.043619383, w: 0.99904823}
       scale: {x: 1, y: 1, z: 1}
     - name: basic_rig Head
       parentName: basic_rig Neck
-      position: {x: -0.00077132613, y: 0, z: 1.364242e-16}
+      position: {x: -0.07713261, y: 0, z: 1.36424185e-14}
       rotation: {x: -5.6082302e-14, y: -0.0000000011042546, z: 0.00039882964, w: 0.99999994}
       scale: {x: 1, y: 1, z: 1}
     - name: basic_rig L Thigh
       parentName: basic_rig Pelvis
-      position: {x: 0.0000000014305115, y: 0.0000000015512107, z: 0.0009872983}
+      position: {x: 0.00000014305115, y: 0.00000015512107, z: 0.098729834}
       rotation: {x: 0.004068527, y: 0.9999575, z: -0.00094074855, w: 0.00821986}
       scale: {x: 1, y: 1, z: 1}
     - name: basic_rig L Calf
       parentName: basic_rig L Thigh
-      position: {x: -0.0019268594, y: 0, z: 7.152557e-11}
+      position: {x: -0.19268593, y: 0, z: 0.0000000071525563}
       rotation: {x: -1.1564061e-10, y: -1.3408081e-11, z: 0.11517454, w: 0.99334526}
       scale: {x: 1, y: 1, z: 1}
     - name: basic_rig L Foot
       parentName: basic_rig L Calf
-      position: {x: -0.0017480643, y: 0, z: -7.152557e-11}
+      position: {x: -0.17480643, y: 0, z: -0.0000000071525563}
       rotation: {x: 0.000013001918, y: 0.008274116, z: -0.11921109, w: 0.9928345}
       scale: {x: 1, y: 1, z: 1}
     - name: basic_rig L Toe0
       parentName: basic_rig L Foot
-      position: {x: -0.000578365, y: 0.0005732103, z: 0}
+      position: {x: -0.0578365, y: 0.05732103, z: 0}
       rotation: {x: -0.00000001545431, y: 0.00000001545431, z: -0.7071068, w: 0.7071068}
       scale: {x: 1, y: 1, z: 1}
     - name: basic_rig R Thigh
       parentName: basic_rig Pelvis
-      position: {x: -0.0000000014305115, y: -0.0000000011846424, z: -0.0009872986}
+      position: {x: -0.00000014305115, y: -0.00000011846423, z: -0.09872986}
       rotation: {x: 0.00406854, y: 0.9999575, z: 0.00093935576, w: -0.008221327}
       scale: {x: 1, y: 1, z: 1}
     - name: basic_rig R Calf
       parentName: basic_rig R Thigh
-      position: {x: -0.0019268594, y: 0, z: 0}
+      position: {x: -0.19268593, y: 0, z: 0}
       rotation: {x: -1.2401656e-10, y: -9.519411e-10, z: 0.11517453, w: 0.99334526}
       scale: {x: 1, y: 1, z: 1}
     - name: basic_rig R Foot
       parentName: basic_rig R Calf
-      position: {x: -0.0017480643, y: 0, z: 0}
+      position: {x: -0.17480643, y: 0, z: 0}
       rotation: {x: -0.000013012017, y: -0.008274201, z: -0.119211085, w: 0.9928345}
       scale: {x: 1, y: 1, z: 1}
     - name: basic_rig R Toe0
       parentName: basic_rig R Foot
-      position: {x: -0.000578365, y: 0.0005732103, z: 0}
+      position: {x: -0.0578365, y: 0.05732103, z: 0}
       rotation: {x: 0.000000015454312, y: -0.000000015454312, z: -0.7071068, w: 0.7071068}
       scale: {x: 1, y: 1, z: 1}
     - name: common_people_female_1
@@ -463,7 +463,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 0.015
+    globalScale: 1.5
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 1

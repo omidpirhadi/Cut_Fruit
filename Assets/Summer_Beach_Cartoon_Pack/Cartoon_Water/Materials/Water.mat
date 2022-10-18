@@ -168,7 +168,7 @@ Material:
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DistortionIntensity: 1
-    - _DistortionTiling: 10
+    - _DistortionTiling: 50
     - _DstBlend: 0
     - _Float0: 9.16
     - _Float1: 0.07
@@ -189,7 +189,7 @@ Material:
     - _Tiling: 0.07
     - _UVSec: 0
     - _WarpIntenisty: 0.11
-    - _WaterTiling: 1
+    - _WaterTiling: 20
     - _WavesSpeed: 1
     - _ZWrite: 1
     - __dirty: 0
@@ -210,13 +210,13 @@ Material:
     - _waterdepth: 0.82
     m_Colors:
     - _Color: {r: 0.40451992, g: 0.41587368, b: 0.6397059, a: 1}
-    - _DistortionSpeed: {r: 0.2, g: 0.2, b: 0.2, a: 0}
+    - _DistortionSpeed: {r: 0, g: 0, b: 0, a: 0}
     - _EmissionColor: {r: 0.1676038, g: 0.32625875, b: 0.36764705, a: 1}
     - _FresnelColor: {r: 0, g: 0, b: 0, a: 0}
     - _NoiseTile: {r: 1, g: 1, b: 0, a: 0}
     - _WaterColor: {r: 0, g: 0, b: 0, a: 0}
     - _WaterColorVariation: {r: 0.2236159, g: 0.46295327, b: 0.64705884, a: 1}
-    - _WaterSpeed: {r: 0.2, g: 0.2, b: 0.2, a: 0}
+    - _WaterSpeed: {r: 0.5, g: 0, b: 0, a: 0}
     - _WaterTextureTile: {r: 0.02, g: 0.01, b: 0, a: 0}
     - _WaterTile: {r: 30, g: 30, b: 0, a: 0}
     - _tint: {r: 0.4376081, g: 0.69299674, b: 0.83823526, a: 1}

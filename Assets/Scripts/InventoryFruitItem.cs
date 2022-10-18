@@ -18,7 +18,11 @@ public class InventoryFruitItem : MonoBehaviour
         slot_btn = GetComponent<UnityEngine.UI.Button>();
         slot_btn.onClick.AddListener(() =>
         {
-
+            if (shopperSystem.TutorialMode )
+            {
+                shopperSystem.HandTutorial.StepTutorial = 5;
+                
+            }
             StartCoroutine(shopperSystem.SpawFruit(FruitName, Price, CashSlice));
             Debug.Log("Fruit Button Click");
         });
@@ -26,6 +30,14 @@ public class InventoryFruitItem : MonoBehaviour
             price_text.color = Color.green;
         else
             price_text.color = Color.red;
+        if (shopperSystem.TutorialMode && FruitName != "Apple")
+        {
+            GetComponentInParent<CanvasGroup>().DOFade(0, 0.2f);
+        }
+        else
+        {
+            GetComponentInParent<CanvasGroup>().DOFade(1, 0.2f);
+        }
         price_text.text = Price.ToString();
     }
     private void OnDisable()

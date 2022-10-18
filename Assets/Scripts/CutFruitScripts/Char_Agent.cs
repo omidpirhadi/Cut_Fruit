@@ -24,7 +24,7 @@ public class Char_Agent : MonoBehaviour
     public float NeedPercentValue;
     public string fruitname;
 
-    private NavMeshAgent agent;
+   public NavMeshAgent agent;
     private Animator animator;
     private ShopperSystemController shopperSystem;
 
@@ -68,49 +68,68 @@ public class Char_Agent : MonoBehaviour
         this.tag = "destroy";
         animator.SetBool("Happy", true);
         DOVirtual.DelayedCall(5, () => {
-            var pos = FindObjectOfType<DestroyPlace>().transform.position;
-            var pos_spawn_doller = transform.position;
-            AgentMoveToDestroy(pos);
+     
+            AgentMoveToDestroy();
          
         });
         IsReadyToGiveFruit = false;
         //shopperSystem.QueueCapacity++;
     }
-    public void AngryMotion()
+   /* public void AngryMotion()
     {
         this.tag = "destroy";
         animator.SetBool("Angry", true);
         DOVirtual.DelayedCall(5, () => {
-            var pos = FindObjectOfType<DestroyPlace>().transform.position;
-            var pos_spawn_doller = transform.position;
-            AgentMoveToDestroy(pos);
+
+            AgentMoveToDestroy();
             
         });
         IsReadyToGiveFruit = false;
       //  shopperSystem.QueueCapacity++;
-    }
+    }*/
+    public void AngryMotionForTime()
+    {
+        
+        animator.SetBool("Angry", true);
 
-    public void ForWhatMotion()
+        
+        //  shopperSystem.QueueCapacity++;
+    }
+    public void SadMotion()
     {
         animator.SetBool("Sad", true);
-        DOVirtual.DelayedCall(2, () => {
-            var pos = FindObjectOfType<DestroyPlace>().transform.position;
-            AgentMoveToDestroy(pos);
+        DOVirtual.DelayedCall(4, () => {
+            
+            AgentMoveToDestroy();
         });
         IsReadyToGiveFruit = false;
+        Debug.Log("Sad Motion");
+    }
+    public void ForWhatMotion()
+    {
+        animator.SetBool("ForWhat", true);
+        DOVirtual.DelayedCall(3, () => {
+            animator.SetBool("ForWhat", false);
+        });
+        
         Debug.Log("For What Motion");
     }
-    public void AgentMoveToDestroy(Vector3 pos)
+    public void AgentMoveToDestroy()
     {
-      
+
+        var pos = FindObjectOfType<DestroyPlace>().transform.position;
+        var pos_spawn_doller = transform.position;
         this.tag = "destroy";
+
         animator.SetBool("Angry", false);
         animator.SetBool("Happy", false);
+        animator.SetBool("Sad", false);
+        animator.SetBool("ForWhat", false);
         animator.SetBool("Walk", true);
         agent.isStopped = false;
         agent.destination = pos;
         IsReadyToGiveFruit = false;
-        var pos_spawn_doller = transform.position;
+        
         if (point_offset != -1000)
         {
             DOVirtual.DelayedCall(0.5f, () => { SpawnDollerCash(point_offset, pos_spawn_doller); });
@@ -135,7 +154,7 @@ public class Char_Agent : MonoBehaviour
         if(pos.Equals(Vector3.zero))
         {
             pos = shopperSystem.ShopperServicePlace[IDPlace].transform.position;
-            Debug.Log("..........................ZEROOOOOOOOOOOOOOO");
+           // Debug.Log("..........................ZEROOOOOOOOOOOOOOO");
         }
         agent.destination = pos;
         IsReadyToGiveFruit = false;
@@ -193,7 +212,7 @@ public class Char_Agent : MonoBehaviour
                 }
                 else if (point_offset >= 6)
                 {
-                    AngryMotion();
+                    SadMotion();
                 }
                  
              
@@ -246,6 +265,7 @@ public class Char_Agent : MonoBehaviour
     /// <summary>
     /// INVOKE IN Calculate
     /// </summary>
+    int intergate = 0;
     public void RunTimer()
     {
         S--;
@@ -289,13 +309,19 @@ public class Char_Agent : MonoBehaviour
         else if (Prograssbar_time.fillAmount > 0 && Prograssbar_time.fillAmount < 0.25)
         {
             Prograssbar_time.color = Color.red;
+            if (intergate == 0)
+            {
+                AngryMotionForTime();
+                intergate = 1;
+            }
         }
         if (S == 0 && M == 0 && H == 0)
         {
+            AgentMoveToDestroy();
             IsReadyToGiveFruit = false;
             CancelInvoke("RunTimer");
           //  var pos = FindObjectOfType<DestroyPlace>().transform.position;
-            AngryMotion();
+           
 
 
         }

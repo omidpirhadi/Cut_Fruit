@@ -96,7 +96,8 @@ public class TouchController : MonoBehaviour
         if (Input.touchCount > 0)
         {
 
-
+            if(crossHair == null)
+                crossHair = FindObjectOfType<CrossHairControll>();
             var touch = Input.GetTouch(0);
 
             if (touch.phase == TouchPhase.Began)
@@ -224,6 +225,9 @@ public class TouchController : MonoBehaviour
 
                         //   CutFruits();
                         line.positionCount = 0;
+                       
+
+
                     }
 
                 }
@@ -241,6 +245,8 @@ public class TouchController : MonoBehaviour
 
                             Destroy(fruit_slice);
 
+                            if (shopperSystem.TutorialMode)
+                                shopperSystem.HandTutorial.StepTutorial = 3;
                             //  DOVirtual.DelayedCall(1, () => { char_agent_temp.AgentMoveToDestroy(pos); });
 
                             //   Debug.Log("END" + hit.collider.name);
@@ -270,6 +276,8 @@ public class TouchController : MonoBehaviour
     }
     public void CutFruits()
     {
+        if (SelectedFruits.Count > 0)
+            shopperSystem.HandTutorial.StepTutorial = 1;
         for (int i = 0; i < SelectedFruits.Count; i++)
         {
             cutter.Cut(SelectedFruits[i], SelectedInnerMatrials[i]);

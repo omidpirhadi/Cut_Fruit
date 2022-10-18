@@ -12,7 +12,8 @@ public class HomePanel : MonoBehaviour
     private void OnEnable()
     {
         shopperSystem = FindObjectOfType<ShopperSystemController>();
-
+        Play_button.interactable = false;
+        DOVirtual.DelayedCall(2, () => { Play_button.interactable = true; });
         Play_button.onClick.AddListener(() =>
         {
 

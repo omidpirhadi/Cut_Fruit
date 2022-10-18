@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Text;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,7 +39,7 @@ public class ShopperSystemController : MonoBehaviour
     public int RandomModeRepeate = 30;
 
     public bool TutorialMode = false;
-
+    public TutorialHand HandTutorial;
    
     public GameFlowData gameFlow;
     public Flow InfinityFlow;
@@ -68,17 +70,16 @@ public class ShopperSystemController : MonoBehaviour
     private int CountrepeatedRandomMode = 0;
     private bool EnableInfinityMode = false;
     private CustomerData customerData;
+   
+    private LeaderboardData leaderboard;
     private int CountCustomerInQueue = 0;
 
     private List<int> PercentFruits = new List<int> { 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95 };
 
 
-
-    public void Start()
+    public void Awake()
     {
         Application.targetFrameRate = 60;
-
-        
        
     }
 
@@ -177,11 +178,13 @@ public class ShopperSystemController : MonoBehaviour
                 yield return new WaitForSecondsRealtime(TimeBetweenEverySpawn);
 
                 var shopper = Instantiate(Humen_prefab[rand], CustomerPlaceSpwan.position, CustomerPlaceSpwan.rotation);
-
+            
                 yield return new WaitForSecondsRealtime(0.1f);
                 shopper.IDPlace = idplace;
                 shopper.fruitname = data.Fruit;
                 shopper.SetUI(null, data.logo, data.PercentFruit, TimeResponseCustomer);
+                if (TutorialMode)
+                    shopper.transform.position = new Vector3(-21, 1, -4);
                 shopper.SetDestination(pos);
               //    Debug.Log("ShopperPOS" + pos);
 
@@ -320,34 +323,36 @@ public class ShopperSystemController : MonoBehaviour
 
     private IEnumerator MessUpPlacePositionArray()
     {
-
-        List<PlaceShopper> temp = new List<PlaceShopper>();
-        int rand = 0;
-        PlaceShopper place = new PlaceShopper();
-        for (int i = 0; i < ShopperServicePlace.Count; i++)
+        if (TutorialMode == false)
         {
-            do
+            List<PlaceShopper> temp = new List<PlaceShopper>();
+            int rand = 0;
+            PlaceShopper place = new PlaceShopper();
+            for (int i = 0; i < ShopperServicePlace.Count; i++)
             {
-                rand = UnityEngine.Random.Range(0, ShopperServicePlace.Count);
+                do
+                {
+                    rand = UnityEngine.Random.Range(0, ShopperServicePlace.Count);
 
-                place = ShopperServicePlace[rand];
-            } while (temp.Contains(place));
-            temp.Add(place);
-           /// Debug.Log(".............." + rand);
+                    place = ShopperServicePlace[rand];
+                } while (temp.Contains(place));
+                temp.Add(place);
+                /// Debug.Log(".............." + rand);
+            }
+
+            ShopperServicePlace.Clear();
+            yield return new WaitForSecondsRealtime(0.1f);
+
+
+            for (int i = 0; i < temp.Count; i++)
+            {
+                temp[i].ID = i;
+                ShopperServicePlace.Add(temp[i]);
+            }
+
+            /// Debug.Log(".............." + place.transform.position);
+            yield return new WaitForSecondsRealtime(0.1f);
         }
-
-        ShopperServicePlace.Clear();
-        yield return new WaitForSecondsRealtime(0.1f);
-
-
-        for (int i = 0; i < temp.Count; i++)
-        {
-            temp[i].ID = i;
-            ShopperServicePlace.Add(temp[i]);
-        }
-
-        /// Debug.Log(".............." + place.transform.position);
-        yield return new WaitForSecondsRealtime(0.1f);
     }
     private Tuple<int, Vector3> FindFreePlaceInQueueForCustomer()
     {
@@ -399,12 +404,14 @@ public class ShopperSystemController : MonoBehaviour
                         this.SliceCash = cashSlice;
                         AmountCash(-price);
                         TryToSelectFruit = false;
-                        dialogBox.Set("Ready For Cut", 3);
+                        if (TutorialMode == false)
+                            dialogBox.Set("Ready For Cut", 3);
                         //Debug.Log("FruitSpawned");
                     }
                     else
                     {
-                        dialogBox.Set("No Enoghe Cash", 3);
+                        if (TutorialMode == false)
+                            dialogBox.Set("No Enoghe Cash", 3);
                         TryToSelectFruit = false;
                         //  Debug.Log("Cant Spawn Fruit");
                     }
@@ -488,6 +495,20 @@ public class ShopperSystemController : MonoBehaviour
     {
         customerData = new CustomerData();
         customerData.customers = new Queue<Customer>();
+        leaderboard = new LeaderboardData();
+
+        if (ExistSave("fruitshop"))
+        {
+
+            leaderboard = LoadLeaderboard("fruitshop");
+
+        }
+        else
+        {
+            TutorialMode = true;
+            leaderboard.tutorial = true;
+        }
+
         HUDPanel.SetActive(true);
       
         GenerationWave(10);
@@ -495,12 +516,14 @@ public class ShopperSystemController : MonoBehaviour
         if (TutorialMode == true)
         {
             SelectFlow(0);
-            Debug.Log(".................");
+            StartCoroutine(SpawFruit("Apple", 100, 150));
+            StartCoroutine(HandTutorial.Tutorial());
+          //  Debug.Log(".................");
         }
         else
         {
             SelectFlow(1);
-            Debug.Log("XXXXXXXXXXXXXXXXXXXX");
+          ///  Debug.Log("XXXXXXXXXXXXXXXXXXXX");
 
         }
         yield return new WaitForSecondsRealtime(0.1f);
@@ -514,19 +537,36 @@ public class ShopperSystemController : MonoBehaviour
         {
 
             //  cameraController.SwitchCamera(1);
+            if(TutorialMode)
+            {
+                HandTutorial.StepTutorial = 0;
+            }
             Handler_OnChangePhase(PhaseGame.Cut);
         });
         Pickup_Button.onClick.AddListener(() =>
         {
-            // cameraController.SwitchCamera(1);
+            if (TutorialMode)
+            {
+                HandTutorial.StepTutorial = 2;
+            }
             Handler_OnChangePhase(PhaseGame.Pickup);
+        });
+        Shop_Button.onClick.AddListener(() =>
+        {
+            if (TutorialMode)
+            {
+                HandTutorial.StepTutorial = 4;
+            }
+            
         });
         Pause_Button.onClick.AddListener(() =>
         {
 
-
+            HUDPanel.SetActive(false);
             PausePanel.SetActive(true);
         });
+        if (TutorialMode == true)
+            Pause_Button.interactable = false;
         Debug.Log("GameStart");
         yield return new WaitForSecondsRealtime(0.1f);
         HomePanel.SetActive(false);
@@ -554,16 +594,26 @@ public class ShopperSystemController : MonoBehaviour
         
         Pickup_Button.onClick.RemoveAllListeners();
         Pause_Button.onClick.RemoveAllListeners();
-        Debug.Log("Game OVERRRRRRRRRRRRRRRRRRRRRRRRR");
+
+        SetLeaderboard();
+        SaveLeaderboard("fruitshop");
+        Debug.Log("Game OVER");
+        
         yield return new WaitForSecondsRealtime(0.1f);
         PausePanel.SetActive(false);
         HUDPanel.SetActive(false);
+
         yield return null;
     }
     private void ClearSceneInEndGame()
     {
         var humen = FindObjectsOfType<Char_Agent>().ToList();
+        var cash = FindObjectsOfType<Money>().ToList();
         humen.ForEach(e =>
+        {
+            Destroy(e.gameObject);
+        });
+        cash.ForEach(e =>
         {
             Destroy(e.gameObject);
         });
@@ -581,6 +631,46 @@ public class ShopperSystemController : MonoBehaviour
         CountCustomerInQueue = 0;
     }
 
+
+    #region Read and Write File
+    public bool ExistSave(string FileName)
+    {
+        bool find = false;
+        if (File.Exists(Application.persistentDataPath + "//" + FileName + ".json"))
+        {
+            find = true;
+        }
+        return find;
+    }
+    public void SaveLeaderboard(string FileName)
+    {
+
+        var json_data = JsonUtility.ToJson(leaderboard);
+        if (File.Exists(Application.persistentDataPath + "//" + FileName + ".json"))
+        {
+            File.Delete(Application.persistentDataPath + "//" + FileName + ".json");
+        }
+        File.WriteAllText(Application.persistentDataPath + "//" + FileName + ".json", json_data);
+         Debug.Log("Data Saved");
+    }
+    public LeaderboardData LoadLeaderboard(string FileName)
+    {
+        LeaderboardData data = new LeaderboardData();
+        if (File.Exists(Application.persistentDataPath + "//" + FileName + ".json"))
+        {
+            var j_data = File.ReadAllText(Application.persistentDataPath + "//" + FileName + ".json");
+            data = JsonUtility.FromJson<LeaderboardData>(j_data);
+
+        }
+         Debug.Log("Data Loaded");
+        return data;
+    }
+    public void SetLeaderboard()
+    {
+        leaderboard.totalCash = this.TotalCash;
+        leaderboard.tutorial = false;
+    }
+    #endregion
     #region Events
     private Action resetwave;
     public event Action OnResetWave
@@ -681,5 +771,12 @@ public struct GameFlowData
         }
         return c;
     }
+}
+[Serializable]
+public struct LeaderboardData
+{
+    public float totalCash;
+    public bool tutorial;
+
 }
 #endregion
