@@ -38,15 +38,15 @@ public class TutorialHand : MonoBehaviour
         HandImage.DOFade(1, 0.5f);
         
         animation.Play("ShockOnButton", PlayMode.StopAll);
-
+        dialog.SetPositionWithAnimation("Cut_POS_Button");
         dialog.Set("Click On Cut Button ", 10);
-
+       
         Debug.Log("Step1");
 
         yield return new WaitUntil(() => StepTutorial == 0);
 
         animation.Play("DoCut", PlayMode.StopAll);
-
+        dialog.SetPositionWithAnimation("CutDrag");
         dialog.Set("Drag Finger On Fruit For Cut ", 10);
         Debug.Log("Setp 2");
 
@@ -54,13 +54,14 @@ public class TutorialHand : MonoBehaviour
 
         hand_rect.DOMove(PickupButton_pos.position, 1.0f);
         animation.Play("ShockOnButton", PlayMode.StopAll);
-
+        dialog.SetPositionWithAnimation("Pickup_POS_Button");
         dialog.Set("Click On PickUp Button ", 10);
         Debug.Log("Setp 3");
 
         yield return new WaitUntil(() => StepTutorial == 2);
 
         animation.Play("DoDrag", PlayMode.StopAll);
+        dialog.SetPositionWithAnimation("CutDrag");
         dialog.Set("Drag Fruit On Customer", 10);
         Debug.Log("Setp 4");
 
@@ -68,7 +69,7 @@ public class TutorialHand : MonoBehaviour
 
         hand_rect.DOMove(ShopButton_pos.position, 1.0f);
         animation.Play("ShockOnButton", PlayMode.StopAll);
-
+        dialog.SetPositionWithAnimation("Shop_POS_Button");
         dialog.Set("Click Shop Button", 10);
         Debug.Log("Setp 5");
 
@@ -77,6 +78,7 @@ public class TutorialHand : MonoBehaviour
 
         animation.Play("SellFruit", PlayMode.StopAll);
         DOVirtual.DelayedCall(1, () => { animation.Play("ShockOnButton", PlayMode.StopAll); });
+        dialog.SetPositionWithAnimation("Inventory_POS");
         dialog.Set("Buy Fruit", 10);
         Debug.Log("Setp 5");
 
@@ -84,7 +86,9 @@ public class TutorialHand : MonoBehaviour
 
 
         //yield return new WaitUntil(() => StepTutorial == 6);
+        dialog.SetPositionWithAnimation("CashMony_POS");
         dialog.Set("Excellent And DontForget Pickup Cash Item", 5);
+
         HandImage.DOFade(0, 0.5f);
        
         DOVirtual.DelayedCall(5, () => {

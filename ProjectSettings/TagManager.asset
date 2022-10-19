@@ -9,6 +9,7 @@ TagManager:
   - shopper
   - destroy
   - floor
+  - npc
   layers:
   - Default
   - TransparentFX

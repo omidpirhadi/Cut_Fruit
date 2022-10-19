@@ -6,11 +6,16 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
 using DG.Tweening;
+
+
+[RequireComponent(typeof(CapsuleCollider), typeof(Rigidbody), typeof(NavMeshAgent))]
 public class Char_Agent : MonoBehaviour
 {
     // public Transform Target;
     public int IDPlace;
     public Money CashPrefab;
+   
+
 
     //public Transform Canvas;
     public Image Character_image;
@@ -24,7 +29,7 @@ public class Char_Agent : MonoBehaviour
     public float NeedPercentValue;
     public string fruitname;
 
-   public NavMeshAgent agent;
+    public NavMeshAgent agent;
     private Animator animator;
     private ShopperSystemController shopperSystem;
 
@@ -35,27 +40,31 @@ public class Char_Agent : MonoBehaviour
     private float S;
     private float point_offset = -1000;
     private Vector3 des_pos;
-   [SerializeField] private bool IsReadyToGiveFruit = false;
+    [SerializeField] private bool IsReadyToGiveFruit = false;
+
+
+
     void Start()
     {
         point_offset = -1000;
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
         shopperSystem = FindObjectOfType<ShopperSystemController>();
-      //  shopperSystem.OnAgentMove += ShopperSystem_OnAgentMove;
+        
+        //  shopperSystem.OnAgentMove += ShopperSystem_OnAgentMove;
     }
     private void LateUpdate()
     {
-        
+
         UI.forward = -(Camera.main.transform.position - transform.position);
     }
     private void OnDestroy()
     {
-       
+
     }
     public void CustomerInPlace()
     {
-       
+
         agent.isStopped = true;
         animator.SetBool("Walk", false);
 
@@ -67,39 +76,44 @@ public class Char_Agent : MonoBehaviour
     {
         this.tag = "destroy";
         animator.SetBool("Happy", true);
-        DOVirtual.DelayedCall(5, () => {
-     
+        DOVirtual.DelayedCall(3.22f, () =>
+        {
+
             AgentMoveToDestroy();
-         
+
         });
+        // animator.SetBool("Happy", false);
         IsReadyToGiveFruit = false;
+        Debug.Log("HAPPY MOTIONNNNNNNNNN");
         //shopperSystem.QueueCapacity++;
     }
-   /* public void AngryMotion()
-    {
-        this.tag = "destroy";
-        animator.SetBool("Angry", true);
-        DOVirtual.DelayedCall(5, () => {
+    /* public void AngryMotion()
+     {
+         this.tag = "destroy";
+         animator.SetBool("Angry", true);
+         DOVirtual.DelayedCall(5, () => {
 
-            AgentMoveToDestroy();
-            
-        });
-        IsReadyToGiveFruit = false;
-      //  shopperSystem.QueueCapacity++;
-    }*/
+             AgentMoveToDestroy();
+
+         });
+         IsReadyToGiveFruit = false;
+       //  shopperSystem.QueueCapacity++;
+     }*/
     public void AngryMotionForTime()
     {
-        
-        animator.SetBool("Angry", true);
 
-        
+        animator.SetBool("Angry", true);
+        DOVirtual.DelayedCall(1, () => { animator.SetBool("Angry", false); });
+        Debug.Log("Angry MOTIONNNNNNNNNN");
+
         //  shopperSystem.QueueCapacity++;
     }
     public void SadMotion()
     {
         animator.SetBool("Sad", true);
-        DOVirtual.DelayedCall(4, () => {
-            
+        DOVirtual.DelayedCall(2.22f, () =>
+        {
+
             AgentMoveToDestroy();
         });
         IsReadyToGiveFruit = false;
@@ -108,19 +122,20 @@ public class Char_Agent : MonoBehaviour
     public void ForWhatMotion()
     {
         animator.SetBool("ForWhat", true);
-        DOVirtual.DelayedCall(3, () => {
+        DOVirtual.DelayedCall(1.20f, () =>
+        {
             animator.SetBool("ForWhat", false);
         });
-        
+
         Debug.Log("For What Motion");
     }
     public void AgentMoveToDestroy()
     {
-
+        IsReadyToGiveFruit = false;
         var pos = FindObjectOfType<DestroyPlace>().transform.position;
         var pos_spawn_doller = transform.position;
         this.tag = "destroy";
-
+        animator.SetBool("ForceWalk", true);
         animator.SetBool("Angry", false);
         animator.SetBool("Happy", false);
         animator.SetBool("Sad", false);
@@ -128,20 +143,20 @@ public class Char_Agent : MonoBehaviour
         animator.SetBool("Walk", true);
         agent.isStopped = false;
         agent.destination = pos;
-        IsReadyToGiveFruit = false;
-        
+
+
         if (point_offset != -1000)
         {
             DOVirtual.DelayedCall(0.5f, () => { SpawnDollerCash(point_offset, pos_spawn_doller); });
             point_offset = -1000;
-            
+
         }
         else if (point_offset == -1000)
         {
             shopperSystem.SetHealth();
-           
+
         }
-       
+
         // shopperSystem.CustomerInWave--;
     }
 
@@ -151,10 +166,10 @@ public class Char_Agent : MonoBehaviour
     public void SetDestination(Vector3 pos)
     {
         animator.SetBool("Walk", true);
-        if(pos.Equals(Vector3.zero))
+        if (pos.Equals(Vector3.zero))
         {
             pos = shopperSystem.ShopperServicePlace[IDPlace].transform.position;
-           // Debug.Log("..........................ZEROOOOOOOOOOOOOOO");
+            // Debug.Log("..........................ZEROOOOOOOOOOOOOOO");
         }
         agent.destination = pos;
         IsReadyToGiveFruit = false;
@@ -163,7 +178,7 @@ public class Char_Agent : MonoBehaviour
 
 
 
-    public void SetUI(Sprite profile, Sprite fruitIcon, float percent , float timereponse)
+    public void SetUI(Sprite profile, Sprite fruitIcon, float percent, float timereponse)
     {
         this.Character_image.sprite = profile;
         this.FuritIcon_image.sprite = fruitIcon;
@@ -178,7 +193,7 @@ public class Char_Agent : MonoBehaviour
         // CalculateTime(timereponse);
     }
 
-    public void PrograssbarAndPointSet(float amount , string fruitname)
+    public void PrograssbarAndPointSet(float amount, string fruitname)
     {
         if (IsReadyToGiveFruit == true)
         {
@@ -214,9 +229,9 @@ public class Char_Agent : MonoBehaviour
                 {
                     SadMotion();
                 }
-                 
-             
-                
+
+
+
             }
             else if (this.fruitname != fruitname)
             {
@@ -320,13 +335,13 @@ public class Char_Agent : MonoBehaviour
             AgentMoveToDestroy();
             IsReadyToGiveFruit = false;
             CancelInvoke("RunTimer");
-          //  var pos = FindObjectOfType<DestroyPlace>().transform.position;
-           
+            //  var pos = FindObjectOfType<DestroyPlace>().transform.position;
+
 
 
         }
     }
 
 
-    
+
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,7 +19,7 @@ public class HomePanel : MonoBehaviour
         {
 
             StartCoroutine(shopperSystem.StartGame());
-
+            Handler_OnPlay();
 
 
         });
@@ -30,5 +31,19 @@ public class HomePanel : MonoBehaviour
     {
         Play_button.onClick.RemoveAllListeners();
         
+    }
+
+    private Action onplay;
+    public event Action OnPlay
+    {
+        add { onplay += value; }
+        remove { onplay -= value; }
+    }
+    protected void Handler_OnPlay()
+    {
+        if (onplay != null)
+        {
+            onplay();
+        }
     }
 }

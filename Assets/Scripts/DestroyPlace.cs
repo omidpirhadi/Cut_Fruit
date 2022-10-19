@@ -24,6 +24,9 @@ public class DestroyPlace : MonoBehaviour
             Destroy(obj.gameObject);
 
         }
-        
+        else if(obj.tag == "npc")
+        {
+            Destroy(obj.gameObject);
+        }
     }
 }

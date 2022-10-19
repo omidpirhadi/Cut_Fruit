@@ -40,7 +40,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1914516824689459437}
-  m_Layer: 5
+  m_Layer: 13
   m_Name: Shopper_indicator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -306,7 +306,7 @@ GameObject:
   - component: {fileID: 6949323726262818650}
   - component: {fileID: 8053627489323357456}
   - component: {fileID: 8164844530562035619}
-  m_Layer: 5
+  m_Layer: 13
   m_Name: Character_image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -663,7 +663,7 @@ GameObject:
   - component: {fileID: 3257047871637406989}
   - component: {fileID: 2108242329274081470}
   - component: {fileID: 3965426584164300342}
-  m_Layer: 5
+  m_Layer: 13
   m_Name: PrograssbarTime_img
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -830,7 +830,7 @@ GameObject:
   - component: {fileID: 3854558359375501468}
   - component: {fileID: 5235598256953365978}
   - component: {fileID: 5820152834904106646}
-  m_Layer: 5
+  m_Layer: 13
   m_Name: Prograssbar_img
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1089,7 +1089,7 @@ GameObject:
   - component: {fileID: 3817628131305497872}
   - component: {fileID: 2631443620095429641}
   - component: {fileID: 3304625929241389896}
-  m_Layer: 5
+  m_Layer: 13
   m_Name: Frame_UserPictureFrame_Frame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1948,7 +1948,7 @@ GameObject:
   - component: {fileID: 470093142562237592}
   - component: {fileID: 4694939822950629976}
   - component: {fileID: 5955828134310169794}
-  m_Layer: 5
+  m_Layer: 13
   m_Name: FuritIcon_image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2116,7 +2116,7 @@ GameObject:
   - component: {fileID: 4103858498150509811}
   - component: {fileID: 2491862803404438127}
   - component: {fileID: 5735269735508550981}
-  m_Layer: 5
+  m_Layer: 13
   m_Name: Frame_UserPictureFrame_InBase
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2461,7 +2461,7 @@ GameObject:
   - component: {fileID: 8044848592948236057}
   - component: {fileID: 1981499184508005119}
   - component: {fileID: 4641194081849776574}
-  m_Layer: 5
+  m_Layer: 13
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2559,7 +2559,7 @@ GameObject:
   - component: {fileID: 390347113436259602}
   - component: {fileID: 411294642350377694}
   - component: {fileID: 2034569675223160823}
-  m_Layer: 5
+  m_Layer: 13
   m_Name: PrograsbarText_text
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -17,7 +17,7 @@ public class ShopperSystemController : MonoBehaviour
     public CameraController cameraController;
     public ShopperIndicatorUI shopperIndicatorUI;
     public DialogBox dialogBox;
-   // public RectTransform Contents;
+   
     public TMPro.TMP_Text TotalCash_Text;
     public Transform CustomerPlaceSpwan;
     public Transform FruitSpwanPlace;
@@ -26,11 +26,14 @@ public class ShopperSystemController : MonoBehaviour
     public GameObject InventoryPanel;
     public GameObject PausePanel;
     public GameObject HomePanel;
+
+    public GlowButton glowbutton;
     public Button Cut_button;
     public Button Pickup_Button;
     public Button Shop_Button;
     public Button Pause_Button;
     public Slider Flow_slider;
+
     public int Health = 3;
     public float TotalCash;
     public float SliceCash;
@@ -405,13 +408,17 @@ public class ShopperSystemController : MonoBehaviour
                         AmountCash(-price);
                         TryToSelectFruit = false;
                         if (TutorialMode == false)
-                            dialogBox.Set("Ready For Cut", 3);
-                        //Debug.Log("FruitSpawned");
+                        {
+                            //  dialogBox.Set("Ready For Cut", 3);
+                            //Debug.Log("FruitSpawned");
+                        }
                     }
                     else
                     {
                         if (TutorialMode == false)
-                            dialogBox.Set("No Enoghe Cash", 3);
+                        {
+                            // dialogBox.Set("No Enoghe Cash", 3);
+                        }
                         TryToSelectFruit = false;
                         //  Debug.Log("Cant Spawn Fruit");
                     }
@@ -496,7 +503,7 @@ public class ShopperSystemController : MonoBehaviour
         customerData = new CustomerData();
         customerData.customers = new Queue<Customer>();
         leaderboard = new LeaderboardData();
-
+        glowbutton.GlowPos("1");
         if (ExistSave("fruitshop"))
         {
 
@@ -541,6 +548,7 @@ public class ShopperSystemController : MonoBehaviour
             {
                 HandTutorial.StepTutorial = 0;
             }
+            glowbutton.GlowPos("1");
             Handler_OnChangePhase(PhaseGame.Cut);
         });
         Pickup_Button.onClick.AddListener(() =>
@@ -549,6 +557,7 @@ public class ShopperSystemController : MonoBehaviour
             {
                 HandTutorial.StepTutorial = 2;
             }
+            glowbutton.GlowPos("2");
             Handler_OnChangePhase(PhaseGame.Pickup);
         });
         Shop_Button.onClick.AddListener(() =>
@@ -556,14 +565,17 @@ public class ShopperSystemController : MonoBehaviour
             if (TutorialMode)
             {
                 HandTutorial.StepTutorial = 4;
+                
             }
-            
+          //  glowbutton.GlowPos("3");
+            InventoryPanel.SetActive(true);
         });
         Pause_Button.onClick.AddListener(() =>
         {
 
             HUDPanel.SetActive(false);
             PausePanel.SetActive(true);
+           // glowbutton.GlowPos("4");
         });
         if (TutorialMode == true)
             Pause_Button.interactable = false;
@@ -667,8 +679,10 @@ public class ShopperSystemController : MonoBehaviour
     }
     public void SetLeaderboard()
     {
+        TutorialMode = false;
         leaderboard.totalCash = this.TotalCash;
         leaderboard.tutorial = false;
+       
     }
     #endregion
     #region Events

@@ -6,6 +6,9 @@ using DG.Tweening;
 public class DialogBox : MonoBehaviour
 {
     public TMPro.TMP_Text Context;
+    public Image Frame;
+    public Sprite bubble_right;
+    public Sprite bubble_left;
     private CanvasGroup CanvasGroup;
     private Tween t;
     public void Set(string context, float duration = 5)
@@ -25,6 +28,11 @@ public class DialogBox : MonoBehaviour
         }
 
     }
+    public void SetPositionWithAnimation(string name)
+    {
+        var ani = GetComponent<Animation>();
+        ani.Play(name, PlayMode.StopAll);
+    }
     public void Hide()
     {
 
@@ -34,5 +42,13 @@ public class DialogBox : MonoBehaviour
     {
 
         CanvasGroup.DOFade(1, 0.5f);
+    }
+    public void ChangebubbleToRight()
+    {
+        Frame.sprite = bubble_right;
+    }
+    public void ChangebubbleToLeft()
+    {
+        Frame.sprite = bubble_left;
     }
 }
