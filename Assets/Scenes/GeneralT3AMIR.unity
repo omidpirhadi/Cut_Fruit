@@ -43716,7 +43716,7 @@ MonoBehaviour:
       CustomerInQueue: 1
       RepeatFlow: 1
     - CustomerTimeResponse: 40
-      CustomerInQueue: 4
+      CustomerInQueue: 1
       RepeatFlow: 2
     - CustomerTimeResponse: 40
       CustomerInQueue: 3
