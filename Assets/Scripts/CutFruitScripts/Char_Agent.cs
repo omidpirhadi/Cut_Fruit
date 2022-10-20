@@ -40,6 +40,7 @@ public class Char_Agent : MonoBehaviour
     private float S;
     private float point_offset = -1000;
     private Vector3 des_pos;
+    private bool ToDestroy = false;
     [SerializeField] private bool IsReadyToGiveFruit = false;
 
 
@@ -50,23 +51,29 @@ public class Char_Agent : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
         shopperSystem = FindObjectOfType<ShopperSystemController>();
-        
+       
         //  shopperSystem.OnAgentMove += ShopperSystem_OnAgentMove;
     }
     private void LateUpdate()
     {
 
         UI.forward = -(Camera.main.transform.position - transform.position);
-       
-      
+        var a = animator.GetCurrentAnimatorStateInfo(0);
+        if(ToDestroy && a.IsName("Idel"))
+        {
+            AgentMoveToDestroy();
+            ToDestroy = false;
+        }
+        
+            
     }
 
     public void CustomerInPlace()
     {
 
         agent.isStopped = true;
+        animator.SetBool("Destroy", false);
         animator.SetBool("Walk", false);
-
 
         transform.DORotate(new Vector3(0, -180, 0), 2);
 
@@ -81,12 +88,14 @@ public class Char_Agent : MonoBehaviour
     {
         this.tag = "destroy";
         animator.SetBool("Happy", true);
-        DOVirtual.DelayedCall(3.22f, () =>
-        {
-
-            AgentMoveToDestroy();
-
+        
+        DOVirtual.DelayedCall(2f, () => {
+            animator.SetBool("Happy", false);
+            animator.SetBool("Destroy", true);
+            ToDestroy = true;
         });
+
+      
         // animator.SetBool("Happy", false);
         IsReadyToGiveFruit = false;
         Debug.Log("HAPPY MOTIONNNNNNNNNN");
@@ -108,7 +117,7 @@ public class Char_Agent : MonoBehaviour
     {
 
         animator.SetBool("Angry", true);
-        DOVirtual.DelayedCall(1, () => { animator.SetBool("Angry", false); });
+        DOVirtual.DelayedCall(1, () => { animator.SetBool("Angry", false); animator.SetBool("Destroy", true); });
         Debug.Log("Angry MOTIONNNNNNNNNN");
 
         //  shopperSystem.QueueCapacity++;
@@ -116,10 +125,10 @@ public class Char_Agent : MonoBehaviour
     public void SadMotion()
     {
         animator.SetBool("Sad", true);
-        DOVirtual.DelayedCall(2.22f, () =>
-        {
-
-            AgentMoveToDestroy();
+        DOVirtual.DelayedCall(2.0f, () => {
+            animator.SetBool("Sad", false);
+            animator.SetBool("Destroy", true);
+            ToDestroy = true;
         });
         IsReadyToGiveFruit = false;
         Debug.Log("Sad Motion");
@@ -136,17 +145,20 @@ public class Char_Agent : MonoBehaviour
     }
     public void AgentMoveToDestroy()
     {
-        IsReadyToGiveFruit = false;
+
+
         var pos = FindObjectOfType<DestroyPlace>().transform.position;
         var pos_spawn_doller = transform.position;
         transform.DOLookAt(pos, 0.5f);
+        IsReadyToGiveFruit = false;
         this.tag = "destroy";
-        animator.SetBool("ForceWalk", true);
+        animator.SetBool("Destroy", true);
+        animator.SetBool("Walk", true);
         animator.SetBool("Angry", false);
         animator.SetBool("Happy", false);
         animator.SetBool("Sad", false);
         animator.SetBool("ForWhat", false);
-        animator.SetBool("Walk", true);
+        
         agent.isStopped = false;
         agent.destination = pos;
 
@@ -154,12 +166,13 @@ public class Char_Agent : MonoBehaviour
         if (point_offset != -1000)
         {
             DOVirtual.DelayedCall(0.5f, () => { SpawnDollerCash(point_offset, pos_spawn_doller); });
-            point_offset = -1000;
+            
 
         }
         else if (point_offset == -1000)
         {
             shopperSystem.SetHealth();
+            Debug.Log("SETT HEALTH:" + point_offset);
 
         }
 
@@ -172,6 +185,7 @@ public class Char_Agent : MonoBehaviour
     public void SetDestination(Vector3 pos)
     {
         animator.SetBool("Walk", true);
+        animator.SetBool("Destroy", true);
         if (pos.Equals(Vector3.zero))
         {
             pos = shopperSystem.ShopperServicePlace[IDPlace].transform.position;
@@ -222,6 +236,7 @@ public class Char_Agent : MonoBehaviour
                 }
                 //  this.Percent_text.text = (Mathf.Clamp(amount / NeedPercentValue, 0, 1) * 100).ToString("0"); 
                 point_offset = (NeedPercentValue - amount);
+                Debug.Log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA:" + point_offset);
                 /// nagative offset mean  Customer is happy
                 ///  positive offset mean  Customer is angery
                 if (point_offset <= 5)
@@ -335,7 +350,7 @@ public class Char_Agent : MonoBehaviour
         }
         if (S == 0 && M == 0 && H == 0)
         {
-            AgentMoveToDestroy();
+            ToDestroy = true;
             IsReadyToGiveFruit = false;
             CancelInvoke("RunTimer");
             //  var pos = FindObjectOfType<DestroyPlace>().transform.position;

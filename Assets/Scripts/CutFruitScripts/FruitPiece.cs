@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
+using DG.Tweening;
 public class FruitPiece : MonoBehaviour,IFruit
 {
     public string FuritTag;
@@ -10,17 +11,7 @@ public class FruitPiece : MonoBehaviour,IFruit
     public float TotalVolume;
     public float Volume;
     public float PercentVolume;
-   
-
-  //  private TouchController controller;
     private Mesh meshFilter;
-   // private  new MeshRenderer  renderer;
-    
-
-
-   // private float Get_Z;
-    //private UI ui;
-  //  private int index = 0;
     public new Rigidbody rigidbody;
     public Vector3 OffsetCenter;
     void Start()
@@ -34,6 +25,8 @@ public class FruitPiece : MonoBehaviour,IFruit
         rigidbody = GetComponent<Rigidbody>();
         PercentVolume = (Volume / TotalVolume) * 100;
         OffsetCenter = transform.position - transform.TransformPoint(meshFilter.bounds.center);
+        DOVirtual.DelayedCall(0.5f, () => { InstantiatWeightTextEffct(); });
+        
     }
     private void LateUpdate()
     {
@@ -116,6 +109,14 @@ public class FruitPiece : MonoBehaviour,IFruit
             
         }
         return Mathf.Abs(volume*1000);
+    }
+
+    private void InstantiatWeightTextEffct()
+    {
+        var obj = FindObjectOfType<WeightIndicator>();
+        var t = Instantiate(obj, transform.position, Quaternion.identity);
+        t.Set(PercentVolume.ToString("0"));
+
     }
 }
 

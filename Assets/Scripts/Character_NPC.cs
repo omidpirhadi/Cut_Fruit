@@ -12,12 +12,14 @@ public class Character_NPC : MonoBehaviour
     public NavMeshAgent agent;
     public Transform DestroyPlace;
     private Animator animator;
+    private HomePanel homePanel;
     void Start()
     {
         
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
-        FindObjectOfType<HomePanel>().OnPlay += Character_NPC_OnPlay;
+        homePanel = FindObjectOfType<HomePanel>();
+        homePanel.OnPlay += Character_NPC_OnPlay;
 
         //  shopperSystem.OnAgentMove += ShopperSystem_OnAgentMove;
     }
@@ -35,5 +37,9 @@ public class Character_NPC : MonoBehaviour
         agent.destination = pos;
         
         //Debug.Log("POS SET");
+    }
+    private void OnDestroy()
+    {
+        homePanel.OnPlay -= Character_NPC_OnPlay;
     }
 }

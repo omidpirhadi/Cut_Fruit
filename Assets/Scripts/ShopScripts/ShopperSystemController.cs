@@ -79,11 +79,11 @@ public class ShopperSystemController : MonoBehaviour
 
     private List<int> PercentFruits = new List<int> { 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95 };
 
-
+   
     public void Awake()
     {
         Application.targetFrameRate = 60;
-       
+      
     }
 
 
@@ -166,7 +166,7 @@ public class ShopperSystemController : MonoBehaviour
     }
     private IEnumerator SpawnCustomer(int repeatSpawn)
     {
-        yield return new WaitForSecondsRealtime(0.1f);
+        //yield return new WaitForSecondsRealtime(0.1f);
         if (repeatSpawn <= QueueCapacity)
         {
             for (int i = 0; i < repeatSpawn; i++)
@@ -175,14 +175,14 @@ public class ShopperSystemController : MonoBehaviour
                 var position_data = FindFreePlaceInQueueForCustomer();
                 var idplace = position_data.Item1;
                 var pos = position_data.Item2;
-                yield return new WaitForSecondsRealtime(0.1f);
+                //yield return new WaitForSecondsRealtime(0.1f);
                 var data = customerData.customers.Dequeue();
                 var rand = UnityEngine.Random.Range(0, Humen_prefab.Length);
                 yield return new WaitForSecondsRealtime(TimeBetweenEverySpawn);
 
                 var shopper = Instantiate(Humen_prefab[rand], CustomerPlaceSpwan.position, CustomerPlaceSpwan.rotation);
             
-                yield return new WaitForSecondsRealtime(0.1f);
+                yield return new WaitForSecondsRealtime(0.01f);
                 shopper.IDPlace = idplace;
                 shopper.fruitname = data.Fruit;
                 shopper.SetUI(null, data.logo, data.PercentFruit, TimeResponseCustomer);
@@ -510,6 +510,8 @@ public class ShopperSystemController : MonoBehaviour
         customerData = new CustomerData();
         customerData.customers = new Queue<Customer>();
         leaderboard = new LeaderboardData();
+        TotalCash = 1000;
+
         glowbutton.GlowPos("1");
         ResetHealth();
         if (ExistSave("fruitshop"))
@@ -582,6 +584,7 @@ public class ShopperSystemController : MonoBehaviour
         {
 
             HUDPanel.SetActive(false);
+            InventoryPanel.SetActive(false);
             PausePanel.SetActive(true);
            // glowbutton.GlowPos("4");
         });

@@ -13,16 +13,24 @@ public class HomePanel : MonoBehaviour
     private void OnEnable()
     {
         shopperSystem = FindObjectOfType<ShopperSystemController>();
-        Play_button.interactable = false;
-        DOVirtual.DelayedCall(2, () => { Play_button.interactable = true; });
-        Play_button.onClick.AddListener(() =>
-        {
+        Play_button.gameObject.SetActive(false);
+        DOVirtual.DelayedCall(2, () => {
+            
+            Play_button.gameObject.SetActive(true);
+            Play_button.interactable = true;
+            Play_button.GetComponent<Image>().DOFade(1, 0.5f);
+            Play_button.onClick.AddListener(() =>
+            {
 
-            StartCoroutine(shopperSystem.StartGame());
-            Handler_OnPlay();
+                StartCoroutine(shopperSystem.StartGame());
+                Handler_OnPlay();
+
+
+            });
 
 
         });
+        
       
         Gold_text.text = shopperSystem.TotalCash.ToString();
         
