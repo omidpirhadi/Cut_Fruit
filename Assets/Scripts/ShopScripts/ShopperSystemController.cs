@@ -330,7 +330,7 @@ public class ShopperSystemController : MonoBehaviour
         {
             List<PlaceShopper> temp = new List<PlaceShopper>();
             int rand = 0;
-            PlaceShopper place = new PlaceShopper();
+            PlaceShopper place;
             for (int i = 0; i < ShopperServicePlace.Count; i++)
             {
                 do
@@ -496,7 +496,14 @@ public class ShopperSystemController : MonoBehaviour
             StartCoroutine(EndGame());
         }
     }
-    
+    private void ResetHealth()
+    {
+        for (int i = 0; i < List_Health_images.Count; i++)
+        {
+            List_Health_images[i].DOFillAmount(1, 0.1f);
+        }
+        Health = 3;
+    }
 
     public IEnumerator StartGame()
     {
@@ -504,6 +511,7 @@ public class ShopperSystemController : MonoBehaviour
         customerData.customers = new Queue<Customer>();
         leaderboard = new LeaderboardData();
         glowbutton.GlowPos("1");
+        ResetHealth();
         if (ExistSave("fruitshop"))
         {
 
@@ -587,7 +595,7 @@ public class ShopperSystemController : MonoBehaviour
     }
     public IEnumerator EndGame()
     {
-        HomePanel.SetActive(true);
+        
 
         yield return new WaitForSecondsRealtime(0.1f);
 
@@ -610,7 +618,7 @@ public class ShopperSystemController : MonoBehaviour
         SetLeaderboard();
         SaveLeaderboard("fruitshop");
         Debug.Log("Game OVER");
-        
+        HomePanel.SetActive(true);
         yield return new WaitForSecondsRealtime(0.1f);
         PausePanel.SetActive(false);
         HUDPanel.SetActive(false);

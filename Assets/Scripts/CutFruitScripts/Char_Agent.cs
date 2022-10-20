@@ -57,11 +57,10 @@ public class Char_Agent : MonoBehaviour
     {
 
         UI.forward = -(Camera.main.transform.position - transform.position);
+       
+      
     }
-    private void OnDestroy()
-    {
 
-    }
     public void CustomerInPlace()
     {
 
@@ -70,6 +69,12 @@ public class Char_Agent : MonoBehaviour
 
 
         transform.DORotate(new Vector3(0, -180, 0), 2);
+
+        var dis = Vector3.Distance(this.transform.position, Camera.main.transform.position);
+        if (dis > 5)
+            UI.DOScale(6, 0.1f);
+        else
+            UI.DOScale(4, 0.1f);
         CalculateTime(shopperSystem.TimeResponseCustomer);
     }
     public void HappyMotion()
@@ -134,6 +139,7 @@ public class Char_Agent : MonoBehaviour
         IsReadyToGiveFruit = false;
         var pos = FindObjectOfType<DestroyPlace>().transform.position;
         var pos_spawn_doller = transform.position;
+        transform.DOLookAt(pos, 0.5f);
         this.tag = "destroy";
         animator.SetBool("ForceWalk", true);
         animator.SetBool("Angry", false);
@@ -186,10 +192,7 @@ public class Char_Agent : MonoBehaviour
         this.NeedPercentValue = percent;
         this.Timeresponse = timereponse;
         this.Prograssbar_time.fillAmount = 1;
-        if (IDPlace > 1)
-            UI.DOScale(5, 0.1f);
-        else
-            UI.DOScale(4, 0.1f);
+
         // CalculateTime(timereponse);
     }
 
