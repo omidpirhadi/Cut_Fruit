@@ -399,11 +399,12 @@ public class ShopperSystemController : MonoBehaviour
             {
                 if (fruit.Name == name)
                 {
-                    if (TotalCash > price)
+                    if (TotalCash >= price)
                     {
                         InventoryPanel.SetActive(false);
                         var s = Instantiate(fruit.prefab, FruitSpwanPlace.position, Quaternion.identity);
                         s.GetComponent<Furit>().FuritTag = fruit.Name;
+                        s.GetComponent<Rigidbody>().isKinematic = true;
                         this.SliceCash = cashSlice;
                         AmountCash(-price);
                         TryToSelectFruit = false;
@@ -412,6 +413,7 @@ public class ShopperSystemController : MonoBehaviour
                             //  dialogBox.Set("Ready For Cut", 3);
                             //Debug.Log("FruitSpawned");
                         }
+                        Handler_OnFruitSpawn();
                     }
                     else
                     {
@@ -598,7 +600,8 @@ public class ShopperSystemController : MonoBehaviour
     }
     public IEnumerator EndGame()
     {
-        
+
+       
 
         yield return new WaitForSecondsRealtime(0.1f);
 
@@ -724,7 +727,19 @@ public class ShopperSystemController : MonoBehaviour
             agentmove(des);
         }
     }
-
+    private Action fruitspawn;
+    public event Action OnFruitSpawn
+    {
+        add { fruitspawn += value; }
+        remove { fruitspawn -= value; }
+    }
+    protected void Handler_OnFruitSpawn()
+    {
+        if (fruitspawn != null)
+        {
+            fruitspawn();
+        }
+    }
 
     public enum PhaseGame { None = 0, Wait = 1, Cut = 2, Pickup = 3, Win = 4, Lose = 5 }
     private Action<PhaseGame> phase;

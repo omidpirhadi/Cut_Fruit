@@ -91,7 +91,7 @@ public class Char_Agent : MonoBehaviour
         
         DOVirtual.DelayedCall(2f, () => {
             animator.SetBool("Happy", false);
-            animator.SetBool("Destroy", true);
+            
             ToDestroy = true;
         });
 
@@ -117,7 +117,7 @@ public class Char_Agent : MonoBehaviour
     {
 
         animator.SetBool("Angry", true);
-        DOVirtual.DelayedCall(1, () => { animator.SetBool("Angry", false); animator.SetBool("Destroy", true); });
+        DOVirtual.DelayedCall(1, () => { animator.SetBool("Angry", false);  });
         Debug.Log("Angry MOTIONNNNNNNNNN");
 
         //  shopperSystem.QueueCapacity++;
@@ -127,7 +127,7 @@ public class Char_Agent : MonoBehaviour
         animator.SetBool("Sad", true);
         DOVirtual.DelayedCall(2.0f, () => {
             animator.SetBool("Sad", false);
-            animator.SetBool("Destroy", true);
+            //animator.SetBool("Destroy", true);
             ToDestroy = true;
         });
         IsReadyToGiveFruit = false;

@@ -12,7 +12,7 @@ public class Furit : MonoBehaviour,IFruit
     public bool IsReadyPickedUp = false;
     private new MeshRenderer renderer;
     public Material InnerMatrialAfterCut;
-    private FuritSliceManager furitSliceManager;
+   // private FuritSliceManager furitSliceManager;
     private Mesh meshFilter;
    // private UI ui;
    // private int index = 0;
@@ -27,10 +27,10 @@ public class Furit : MonoBehaviour,IFruit
         Volume = VolumeOfMesh(meshFilter);
         // controller = FindObjectOfType<TouchController>();
         renderer = GetComponent<MeshRenderer>();
-        furitSliceManager = FindObjectOfType<FuritSliceManager>();
+       // furitSliceManager = FindObjectOfType<FuritSliceManager>();
 
-       // FuritTag = this.gameObject.name;
-        furitSliceManager.AddFuritOnStartGame(FuritTag, Volume);
+      
+       // furitSliceManager.AddFuritOnStartGame(FuritTag, Volume);
 
         GetComponent<MeshCollider>().convex = true;
         rigidbody = GetComponent<Rigidbody>();

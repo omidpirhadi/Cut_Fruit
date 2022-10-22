@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 using EzySlice;
 using DG.Tweening;
 using Sirenix.OdinInspector;
@@ -14,8 +15,25 @@ public class Cutter : MonoBehaviour
     public PhysicMaterial physicMaterial;
   //  public Material hightlight_matrial;
     public Transform Plane;
-    
 
+    public Stack<GameObject> piecefruit = new Stack<GameObject>(100);
+    private ShopperSystemController shopperSystem;
+    public void Start()
+    {
+        shopperSystem = GetComponent<ShopperSystemController>();
+        shopperSystem.OnFruitSpawn += ShopperSystem_OnFruitSpawn;
+    }
+
+    private void ShopperSystem_OnFruitSpawn()
+    {
+        if (piecefruit.Count > 0)
+            piecefruit.Clear();
+    }
+
+    public void LateUpdate()
+    {
+        ControllCountFruitPiece();
+    }
     public void Cut(GameObject furit , Material inner)
     {
         string tag_furit = "";
@@ -96,8 +114,11 @@ public class Cutter : MonoBehaviour
 
                 });
                 // objectToSlice.SetActive(false);
+                piecefruit.Push(upper);
+                piecefruit.Push(lower);
                 Destroy(objectToSlice);
                 Handler_OnCut();
+               
             }
         }
         // Debug.Log("Cut");
@@ -138,6 +159,20 @@ public class Cutter : MonoBehaviour
         return objectToSlice.Slice(planeWorldPosition, planeWorldDirection, mat);
     }
 
+
+
+    private void ControllCountFruitPiece()
+    {
+        if (piecefruit.Count > 49)
+        {
+
+            var des = piecefruit.Pop();
+
+
+            Destroy(des.gameObject);
+            Debug.Log("..................................Destroy OverRange Fruit:" + piecefruit.Count);
+        }
+    }
     private Action cut;
     public event Action OnCut
     {

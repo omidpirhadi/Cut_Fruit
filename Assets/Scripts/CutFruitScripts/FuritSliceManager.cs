@@ -3,14 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
-
+[Obsolete]
 public class FuritSliceManager : MonoBehaviour
 {
     [SerializeField]
     public FuritsInGameData FuritsInGame;
 
 
-    public void AddToListSlicedFruit()
+    private void AddToListSlicedFruit()
     {
         Clearpiecelist();
         var pieces = FindObjectsOfType<FruitPiece>();
@@ -20,7 +20,7 @@ public class FuritSliceManager : MonoBehaviour
             // Debug.Log("CUTTtTTT" + piece.FuritTag);
         }
     }
-    public void AddFuritOnStartGame(string tag , float  vloume)
+    private void AddFuritOnStartGame(string tag , float  vloume)
     {
 
             FuritsInGame.Furits.Clear();
@@ -44,7 +44,7 @@ public class FuritSliceManager : MonoBehaviour
         }
     }
    
-    public void Clearpiecelist()
+    private void Clearpiecelist()
     {
         foreach (var f in FuritsInGame.Furits)
         {
@@ -57,12 +57,14 @@ public class FuritSliceManager : MonoBehaviour
  
 }
 [Serializable]
+[Obsolete]
 public struct FuritsInGameData
 {
 
     public List<FuritData> Furits;
 }
 [Serializable]
+[Obsolete]
 public struct FuritData
 {
 
@@ -74,6 +76,7 @@ public struct FuritData
 }
 
 [Serializable]
+[Obsolete]
 public struct SlicedPieceData
 {
     public string Tag;
