@@ -13,15 +13,30 @@ public class Character_NPC : MonoBehaviour
     public Transform DestroyPlace;
     private Animator animator;
     private HomePanel homePanel;
+    private ShopperSystemController shopperSystem;
+    private Vector3 standPos;
+    private Vector3 standrotate;
     void Start()
     {
         
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
         homePanel = FindObjectOfType<HomePanel>();
+        shopperSystem = FindObjectOfType<ShopperSystemController>();
         homePanel.OnPlay += Character_NPC_OnPlay;
+        shopperSystem.OnEndGame += ShopperSystem_OnEndGame;
+        standPos = transform.position;
+        standrotate = transform.eulerAngles;
+    }
 
-        //  shopperSystem.OnAgentMove += ShopperSystem_OnAgentMove;
+    private void ShopperSystem_OnEndGame()
+    {
+        this.tag = "null";
+        DOVirtual.DelayedCall(2,()=>{ this.tag = "npc"; });
+        
+        transform.position = standPos;
+        transform.eulerAngles = standrotate;
+        this.gameObject.SetActive(true);
     }
 
     private void Character_NPC_OnPlay()
@@ -42,4 +57,9 @@ public class Character_NPC : MonoBehaviour
     {
         homePanel.OnPlay -= Character_NPC_OnPlay;
     }
+    
+  
+  
 }
+
+

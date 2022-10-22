@@ -9653,7 +9653,7 @@ Transform:
   m_GameObject: {fileID: 1974642295132470172}
   m_LocalRotation: {x: -0, y: 0.8303725, z: -0, w: -0.5572087}
   m_LocalPosition: {x: -22.88, y: 0.371, z: -2.465064}
-  m_LocalScale: {x: 0.21796103, y: 0.21796103, z: 0.21796103}
+  m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 1976971301733165004}
   - {fileID: 1976985790917122832}
@@ -10230,7 +10230,7 @@ ParticleSystem:
         m_RotationOrder: 4
     randomizeRotationDirection: 0
     maxNumParticles: 1000
-    size3D: 1
+    size3D: 0
     rotation3D: 0
     gravityModifier:
       serializedVersion: 2
@@ -14454,6 +14454,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AmountCash: 0
+  GrowSize: 0.24
+  SpeedGrow: 2
   SpeedRotate: 0.3
   Angel: {x: 0, y: 360, z: 0}
   easeType: 1

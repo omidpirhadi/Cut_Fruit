@@ -26,7 +26,7 @@ public class DestroyPlace : MonoBehaviour
         }
         else if(obj.tag == "npc")
         {
-            Destroy(obj.gameObject);
+            obj.gameObject.SetActive(false);
         }
     }
 }

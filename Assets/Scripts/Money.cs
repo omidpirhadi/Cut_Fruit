@@ -6,6 +6,8 @@ using Sirenix.OdinInspector;
 public class Money : MonoBehaviour
 {
     public float AmountCash;
+    [SerializeField] float GrowSize = 2;
+    [SerializeField] float SpeedGrow = 0.5f;
     [SerializeField] float SpeedRotate = 0.5f;
     [SerializeField] Vector3 Angel;
     [SerializeField] Ease easeType;
@@ -15,6 +17,8 @@ public class Money : MonoBehaviour
     {
         shopperSystem = FindObjectOfType<ShopperSystemController>();
         transform.DORotate(Angel, SpeedRotate).SetEase(easeType).SetLoops(-1, loopType);
+        DOVirtual.DelayedCall(1f, () => { transform.DOScale(GrowSize, SpeedGrow).SetEase(easeType).SetLoops(1, loopType); });
+
     }
 
     public void ReciveCash()
@@ -26,6 +30,7 @@ public class Money : MonoBehaviour
     private void Set()
     {
         transform.DORotate(Angel, SpeedRotate).SetEase(easeType).SetLoops(-1, loopType);
+        
     }
 
 }

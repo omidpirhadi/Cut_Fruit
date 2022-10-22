@@ -165,7 +165,12 @@ public class Char_Agent : MonoBehaviour
 
         if (point_offset != -1000)
         {
-            DOVirtual.DelayedCall(0.5f, () => { SpawnDollerCash(point_offset, pos_spawn_doller); });
+            DOVirtual.DelayedCall(0.5f, () =>
+            {
+
+                SpawnDollerCash(point_offset, pos_spawn_doller);
+
+            });
             
 
         }

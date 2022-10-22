@@ -45,12 +45,22 @@ public class FruitPiece : MonoBehaviour,IFruit
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(collision.gameObject.tag == "floor")
+
+
+        if (collision.gameObject.tag == "floor")
         {
-            
-            Destroy(this.gameObject, 0.1f);
-            Debug.Log("Fruit droped On Floor And Destroyed");
+            DOVirtual.DelayedCall(0.5f, () => {
+                this.transform.DOScale(0, 1f).OnComplete(() =>
+                {
+                    Destroy(this.gameObject);
+                    Debug.Log("Fruit droped On Floor And Destroyed");
+                });
+            });
+
+
+
         }
+
     }
 
 

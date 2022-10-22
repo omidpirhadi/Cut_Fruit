@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using DG.Tweening;
 [RequireComponent(typeof(MeshCollider),typeof(Rigidbody))]
 public class Furit : MonoBehaviour,IFruit
 {
@@ -58,8 +58,12 @@ public class Furit : MonoBehaviour,IFruit
     {
         if (collision.gameObject.tag == "floor")
         {
-            Destroy(this.gameObject, 0.2f);
-            Debug.Log("Fruit droped On Floor And Destroyed");
+            this.transform.DOScale(0, 1f).OnComplete(() =>
+            {
+                Destroy(this.gameObject, 0.2f);
+                Debug.Log("Fruit droped On Floor And Destroyed");
+            });
+
         }
     }
 

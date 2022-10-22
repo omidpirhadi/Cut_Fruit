@@ -402,7 +402,7 @@ public class ShopperSystemController : MonoBehaviour
                     if (TotalCash >= price)
                     {
                         InventoryPanel.SetActive(false);
-                        var s = Instantiate(fruit.prefab, FruitSpwanPlace.position, Quaternion.identity);
+                        var s = Instantiate(fruit.prefab, FruitSpwanPlace.position, fruit.prefab.transform.rotation);
                         s.GetComponent<Furit>().FuritTag = fruit.Name;
                         s.GetComponent<Rigidbody>().isKinematic = true;
                         this.SliceCash = cashSlice;
@@ -601,34 +601,30 @@ public class ShopperSystemController : MonoBehaviour
     public IEnumerator EndGame()
     {
 
-       
-
-        yield return new WaitForSecondsRealtime(0.1f);
-
-       
         yield return new WaitForSecondsRealtime(0.1f);
         ClearSceneInEndGame();
         yield return new WaitForSecondsRealtime(0.1f);
         StartCoroutine(ClearFruitInScene());
         yield return new WaitForSecondsRealtime(0.1f);
-      
+
         TutorialMode = false;
         QueueCapacity = 4;
 
         ShopperServicePlace.ForEach(e => { e.HaveShopper = false; });
-        Cut_button.onClick.RemoveAllListeners();
-        
-        Pickup_Button.onClick.RemoveAllListeners();
-        Pause_Button.onClick.RemoveAllListeners();
 
         SetLeaderboard();
         SaveLeaderboard("fruitshop");
         Debug.Log("Game OVER");
         HomePanel.SetActive(true);
+
         yield return new WaitForSecondsRealtime(0.1f);
         PausePanel.SetActive(false);
         HUDPanel.SetActive(false);
+        Cut_button.onClick.RemoveAllListeners();
 
+        Pickup_Button.onClick.RemoveAllListeners();
+        Pause_Button.onClick.RemoveAllListeners();
+        Handler_OnEndGame();
         yield return null;
     }
     private void ClearSceneInEndGame()
@@ -713,7 +709,19 @@ public class ShopperSystemController : MonoBehaviour
             resetwave();
         }
     }
-
+    private Action endgame;
+    public event Action OnEndGame
+    {
+        add { endgame += value; }
+        remove { endgame -= value; }
+    }
+    protected void Handler_OnEndGame()
+    {
+        if (endgame != null)
+        {
+            endgame();
+        }
+    }
     private Action<Vector3> agentmove;
     public event Action<Vector3> OnAgentMove
     {
