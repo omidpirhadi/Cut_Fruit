@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
 using DG.Tweening;
-
+using Sirenix.OdinInspector;
 
 [RequireComponent(typeof(CapsuleCollider), typeof(Rigidbody), typeof(NavMeshAgent))]
 public class Char_Agent : MonoBehaviour
@@ -14,22 +14,24 @@ public class Char_Agent : MonoBehaviour
     // public Transform Target;
     public int IDPlace;
     public Money CashPrefab;
-   
 
 
+    public RectTransform UI;
     //public Transform Canvas;
-    public Image Character_image;
+  //  public Image Character_image;
     public TMPro.TMP_Text Percent_text;
     public Image FuritIcon_image;
     public Image Prograssbar_time;
-    public Image Prograssbar_satisfaction;
-    public RectTransform Canvans;
+   // public Image Prograssbar_satisfaction;
+  //  public RectTransform Canvans;
 
-    public RectTransform UI;
+    
     public float NeedPercentValue;
     public string fruitname;
 
     public NavMeshAgent agent;
+    public float TurnSpeed = 1.5f;
+    public Transform Target;
     private Animator animator;
     private ShopperSystemController shopperSystem;
 
@@ -52,7 +54,7 @@ public class Char_Agent : MonoBehaviour
         animator = GetComponent<Animator>();
         shopperSystem = FindObjectOfType<ShopperSystemController>();
        
-        //  shopperSystem.OnAgentMove += ShopperSystem_OnAgentMove;
+        //shopperSystem.OnAgentMove += ShopperSystem_OnAgentMove;
     }
     private void LateUpdate()
     {
@@ -61,10 +63,11 @@ public class Char_Agent : MonoBehaviour
         var a = animator.GetCurrentAnimatorStateInfo(0);
         if(ToDestroy && a.IsName("Idel"))
         {
-            AgentMoveToDestroy();
             ToDestroy = false;
+            AgentMoveToDestroy();
+            
         }
-        
+       // TurnAgent();
             
     }
 
@@ -79,10 +82,14 @@ public class Char_Agent : MonoBehaviour
 
         var dis = Vector3.Distance(this.transform.position, Camera.main.transform.position);
         if (dis > 5)
-            UI.DOScale(6, 0.1f);
+        {
+            //    UI.DOScale(2.0f, 0.1f);
+        }
         else
-            UI.DOScale(4, 0.1f);
-        CalculateTime(shopperSystem.TimeResponseCustomer);
+        {
+            //  UI.DOScale(1.2f, 0.1f);
+        }
+            CalculateTime(shopperSystem.TimeResponseCustomer);
     }
     public void HappyMotion()
     {
@@ -118,7 +125,7 @@ public class Char_Agent : MonoBehaviour
 
         animator.SetBool("Angry", true);
         DOVirtual.DelayedCall(1, () => { animator.SetBool("Angry", false);  });
-        Debug.Log("Angry MOTIONNNNNNNNNN");
+     //   Debug.Log("Angry MOTIONNNNNNNNNN");
 
         //  shopperSystem.QueueCapacity++;
     }
@@ -143,13 +150,29 @@ public class Char_Agent : MonoBehaviour
 
         Debug.Log("For What Motion");
     }
+
+
+
+   // [Button("Trun")]///
+   /// <summary>
+   /// 
+   /// </summary>
+   /// <param name="Destroyplace"></param>
+   /// <returns></returns>
+    public Tweener TurnAgent(Vector3 Destroyplace)
+    {
+        var dir = (Destroyplace - transform.position);
+        var angel = Mathf.Atan2(dir.z, dir.x) * Mathf.Rad2Deg;
+        Quaternion a = Quaternion.Euler(new Vector3(0, -angel + 90, 0));
+        var tweener = transform.DORotateQuaternion(a, TurnSpeed);
+       
+        return tweener;
+    }
     public void AgentMoveToDestroy()
     {
-
-
         var pos = FindObjectOfType<DestroyPlace>().transform.position;
         var pos_spawn_doller = transform.position;
-        transform.DOLookAt(pos, 0.5f);
+
         IsReadyToGiveFruit = false;
         this.tag = "destroy";
         animator.SetBool("Destroy", true);
@@ -158,28 +181,25 @@ public class Char_Agent : MonoBehaviour
         animator.SetBool("Happy", false);
         animator.SetBool("Sad", false);
         animator.SetBool("ForWhat", false);
-        
         agent.isStopped = false;
         agent.destination = pos;
-
-
-        if (point_offset != -1000)
+        TurnAgent(pos).OnComplete(() =>
         {
-            DOVirtual.DelayedCall(0.5f, () =>
+
+            if (point_offset != -1000)
             {
 
                 SpawnDollerCash(point_offset, pos_spawn_doller);
+            }
+            else if (point_offset == -1000)
+            {
+                shopperSystem.SetHealth();
+               // Debug.Log("SETT HEALTH:" + point_offset);
 
-            });
-            
-
-        }
-        else if (point_offset == -1000)
-        {
-            shopperSystem.SetHealth();
-            Debug.Log("SETT HEALTH:" + point_offset);
-
-        }
+            }
+        });
+      
+      
 
         // shopperSystem.CustomerInWave--;
     }
@@ -205,7 +225,7 @@ public class Char_Agent : MonoBehaviour
 
     public void SetUI(Sprite profile, Sprite fruitIcon, float percent, float timereponse)
     {
-        this.Character_image.sprite = profile;
+        //this.Character_image.sprite = profile;
         this.FuritIcon_image.sprite = fruitIcon;
         this.Percent_text.text = percent.ToString("0") + "gr";
         this.NeedPercentValue = percent;
@@ -223,7 +243,7 @@ public class Char_Agent : MonoBehaviour
             {
                 var unit = amount / NeedPercentValue;
 
-                Prograssbar_satisfaction.fillAmount += unit;
+               /* Prograssbar_satisfaction.fillAmount += unit;
                 if (Prograssbar_satisfaction.fillAmount > 0.5)
                 {
                     Prograssbar_satisfaction.color = Color.green;
@@ -238,10 +258,10 @@ public class Char_Agent : MonoBehaviour
                 {
                     Prograssbar_satisfaction.color = Color.red;
 
-                }
+                }*/
                 //  this.Percent_text.text = (Mathf.Clamp(amount / NeedPercentValue, 0, 1) * 100).ToString("0"); 
                 point_offset = (NeedPercentValue - amount);
-                Debug.Log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA:" + point_offset);
+                //Debug.Log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA:" + point_offset);
                 /// nagative offset mean  Customer is happy
                 ///  positive offset mean  Customer is angery
                 if (point_offset <= 5)
@@ -265,10 +285,13 @@ public class Char_Agent : MonoBehaviour
 
     private void SpawnDollerCash(float offset, Vector3 pos)
     {
-        var cash_obj = Instantiate(CashPrefab, pos, CashPrefab.transform.rotation);
-        var amount = CalculateScore(offset);
-        cash_obj.AmountCash = amount;
-        Debug.Log("CASH SPAWN :" + amount);
+        DOVirtual.DelayedCall(0.5f, () =>
+        {
+            var cash_obj = Instantiate(CashPrefab, pos, CashPrefab.transform.rotation);
+            var amount = CalculateScore(offset);
+            cash_obj.AmountCash = amount;
+           // Debug.Log("CASH SPAWN :" + amount);
+        });
     }
 
 

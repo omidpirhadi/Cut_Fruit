@@ -12,10 +12,8 @@ public class Furit : MonoBehaviour,IFruit
     public bool IsReadyPickedUp = false;
     private new MeshRenderer renderer;
     public Material InnerMatrialAfterCut;
-   // private FuritSliceManager furitSliceManager;
     private Mesh meshFilter;
-   // private UI ui;
-   // private int index = 0;
+
 
     public new Rigidbody rigidbody;
     public Vector3 OffsetCenter;
@@ -58,11 +56,16 @@ public class Furit : MonoBehaviour,IFruit
     {
         if (collision.gameObject.tag == "floor")
         {
-            this.transform.DOScale(0, 1f).OnComplete(() =>
+            if (collision.gameObject.tag == "floor")
             {
-                Destroy(this.gameObject, 0.2f);
-                Debug.Log("Fruit droped On Floor And Destroyed");
-            });
+                DOVirtual.DelayedCall(2f, () => {
+                    this.transform.DOScale(0, 1f).OnComplete(() =>
+                    {
+                        Destroy(this.gameObject);
+                        Debug.Log("Fruit droped On Floor And Destroyed");
+                    });
+                });
+            }
 
         }
     }

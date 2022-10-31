@@ -25,7 +25,7 @@ public class FruitPiece : MonoBehaviour,IFruit
         rigidbody = GetComponent<Rigidbody>();
         PercentVolume = (Volume / TotalVolume) * 100;
         OffsetCenter = transform.position - transform.TransformPoint(meshFilter.bounds.center);
-        DOVirtual.DelayedCall(0.5f, () => { InstantiatWeightTextEffct(); });
+        InstantiatWeightTextEffct();
         
     }
     private void LateUpdate()
@@ -49,7 +49,7 @@ public class FruitPiece : MonoBehaviour,IFruit
 
         if (collision.gameObject.tag == "floor")
         {
-            DOVirtual.DelayedCall(0.5f, () => {
+            DOVirtual.DelayedCall(2f, () => {
                 this.transform.DOScale(0, 1f).OnComplete(() =>
                 {
                     Destroy(this.gameObject);
@@ -123,9 +123,14 @@ public class FruitPiece : MonoBehaviour,IFruit
 
     private void InstantiatWeightTextEffct()
     {
-        var obj = FindObjectOfType<WeightIndicator>();
-        var t = Instantiate(obj, transform.position, Quaternion.identity);
-        t.Set(PercentVolume.ToString("0"));
+        DOVirtual.DelayedCall(0.5f, () =>
+        {
+            var obj = FindObjectOfType<WeightIndicator>();
+            var pos = transform.TransformPoint(meshFilter.bounds.center);
+            var t = Instantiate(obj, pos, Quaternion.identity);
+
+            t.SetForFruit(PercentVolume.ToString("0"));
+        });
 
     }
 }

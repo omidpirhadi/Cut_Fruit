@@ -34,10 +34,7 @@ public class CrossHairControll : MonoBehaviour, IPointerClickHandler,IDragHandle
         {
             var temp = pos + Offset;
             cross_rect.anchoredPosition = new Vector2(temp.x, Mathf.Clamp(temp.y, Min_Y, Max_Y));
-          
-
         }
-
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -47,7 +44,6 @@ public class CrossHairControll : MonoBehaviour, IPointerClickHandler,IDragHandle
         {
             var temp = pos + Offset;
             cross_rect.anchoredPosition = new Vector2(temp.x, Mathf.Clamp(temp.y, Min_Y, Max_Y));
-
         }
     }
 }

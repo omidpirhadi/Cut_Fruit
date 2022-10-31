@@ -22,6 +22,9 @@ public class ShopperSystemController : MonoBehaviour
     public Transform CustomerPlaceSpwan;
     public Transform FruitSpwanPlace;
     public DestroyPlace DestroyPositionAgent;
+    public SplashScreen splashScreen;
+    public float DelayFadeSplashScreen = 4.0f;
+    public float DurationFadeSplashScreen = 0.1f;
     public GameObject HUDPanel;
     public GameObject InventoryPanel;
     public GameObject PausePanel;
@@ -83,7 +86,14 @@ public class ShopperSystemController : MonoBehaviour
     public void Awake()
     {
         Application.targetFrameRate = 60;
-      
+
+        DOVirtual.DelayedCall(DelayFadeSplashScreen, () => {
+
+            DOVirtual.Float(1, 0, DurationFadeSplashScreen, (alpha) =>
+            {
+                splashScreen.SetAlpha(alpha);
+            }).OnComplete(() => { splashScreen.gameObject.SetActive(false); });
+        });
     }
 
 
@@ -465,7 +475,9 @@ public class ShopperSystemController : MonoBehaviour
     }
     private void SetTextForTotalCash(string amount)
     {
-        TotalCash_Text.text = amount;
+        var a = Convert.ToInt32(amount);
+        var t = Convert.ToInt32(TotalCash);
+        TotalCash_Text.DOCounter(t, a, 1f);
     }
 
     float stepSliderflow = 0.0f;

@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1976971301733165004
 Transform:
   m_ObjectHideFlags: 0
@@ -14456,7 +14456,7 @@ MonoBehaviour:
   AmountCash: 0
   GrowSize: 0.24
   SpeedGrow: 2
-  SpeedRotate: 0.3
+  SpeedRotate: 1
   Angel: {x: 0, y: 360, z: 0}
   easeType: 1
   loopType: 2

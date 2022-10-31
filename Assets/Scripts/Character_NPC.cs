@@ -9,8 +9,11 @@ using DG.Tweening;
 
 public class Character_NPC : MonoBehaviour
 {
-    public NavMeshAgent agent;
+
     public Transform DestroyPlace;
+    public float SpeedTurn = 1.5f;
+    private NavMeshAgent agent;
+    
     private Animator animator;
     private HomePanel homePanel;
     private ShopperSystemController shopperSystem;
@@ -41,10 +44,21 @@ public class Character_NPC : MonoBehaviour
 
     private void Character_NPC_OnPlay()
     {
-        transform.DOLookAt(DestroyPlace.position, 0.5f);
+        TurnAgent(DestroyPlace.position);
         SetDestination(DestroyPlace.position);
-    }
 
+
+    }
+    public Tweener TurnAgent(Vector3 Destroyplace)
+    {
+        var dir = (Destroyplace - transform.position);
+        var angel = Mathf.Atan2(dir.z, dir.x) * Mathf.Rad2Deg;
+        Quaternion a = Quaternion.Euler(new Vector3(0, -angel + 90, 0));
+        var tweener = transform.DORotateQuaternion(a, SpeedTurn);
+        Debug.Log("Angel:" + angel + "AA" + gameObject.name);
+        return tweener;
+
+    }
     public void SetDestination(Vector3 pos)
     {
         animator.SetBool("Walk", true);

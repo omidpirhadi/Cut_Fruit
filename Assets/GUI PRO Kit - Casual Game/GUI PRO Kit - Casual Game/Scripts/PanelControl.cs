@@ -16,7 +16,7 @@ namespace LayerLab
         private TextMeshProUGUI textTitle;
         [SerializeField] private Transform panelTransform;
         [SerializeField] private Button buttonPrev;
-        [SerializeField] private Button buttonNext;
+       [SerializeField] private Button buttonNext;
 
         private void Start()
         {
