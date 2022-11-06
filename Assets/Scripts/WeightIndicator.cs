@@ -16,7 +16,10 @@ public class WeightIndicator : MonoBehaviour
     public void SetForFruit(string precent)
     {
         Context.text = precent+"gr";
+
         this.transform.DOMoveY(5 , Duration).SetEase(ease).SetLoops(-1, loop);
+        Context.DOFade(0, 1).SetEase(ease).SetLoops(-1, loop);
+
         this.transform.localEulerAngles = Vector3.zero;
         this.transform.eulerAngles = Vector3.zero;
         Destroy(this.gameObject, TimeDestroy);

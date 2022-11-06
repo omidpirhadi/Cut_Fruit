@@ -55,7 +55,7 @@ public class Character_NPC : MonoBehaviour
         var angel = Mathf.Atan2(dir.z, dir.x) * Mathf.Rad2Deg;
         Quaternion a = Quaternion.Euler(new Vector3(0, -angel + 90, 0));
         var tweener = transform.DORotateQuaternion(a, SpeedTurn);
-        Debug.Log("Angel:" + angel + "AA" + gameObject.name);
+       // Debug.Log("Angel:" + angel + "AA" + gameObject.name);
         return tweener;
 
     }

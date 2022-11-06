@@ -45,7 +45,7 @@ public class Char_Agent : MonoBehaviour
     private bool ToDestroy = false;
     [SerializeField] private bool IsReadyToGiveFruit = false;
 
-
+    private bool HaveScore = false;
 
     void Start()
     {
@@ -74,22 +74,28 @@ public class Char_Agent : MonoBehaviour
     public void CustomerInPlace()
     {
 
+
         agent.isStopped = true;
-        animator.SetBool("Destroy", false);
-        animator.SetBool("Walk", false);
+        transform.DORotate(new Vector3(0, -180, 0), 0.5f).OnComplete(() => {
+            
+            animator.SetBool("Destroy", false);
+            animator.SetBool("Walk", false);
 
-        transform.DORotate(new Vector3(0, -180, 0), 2);
+            var dis = Vector3.Distance(this.transform.position, Camera.main.transform.position);
+            if (dis > 5)
+            {
+                  UI.DOScale(2.0f, 0.1f);
+            }
+            else
+            {
+                 UI.DOScale(1.2f, 0.1f);
+            }
 
-        var dis = Vector3.Distance(this.transform.position, Camera.main.transform.position);
-        if (dis > 5)
-        {
-            //    UI.DOScale(2.0f, 0.1f);
-        }
-        else
-        {
-            //  UI.DOScale(1.2f, 0.1f);
-        }
             CalculateTime(shopperSystem.TimeResponseCustomer);
+        });
+
+       
+          
     }
     public void HappyMotion()
     {
@@ -105,7 +111,7 @@ public class Char_Agent : MonoBehaviour
       
         // animator.SetBool("Happy", false);
         IsReadyToGiveFruit = false;
-        Debug.Log("HAPPY MOTIONNNNNNNNNN");
+     //   Debug.Log("HAPPY MOTIONNNNNNNNNN");
         //shopperSystem.QueueCapacity++;
     }
     /* public void AngryMotion()
@@ -152,13 +158,6 @@ public class Char_Agent : MonoBehaviour
     }
 
 
-
-   // [Button("Trun")]///
-   /// <summary>
-   /// 
-   /// </summary>
-   /// <param name="Destroyplace"></param>
-   /// <returns></returns>
     public Tweener TurnAgent(Vector3 Destroyplace)
     {
         var dir = (Destroyplace - transform.position);
@@ -186,15 +185,16 @@ public class Char_Agent : MonoBehaviour
         TurnAgent(pos).OnComplete(() =>
         {
 
-            if (point_offset != -1000)
+            if (HaveScore)
             {
 
                 SpawnDollerCash(point_offset, pos_spawn_doller);
+                Debug.Log("Money:" + point_offset);
             }
-            else if (point_offset == -1000)
+            else if (!HaveScore)
             {
                 shopperSystem.SetHealth();
-               // Debug.Log("SETT HEALTH:" + point_offset);
+               Debug.Log("Health Minus: " + point_offset);
 
             }
         });
@@ -220,9 +220,6 @@ public class Char_Agent : MonoBehaviour
         IsReadyToGiveFruit = false;
         //Debug.Log("POS SET");
     }
-
-
-
     public void SetUI(Sprite profile, Sprite fruitIcon, float percent, float timereponse)
     {
         //this.Character_image.sprite = profile;
@@ -234,36 +231,18 @@ public class Char_Agent : MonoBehaviour
 
         // CalculateTime(timereponse);
     }
-
-    public void PrograssbarAndPointSet(float amount, string fruitname)
+    public void ReactionToFruitAndScore(float amount, string fruitname)
     {
         if (IsReadyToGiveFruit == true)
         {
             if (this.fruitname == fruitname)
             {
-                var unit = amount / NeedPercentValue;
 
-               /* Prograssbar_satisfaction.fillAmount += unit;
-                if (Prograssbar_satisfaction.fillAmount > 0.5)
-                {
-                    Prograssbar_satisfaction.color = Color.green;
-
-                }
-                else if (Prograssbar_satisfaction.fillAmount > 0.25 && Prograssbar_satisfaction.fillAmount < 0.5)
-                {
-                    Prograssbar_satisfaction.color = Color.yellow;
-
-                }
-                else if (Prograssbar_satisfaction.fillAmount > 0 && Prograssbar_satisfaction.fillAmount < 0.25)
-                {
-                    Prograssbar_satisfaction.color = Color.red;
-
-                }*/
-                //  this.Percent_text.text = (Mathf.Clamp(amount / NeedPercentValue, 0, 1) * 100).ToString("0"); 
-                point_offset = (NeedPercentValue - amount);
-                //Debug.Log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA:" + point_offset);
                 /// nagative offset mean  Customer is happy
                 ///  positive offset mean  Customer is angery
+                  HaveScore = true;
+                point_offset = (NeedPercentValue - amount);
+                
                 if (point_offset <= 5)
                 {
                     HappyMotion();
@@ -282,30 +261,29 @@ public class Char_Agent : MonoBehaviour
             }
         }
     }
-
     private void SpawnDollerCash(float offset, Vector3 pos)
     {
+        float slice_cash = shopperSystem.SliceCash;
+        float amount = CalculateScore(offset, slice_cash);
         DOVirtual.DelayedCall(0.5f, () =>
         {
             var cash_obj = Instantiate(CashPrefab, pos, CashPrefab.transform.rotation);
-            var amount = CalculateScore(offset);
+           
             cash_obj.AmountCash = amount;
            // Debug.Log("CASH SPAWN :" + amount);
         });
     }
-
-
-    private float CalculateScore(float point_offset)
+    private float CalculateScore(float point_offset ,float sliceCash)
     {
         float tempscore = 0.0f;
 
         if (point_offset <= 5)
         {
-            tempscore = shopperSystem.SliceCash;
+            tempscore = sliceCash;
         }
         else if (point_offset >= 6)
         {
-            tempscore = shopperSystem.SliceCash / 2;
+            tempscore = sliceCash / 2;
         }
         return tempscore;
     }

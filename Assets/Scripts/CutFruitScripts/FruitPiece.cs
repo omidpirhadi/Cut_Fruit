@@ -14,10 +14,11 @@ public class FruitPiece : MonoBehaviour,IFruit
     private Mesh meshFilter;
     public new Rigidbody rigidbody;
     public Vector3 OffsetCenter;
+    public ShopperSystemController shopperSystem;
     void Start()
     {
 
-
+        shopperSystem = FindObjectOfType<ShopperSystemController>();
         meshFilter = GetComponent<MeshFilter>().sharedMesh;
         Volume = VolumeOfMesh(meshFilter);
       //  controller = FindObjectOfType<TouchController>();
@@ -123,11 +124,12 @@ public class FruitPiece : MonoBehaviour,IFruit
 
     private void InstantiatWeightTextEffct()
     {
+        var indicator = shopperSystem.weightSliceFruitIndicator;
         DOVirtual.DelayedCall(0.5f, () =>
         {
-            var obj = FindObjectOfType<WeightIndicator>();
+            
             var pos = transform.TransformPoint(meshFilter.bounds.center);
-            var t = Instantiate(obj, pos, Quaternion.identity);
+            var t = Instantiate(indicator, pos, Quaternion.identity);
 
             t.SetForFruit(PercentVolume.ToString("0"));
         });

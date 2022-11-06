@@ -17,7 +17,7 @@ public class ShopperSystemController : MonoBehaviour
     public CameraController cameraController;
     public ShopperIndicatorUI shopperIndicatorUI;
     public DialogBox dialogBox;
-   
+    public WeightIndicator weightSliceFruitIndicator;
     public TMPro.TMP_Text TotalCash_Text;
     public Transform CustomerPlaceSpwan;
     public Transform FruitSpwanPlace;
@@ -604,7 +604,7 @@ public class ShopperSystemController : MonoBehaviour
         });
         if (TutorialMode == true)
             Pause_Button.interactable = false;
-        Debug.Log("GameStart");
+        //Debug.Log("GameStart");
         yield return new WaitForSecondsRealtime(0.1f);
         HomePanel.SetActive(false);
         PausePanel.SetActive(false);
@@ -696,7 +696,7 @@ public class ShopperSystemController : MonoBehaviour
             data = JsonUtility.FromJson<LeaderboardData>(j_data);
 
         }
-         Debug.Log("Data Loaded");
+        // Debug.Log("Data Loaded");
         return data;
     }
     public void SetLeaderboard()

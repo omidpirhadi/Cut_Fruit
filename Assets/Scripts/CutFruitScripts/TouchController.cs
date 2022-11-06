@@ -240,7 +240,7 @@ public class TouchController : MonoBehaviour
                             //   var pos = FindObjectOfType<DestroyPlace>().transform.position;
                             var char_agent_temp = hit.collider.GetComponent<Char_Agent>();
                             // var id = char_agent_temp.ID;
-                            char_agent_temp.PrograssbarAndPointSet(precent_fruit, name_fruit_select);
+                            char_agent_temp.ReactionToFruitAndScore(precent_fruit, name_fruit_select);
                             
 
                             Destroy(fruit_slice);
