@@ -12,18 +12,20 @@ public class TouchController : MonoBehaviour
    // public Transform ttt;
    // public Text log;
     public Selector selector;
-    public bool IsReadyForCut = true;
-    public bool IsTouchReady = true;
+
     public LayerMask MaskForCut;
     public LayerMask MaskForFruit;
     public LayerMask MaskForMoney;
     public LayerMask MaskForHumen;
+    private bool IsReadyForCut = true;
+    private bool IsTouchReady = true;
+
     private Cutter cutter;
     private LineRenderer line;
     private RaycastHit hit;
     private Ray ray;
-    [SerializeField] public List<GameObject> SelectedFruits;
-    [SerializeField] public List<Material> SelectedInnerMatrials;
+    private List<GameObject> SelectedFruits;
+    private List<Material> SelectedInnerMatrials;
     private Vector3 point1;
     private Vector3 point2;
     private Vector3 pos_click;
@@ -32,7 +34,7 @@ public class TouchController : MonoBehaviour
    // private DragAndDropItem DragItem;
     private ShopperSystemController shopperSystem;
 
-    public GameObject fruit_slice;
+    private GameObject fruit_slice;
     private float precent_fruit;
     private string name_fruit_select;
     private Vector3 FirstPosBeforSelect;
