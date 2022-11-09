@@ -52,12 +52,12 @@ public class TutorialHand : MonoBehaviour
 
         yield return new WaitUntil(() => StepTutorial == 1);
 
-        hand_rect.DOMove(PickupButton_pos.position, 1.0f);
+       /* hand_rect.DOMove(PickupButton_pos.position, 1.0f);
         animation.Play("ShockOnButton", PlayMode.StopAll);
         dialog.SetPositionWithAnimation("Pickup_POS_Button");
         dialog.Set("Click On PickUp Button ", 10);
-        Debug.Log("Setp 3");
-
+        Debug.Log("Setp 3");*/
+        StepTutorial = 2;
         yield return new WaitUntil(() => StepTutorial == 2);
 
         animation.Play("DoDrag", PlayMode.StopAll);

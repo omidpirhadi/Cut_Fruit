@@ -17,7 +17,7 @@ public class WeightIndicator : MonoBehaviour
     {
         Context.text = precent+"gr";
 
-        this.transform.DOMoveY(5 , Duration).SetEase(ease).SetLoops(-1, loop);
+        this.transform.DOMoveY(2.5f , Duration).SetEase(ease).SetLoops(-1, loop);
         Context.DOFade(0, 1).SetEase(ease).SetLoops(-1, loop);
 
         this.transform.localEulerAngles = Vector3.zero;

@@ -40,15 +40,11 @@ public class TouchController : MonoBehaviour
     private Vector3 FirstPosBeforSelect;
     private Vector3 offsetOfSelect;
     private  Rigidbody rigidbody_selected_fruit;
-    private void Awake()
-    {
-
-
-    }
+    private SoundEffectControll SoundEffect;
     private void Start()
     {
 
-
+        
         crossHair = FindObjectOfType<CrossHairControll>();
         //DragItem = FindObjectOfType<DragAndDropItem>();
         shopperSystem = GetComponent<ShopperSystemController>();
@@ -58,6 +54,7 @@ public class TouchController : MonoBehaviour
         SelectedFruits = new List<GameObject>();
         SelectedInnerMatrials = new List<Material>();
         line.positionCount = 2;
+        SoundEffect = FindObjectOfType<SoundEffectControll>();
 
     }
    
@@ -76,7 +73,7 @@ public class TouchController : MonoBehaviour
     }
     private void ShopperSystem_OnChangePhase(ShopperSystemController.PhaseGame phase)
     {
-        if (phase == ShopperSystemController.PhaseGame.Cut)
+        /*if (phase == ShopperSystemController.PhaseGame.Cut)
         {
             IsTouchReady = true;
             IsReadyForCut = true;
@@ -90,8 +87,8 @@ public class TouchController : MonoBehaviour
         {
             IsTouchReady = false;
             IsReadyForCut = false;
-
-        }
+            
+        }*/
     }
     private void Touch()
     {
@@ -104,9 +101,8 @@ public class TouchController : MonoBehaviour
 
             if (touch.phase == TouchPhase.Began)
             {
-                ///////
-                ///For Click On Money Box On Grand
-
+                IsReadyForCut = true;
+                ///For Click On Money Box On Ground
                 ray = Camera.main.ScreenPointToRay(touch.position);
                 if (Physics.Raycast(ray, out hit, 50, MaskForMoney))
                 {
@@ -115,6 +111,15 @@ public class TouchController : MonoBehaviour
                     {
                         hit.collider.gameObject.GetComponent<Money>().ReciveCash();
                         Debug.Log(hit.collider.name);
+                    }
+                }
+                /// For Select Fruit
+                if (Physics.Raycast(ray, out hit, 50, MaskForFruit))
+                {
+
+                    if (hit.collider.gameObject.GetComponent<Furit>() || hit.collider.gameObject.GetComponent<FruitPiece>())
+                    {
+                        IsReadyForCut = false;
                     }
                 }
 
@@ -128,8 +133,9 @@ public class TouchController : MonoBehaviour
                         SelectedInnerMatrials.Clear();
                         line.positionCount = 2;
                         point1 = hit.point;
+                        point2 = hit.point;
                         line.SetPosition(0, point1);
-                        line.SetPosition(1, point1);
+                        line.SetPosition(1, point2);
                         //  Debug.Log(hit.collider.name);
 
 
@@ -213,23 +219,19 @@ public class TouchController : MonoBehaviour
                 {
                     if (Physics.Raycast(ray, out hit, 10, MaskForCut))
                     {
+                        var dis = Vector3.Distance(point1, point2);
+                        Debug.Log(dis);
+                        if (dis > 0.05f)
+                        {
+                            point2 = hit.point;
+                            selector.RayFire(point1, point2);
+                            cutter.SetCutPlane(point1, point2, 1f);
+                            
+                        }
 
-                        // pos_click.z = 10.0f;
-                        point2 = hit.point;
-                        selector.RayFire(point1, point2);
-
-
-
-                        cutter.SetCutPlane(point1, point2, 1f);
-
-
-
-
-                        //   CutFruits();
+                        point1 = Vector3.zero;
+                        point2 = Vector3.zero;
                         line.positionCount = 0;
-                       
-
-
                     }
 
                 }
@@ -279,11 +281,16 @@ public class TouchController : MonoBehaviour
     public void CutFruits()
     {
         if (SelectedFruits.Count > 0)
-            shopperSystem.HandTutorial.StepTutorial = 1;
+        {
+            if (shopperSystem.TutorialMode)
+                shopperSystem.HandTutorial.StepTutorial = 1;
+            SoundEffect.PlaySound(0);
+        }
         for (int i = 0; i < SelectedFruits.Count; i++)
         {
             cutter.Cut(SelectedFruits[i], SelectedInnerMatrials[i]);
         }
+        
         SelectedFruits.Clear();
         SelectedInnerMatrials.Clear();
     }

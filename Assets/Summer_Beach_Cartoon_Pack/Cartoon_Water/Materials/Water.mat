@@ -168,7 +168,7 @@ Material:
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DistortionIntensity: 1
-    - _DistortionTiling: 50
+    - _DistortionTiling: 25
     - _DstBlend: 0
     - _Float0: 9.16
     - _Float1: 0.07

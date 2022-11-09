@@ -14,12 +14,14 @@ public class Money : MonoBehaviour
     [SerializeField] LoopType loopType;
     private ShopperSystemController shopperSystem;
     private MoneyParticleController particelMoney;
+    private SoundEffectControll soundEffect;
     void Start()
     {
         Angel = new Vector3();
        // easeType = new Ease();
         shopperSystem = FindObjectOfType<ShopperSystemController>();
         particelMoney = shopperSystem.GetComponent<MoneyParticleController>();
+        soundEffect = FindObjectOfType<SoundEffectControll>();
         transform.DORotate(Angel, SpeedRotate).SetEase(easeType).SetLoops(-1, loopType);
         DOVirtual.DelayedCall(1f, () => { transform.DOScale(GrowSize, SpeedGrow).SetEase(easeType).SetLoops(1, loopType); });
 
@@ -30,7 +32,7 @@ public class Money : MonoBehaviour
         shopperSystem.AmountCash(AmountCash);
 
        particelMoney.StartEmit(transform.position);
-
+        soundEffect.PlaySound(1);
         Destroy(this.gameObject);
     }
 
