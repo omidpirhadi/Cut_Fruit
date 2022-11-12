@@ -44,9 +44,11 @@ public class Character_NPC : MonoBehaviour
 
     private void Character_NPC_OnPlay()
     {
-        TurnAgent(DestroyPlace.position);
-        SetDestination(DestroyPlace.position);
-
+        if (this.gameObject.activeSelf)
+        {
+            TurnAgent(DestroyPlace.position);
+            SetDestination(DestroyPlace.position);
+        }
 
     }
     public Tweener TurnAgent(Vector3 Destroyplace)

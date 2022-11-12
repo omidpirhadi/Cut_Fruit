@@ -5,16 +5,7 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: Assets/Scenes/General.unity
-    guid: 5afcd4068a126a042905958551093a33
-  - enabled: 0
-    path: Assets/Scenes/GeneralT2.unity
-    guid: 76481364048fa22459a35763880822be
-  - enabled: 0
-    path: Assets/Scenes/GeneralT3.unity
-    guid: 4baace54720f3b84ab452b613a68e95e
   - enabled: 1
-    path: Assets/Scenes/GeneralT3AMIR.unity
-    guid: c5d2412bf94441f4ab1a82b5a915548b
+    path: Assets/Scenes/ShopFruit.unity
+    guid: 281c3818fe6699045921ad03ff90334b
   m_configObjects: {}

@@ -23,7 +23,7 @@ public class SoundEffectControll : MonoBehaviour
         else
             Mute = true;*/
     }
-    
+
     private void Setting_OnChangeSetting()
     {
         /*if (setting.Setting.Sound == true)
@@ -31,14 +31,6 @@ public class SoundEffectControll : MonoBehaviour
         else
             Mute = true;*/
     }
-    /* void OnCollisionEnter(Collision obj)
-     {
-         if (obj.gameObject.tag == "marble" && Mute)
-         {
-             //  audioSource.clip = audios[0];
-             // audioSource.Play();
-         }
-     }*/
 
     public void PlaySound(int index)
     {
@@ -50,6 +42,12 @@ public class SoundEffectControll : MonoBehaviour
                 audioSource.Play();
             }
         }
+    }
+    public void MuteSound(bool mute)
+    {
+
+        
+        this.Mute = mute;
     }
 
 }

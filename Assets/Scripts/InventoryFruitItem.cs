@@ -13,6 +13,7 @@ public class InventoryFruitItem : MonoBehaviour
   //  [SerializeField] private GameObject ParentUI;
     private void OnEnable()
     {
+        slot_btn = GetComponent<UnityEngine.UI.Button>();
         if (!shopperSystem)
             shopperSystem = FindObjectOfType<ShopperSystemController>();
 
@@ -27,7 +28,7 @@ public class InventoryFruitItem : MonoBehaviour
         }
 
 
-        slot_btn = GetComponent<UnityEngine.UI.Button>();
+        
         slot_btn.onClick.AddListener(() =>
         {
             if (shopperSystem.TutorialMode )
@@ -47,6 +48,7 @@ public class InventoryFruitItem : MonoBehaviour
     }
     private void OnDisable()
     {
-        slot_btn.onClick.RemoveAllListeners();
+        if (slot_btn)
+            slot_btn.onClick.RemoveAllListeners();
     }
 }

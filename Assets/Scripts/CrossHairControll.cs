@@ -13,18 +13,26 @@ public class CrossHairControll : MonoBehaviour, IPointerClickHandler,IDragHandle
     public float Min_Y = 0;
     public float Max_Y = 0;
     public Vector2 Offset;
-    private Tweener tweenr;
+    private Tween tweenr;
     void Start()
     {
         //cross_rect = this.GetComponent<RectTransform>();
+        
     }
     public void SetVisible(bool show)
     {
-        tweenr.Kill();
+
+
+
+        if(tweenr != null)
+        {
+            tweenr.Kill();
+            tweenr = null;
+        }
         if (show && canvasGroup.alpha < 1.0f)
-            DOVirtual.Float(0, 1, 0.5f, x => { canvasGroup.alpha = x; });
+           tweenr =  DOVirtual.Float(0, 1, 0.5f, x => { canvasGroup.alpha = x; });
         else if (!show && canvasGroup.alpha > 0.0f)
-            DOVirtual.Float(1, 0, 0.5f, x => { canvasGroup.alpha = x; });
+           tweenr =  DOVirtual.Float(1, 0, 0.5f, x => { canvasGroup.alpha = x; });
 
     }
     public void OnPointerClick(PointerEventData eventData)

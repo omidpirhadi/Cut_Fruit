@@ -21,7 +21,7 @@ public class HomePanel : MonoBehaviour
             Play_button.GetComponent<Image>().DOFade(1, 0.5f);
             Play_button.onClick.AddListener(() =>
             {
-
+               
                 StartCoroutine(shopperSystem.StartGame());
                 Handler_OnPlay();
 

@@ -60,7 +60,7 @@ public class TouchController : MonoBehaviour
    
     private void Update()
     {
-        if (IsTouchReady)
+        if (shopperSystem.GamePlayed)
             Touch();
     }
     private void OnDrawGizmos()
@@ -220,7 +220,7 @@ public class TouchController : MonoBehaviour
                     if (Physics.Raycast(ray, out hit, 10, MaskForCut))
                     {
                         var dis = Vector3.Distance(point1, point2);
-                        Debug.Log(dis);
+                        //Debug.Log(dis);
                         if (dis > 0.05f)
                         {
                             point2 = hit.point;

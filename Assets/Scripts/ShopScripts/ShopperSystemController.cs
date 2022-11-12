@@ -13,6 +13,10 @@ using UnityEditor;
 //public enum FRUITS { Apple = 0 , Orange = 1, Lemon = 2, Watermelon =3 }
 public class ShopperSystemController : MonoBehaviour
 {
+    public bool GamePlayed = false;
+
+    public AudioSource Background_soundlayer;
+    public SoundEffectControll Fx_Soundlayer;
 
     public CameraController cameraController;
     public ShopperIndicatorUI shopperIndicatorUI;
@@ -56,7 +60,7 @@ public class ShopperSystemController : MonoBehaviour
 
     public List<FruitInShop> fruitInShops = new List<FruitInShop>();
     public List<Image> List_Health_images = new List<Image>();
-    [HideInInspector]
+    
     public float TimeResponseCustomer = 40;
 
     private float CountFlow = 0;
@@ -92,7 +96,11 @@ public class ShopperSystemController : MonoBehaviour
             DOVirtual.Float(1, 0, DurationFadeSplashScreen, (alpha) =>
             {
                 splashScreen.SetAlpha(alpha);
-            }).OnComplete(() => { splashScreen.gameObject.SetActive(false); });
+            }).OnComplete(() => {
+                splashScreen.gameObject.SetActive(false);
+                Background_soundlayer.Play();
+
+            });
         });
         soundEffect = FindObjectOfType<SoundEffectControll>();
     }
@@ -523,6 +531,7 @@ public class ShopperSystemController : MonoBehaviour
 
     public IEnumerator StartGame()
     {
+        Time.timeScale = 1;
         customerData = new CustomerData();
         customerData.customers = new Queue<Customer>();
         leaderboard = new LeaderboardData();
@@ -604,17 +613,27 @@ public class ShopperSystemController : MonoBehaviour
             PausePanel.SetActive(true);
            // glowbutton.GlowPos("4");
         });
+
+        DOVirtual.DelayedCall(5, () => {
+
+            Pause_Button.interactable = true;
+           
+        });
+
         if (TutorialMode == true)
             Pause_Button.interactable = false;
         //Debug.Log("GameStart");
         yield return new WaitForSecondsRealtime(0.1f);
         HomePanel.SetActive(false);
         PausePanel.SetActive(false);
+        GamePlayed = true;
+        
         
     }
     public IEnumerator EndGame()
     {
-
+        Time.timeScale = 1;
+        GamePlayed = false;
         yield return new WaitForSecondsRealtime(0.1f);
         ClearSceneInEndGame();
         yield return new WaitForSecondsRealtime(0.1f);
@@ -638,6 +657,8 @@ public class ShopperSystemController : MonoBehaviour
 
         Pickup_Button.onClick.RemoveAllListeners();
         Pause_Button.onClick.RemoveAllListeners();
+        Pause_Button.interactable = false;
+        
         Handler_OnEndGame();
         yield return null;
     }
@@ -666,7 +687,14 @@ public class ShopperSystemController : MonoBehaviour
         EnableInfinityMode = false;
         CountCustomerInQueue = 0;
     }
-
+    public  void Mute(bool mute)
+    {
+        if (mute == false)
+            Background_soundlayer.Stop();
+        else
+            Background_soundlayer.Play();
+        Fx_Soundlayer.MuteSound(mute);
+    }
 
     #region Read and Write File
     public bool ExistSave(string FileName)

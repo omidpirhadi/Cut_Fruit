@@ -53,7 +53,7 @@ public class FruitPiece : MonoBehaviour,IFruit
             DOVirtual.DelayedCall(2f, () => {
                 this.transform.DOScale(0, 1f).OnComplete(() =>
                 {
-                    Destroy(this.gameObject);
+                    Destroy(this.gameObject,0.1f);
                     Debug.Log("Fruit droped On Floor And Destroyed");
                 });
             });

@@ -14,7 +14,7 @@ public class PauseMenu : MonoBehaviour
     private void OnEnable()
     {
         shopperSystem = FindObjectOfType<ShopperSystemController>();
-       
+        shopperSystem.GamePlayed = false;
         Home_button.onClick.AddListener(() => {
             Time.timeScale = 1;
             StartCoroutine(shopperSystem.EndGame());
@@ -22,14 +22,16 @@ public class PauseMenu : MonoBehaviour
         });
         Resume_button.onClick.AddListener(() => {
             Time.timeScale = 1;
+            shopperSystem.GamePlayed = true;
             shopperSystem.HUDPanel.SetActive(true);
             this.gameObject.SetActive(false);
         });
         Gold_text.text = shopperSystem.TotalCash.ToString();
-        DOVirtual.DelayedCall(1, () => { Time.timeScale = 0; });
+        DOVirtual.DelayedCall(0.2f, () => { Time.timeScale = 0; });
     }
     private void OnDisable()
     {
+        Time.timeScale = 1;
         Home_button.onClick.RemoveAllListeners();
         Resume_button.onClick.RemoveAllListeners();
     }

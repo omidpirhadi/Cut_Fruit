@@ -34,15 +34,17 @@ public class TutorialHand : MonoBehaviour
             shopperSystem = FindObjectOfType<ShopperSystemController>();
 
         var hand_rect = HandImage.GetComponent<RectTransform>();
-        hand_rect.DOMove(CutButton_pos.position, 1.0f);
         HandImage.DOFade(1, 0.5f);
-        
-        animation.Play("ShockOnButton", PlayMode.StopAll);
-        dialog.SetPositionWithAnimation("Cut_POS_Button");
-        dialog.Set("Click On Cut Button ", 10);
-       
-        Debug.Log("Step1");
 
+        /* hand_rect.DOMove(CutButton_pos.position, 1.0f);
+         
+
+         animation.Play("ShockOnButton", PlayMode.StopAll);
+         dialog.SetPositionWithAnimation("Cut_POS_Button");
+         dialog.Set("Click On Cut Button ", 10);
+
+         Debug.Log("Step1");*/
+        StepTutorial = 0;
         yield return new WaitUntil(() => StepTutorial == 0);
 
         animation.Play("DoCut", PlayMode.StopAll);
