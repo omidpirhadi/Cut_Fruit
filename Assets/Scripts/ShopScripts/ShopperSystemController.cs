@@ -23,6 +23,9 @@ public class ShopperSystemController : MonoBehaviour
     public DialogBox dialogBox;
     public WeightIndicator weightSliceFruitIndicator;
     public TMPro.TMP_Text TotalCash_Text;
+    public CanvasGroup AddedCash_canvasgroup;
+    public TMPro.TMP_Text AddedCash_Text;
+
     public Transform CustomerPlaceSpwan;
     public Transform FruitSpwanPlace;
     public DestroyPlace DestroyPositionAgent;
@@ -33,7 +36,7 @@ public class ShopperSystemController : MonoBehaviour
     public GameObject InventoryPanel;
     public GameObject PausePanel;
     public GameObject HomePanel;
-
+    public GameObject LoserPanel;
     public GlowButton glowbutton;
     public Button Cut_button;
     public Button Pickup_Button;
@@ -479,8 +482,32 @@ public class ShopperSystemController : MonoBehaviour
     public void AmountCash(float amount)
     {
         TotalCash += amount;
+        AddCashIndicator(amount);
         SetTextForTotalCash(TotalCash.ToString("0"));
         //  Debug.Log("TotalCash:" + TotalCash);
+    }
+    Tweener t;
+    private void AddCashIndicator(float amount)
+    {
+        if (amount < 0)
+        {
+            AddedCash_Text.color = new Color(1f, 0.5f, 0.4f, 1f);
+            AddedCash_Text.text = amount.ToString("0");
+        }
+        else
+        {
+            AddedCash_Text.color = new Color(0.5f, 1f, 0.4f, 1f);
+            AddedCash_Text.text = "+" + amount;
+        }
+
+        if (t != null)
+        {
+            t.Kill();
+        }
+        t = AddedCash_canvasgroup.DOFade(1, 2f).OnComplete(() =>
+       {
+           AddedCash_canvasgroup.DOFade(0, 2f);
+       });
     }
     private void SetTextForTotalCash(string amount)
     {
@@ -516,7 +543,11 @@ public class ShopperSystemController : MonoBehaviour
         soundEffect.PlaySound(2);
         if (Health == 0)
         {
-            StartCoroutine(EndGame());
+            InventoryPanel.SetActive(false);
+            HUDPanel.SetActive(false);
+            PausePanel.SetActive(false);
+            HomePanel.SetActive(false);
+            LoserPanel.SetActive(true);
         }
        
     }
@@ -630,6 +661,7 @@ public class ShopperSystemController : MonoBehaviour
         
         
     }
+
     public IEnumerator EndGame()
     {
         Time.timeScale = 1;
@@ -639,26 +671,23 @@ public class ShopperSystemController : MonoBehaviour
         yield return new WaitForSecondsRealtime(0.1f);
         StartCoroutine(ClearFruitInScene());
         yield return new WaitForSecondsRealtime(0.1f);
-
         TutorialMode = false;
         QueueCapacity = 4;
-
         ShopperServicePlace.ForEach(e => { e.HaveShopper = false; });
-
         SetLeaderboard();
-        SaveLeaderboard("fruitshop");
-        Debug.Log("Game OVER");
+        SaveLeaderboard("fruitshop");       
         HomePanel.SetActive(true);
-
         yield return new WaitForSecondsRealtime(0.1f);
         PausePanel.SetActive(false);
         HUDPanel.SetActive(false);
-        Cut_button.onClick.RemoveAllListeners();
+        LoserPanel.SetActive(false);
 
+        Cut_button.onClick.RemoveAllListeners();
         Pickup_Button.onClick.RemoveAllListeners();
         Pause_Button.onClick.RemoveAllListeners();
         Pause_Button.interactable = false;
-        
+
+        Debug.Log("Game OVER");
         Handler_OnEndGame();
         yield return null;
     }
@@ -689,7 +718,7 @@ public class ShopperSystemController : MonoBehaviour
     }
     public  void Mute(bool mute)
     {
-        if (mute == false)
+        if (mute == true)
             Background_soundlayer.Stop();
         else
             Background_soundlayer.Play();

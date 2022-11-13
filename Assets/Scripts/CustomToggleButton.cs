@@ -21,14 +21,14 @@ public class CustomToggleButton : MonoBehaviour
             if (isOn == true)
             {
                 isOn = false;
-                shopperSystem.Mute(false);
+                shopperSystem.Mute(true);
                 TargetGraphic.sprite = ToggleOff_sprite;
                 
             }
             else if(isOn == false)
             {
                 
-                shopperSystem.Mute(true);
+                shopperSystem.Mute(false);
                 TargetGraphic.sprite = ToggleOn_sprite;
                 isOn = true;
             }
