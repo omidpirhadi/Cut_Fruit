@@ -21,6 +21,7 @@ public class Selector : MonoBehaviour
         if(other.tag == "furit")
         {
             controller.FruitSelect(other.gameObject);
+            
            // Debug.Log(other.name);
         }
        

@@ -17,8 +17,9 @@ public class Char_Agent : MonoBehaviour
 
 
     public RectTransform UI;
+    private CanvasGroup UI_CanvasGroup;
     //public Transform Canvas;
-  //  public Image Character_image;
+    //  public Image Character_image;
     public TMPro.TMP_Text Percent_text;
     public Image FuritIcon_image;
     public Image Prograssbar_time;
@@ -45,6 +46,7 @@ public class Char_Agent : MonoBehaviour
     private bool ToDestroy = false;
     [SerializeField] private bool IsReadyToGiveFruit = false;
 
+   
     private bool HaveScore = false;
 
     void Start()
@@ -53,7 +55,7 @@ public class Char_Agent : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
         shopperSystem = FindObjectOfType<ShopperSystemController>();
-       
+        UI_CanvasGroup = UI.GetComponent<CanvasGroup>();
         //shopperSystem.OnAgentMove += ShopperSystem_OnAgentMove;
     }
     private void LateUpdate()
@@ -80,18 +82,19 @@ public class Char_Agent : MonoBehaviour
             
             animator.SetBool("Destroy", false);
             animator.SetBool("Walk", false);
-
             var dis = Vector3.Distance(this.transform.position, Camera.main.transform.position);
             if (dis > 5)
             {
-                  UI.DOScale(2.0f, 0.1f);
+                UI.DOScale(2.0f, 1f);
             }
             else
             {
-                 UI.DOScale(1.2f, 0.1f);
+                UI.DOScale(1.2f, 1f);
             }
-
+            UI_CanvasGroup.DOFade(1, 1f);
             CalculateTime(shopperSystem.TimeResponseCustomer);
+            
+
         });
 
        
@@ -171,7 +174,7 @@ public class Char_Agent : MonoBehaviour
     {
         var pos = FindObjectOfType<DestroyPlace>().transform.position;
         var pos_spawn_doller = transform.position;
-
+        UI_CanvasGroup.DOFade(0, 0.5f);
         IsReadyToGiveFruit = false;
         this.tag = "destroy";
         animator.SetBool("Destroy", true);

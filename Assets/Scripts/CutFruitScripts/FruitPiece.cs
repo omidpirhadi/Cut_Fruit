@@ -41,6 +41,12 @@ public class FruitPiece : MonoBehaviour,IFruit
             rigidbody.drag = 1;
             rigidbody.angularDrag = 0;
         }
+        if(Mathf.RoundToInt(PercentVolume) <= 0)
+        {
+            Debug.Log("Destroy Because This Volume 0");
+            Destroy(this.gameObject);
+
+        }
      //   transform.position = new Vector3(transform.position.x, 1.5f, transform.position.z);
     }
 
