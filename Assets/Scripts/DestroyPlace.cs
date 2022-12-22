@@ -18,7 +18,7 @@ public class DestroyPlace : MonoBehaviour
             var id = obj.GetComponent<Char_Agent>().IDPlace;
             shopperSystem.FreePlaceAfterDestroyCustomer(id);
 
-            StartCoroutine(shopperSystem.FlowSpwanCustomer());
+            StartCoroutine(shopperSystem.FlowManager());
 
             //  StartCoroutine(shopperSystem.SpawnCustomer(1));
             Destroy(obj.gameObject);

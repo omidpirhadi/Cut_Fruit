@@ -6,10 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
-
-using Sirenix.OdinInspector;
 using DG.Tweening;
-using UnityEditor;
+using Diaco.GameAnalytic;
+
 //public enum FRUITS { Apple = 0 , Orange = 1, Lemon = 2, Watermelon =3 }
 public class ShopperSystemController : MonoBehaviour
 {
@@ -89,7 +88,7 @@ public class ShopperSystemController : MonoBehaviour
 
     private List<int> PercentFruits = new List<int> { 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95 };
     private SoundEffectControll soundEffect;
-   
+    private float flowspawned = 0;
     public void Awake()
     {
         Application.targetFrameRate = 60;
@@ -225,7 +224,7 @@ public class ShopperSystemController : MonoBehaviour
 
 
 
-    public IEnumerator FlowSpwanCustomer()
+    public IEnumerator FlowManager()
     {
 
 
@@ -278,7 +277,7 @@ public class ShopperSystemController : MonoBehaviour
                 SliderAddStep();
                  // Debug.Log("CapacityQueue:" + QueueCapacity + "Flow infinity" );
             }
-
+            flowspawned++;
             // Debug.Log("Flow_Run");
         }
     }
@@ -513,6 +512,7 @@ public class ShopperSystemController : MonoBehaviour
     {
         var a = Convert.ToInt32(amount);
         var t = Convert.ToInt32(TotalCash);
+        
         TotalCash_Text.DOCounter(t, a, 1f);
     }
 
@@ -548,6 +548,7 @@ public class ShopperSystemController : MonoBehaviour
             PausePanel.SetActive(false);
             HomePanel.SetActive(false);
             LoserPanel.SetActive(true);
+            DiacoAnalytic.instance.GA_HealthFinish();
         }
        
     }
@@ -563,6 +564,7 @@ public class ShopperSystemController : MonoBehaviour
     public IEnumerator StartGame()
     {
         Time.timeScale = 1;
+        flowspawned = 0;
         customerData = new CustomerData();
         customerData.customers = new Queue<Customer>();
         leaderboard = new LeaderboardData();
@@ -600,7 +602,7 @@ public class ShopperSystemController : MonoBehaviour
 
         }
         yield return new WaitForSecondsRealtime(0.1f);
-        StartCoroutine(FlowSpwanCustomer());
+        StartCoroutine(FlowManager());
 
 
         yield return new WaitForSecondsRealtime(0.1f);
@@ -658,14 +660,17 @@ public class ShopperSystemController : MonoBehaviour
         HomePanel.SetActive(false);
         PausePanel.SetActive(false);
         GamePlayed = true;
-        
-        
+
+        DiacoAnalytic.instance.GA_StartLevel();
     }
 
     public IEnumerator EndGame()
     {
+        DiacoAnalytic.instance.GA_TotalFlowPlayed(flowspawned);
+        DiacoAnalytic.instance.GA_TotalRecord(this.TotalCash);
         Time.timeScale = 1;
         GamePlayed = false;
+        flowspawned = 0;
         yield return new WaitForSecondsRealtime(0.1f);
         ClearSceneInEndGame();
         yield return new WaitForSecondsRealtime(0.1f);
@@ -687,8 +692,10 @@ public class ShopperSystemController : MonoBehaviour
         Pause_Button.onClick.RemoveAllListeners();
         Pause_Button.interactable = false;
 
-        Debug.Log("Game OVER");
+        
+        DiacoAnalytic.instance.GA_LoseLevel();
         Handler_OnEndGame();
+        Debug.Log("Game OVER");
         yield return null;
     }
     private void ClearSceneInEndGame()
